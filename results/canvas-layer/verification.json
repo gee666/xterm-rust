@@ -1,0 +1,1441 @@
+{
+  "originalHashes": 776,
+  "sourceInputs": 33,
+  "durable": [
+    {
+      "path": "crates/xterm-web/src/webgl/canvas_layer.rs",
+      "sha256": "656c18c3180c1b4bcaabdbebd1e8bf302292cb7baeae2f0da66fe90c0cbe7fbb"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/canvas_layer_text.rs",
+      "sha256": "d56609d08ffb73835b9e404bbaa229b684ad32afb21c9993b315447bf0384fb5"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/layer_services.rs",
+      "sha256": "5e9094e9191cf103f8a4745495ee854febe8cbffe3612c1d7cd6e33f24b2dd50"
+    },
+    {
+      "path": "crates/xterm-web/src/webgl/link_layer.rs",
+      "sha256": "46d609f2cc976444c43be1598bc3cb1de8b18ba66b4de92ac9b5b2e8f6dea7b0"
+    },
+    {
+      "path": "crates/xterm-web/tests/wasm_webgl_canvas_layer.rs",
+      "sha256": "bfb89a3aba7c16bf13f9d4d913f22bf445bf4723ed7c21c3418d2b1f9c9cea45"
+    },
+    {
+      "path": "crates/xterm-web/tests/support/canvas_layer.rs",
+      "sha256": "f8dece10f558de2f576f58ce37669f51b40e9ca978917903068b59e821cc92a0"
+    },
+    {
+      "path": "crates/xterm-web/tests/canvas_layer_probe.js",
+      "sha256": "2905120302c1b7db390ca4ce8f3f8c537eb483696e47218f826cd0435c895b91"
+    },
+    {
+      "path": "crates/xterm-web/tests/reference/canvas-layer.mjs",
+      "sha256": "70dcb0a090e6bcfa1a940c9ceb2d20d898263429631d397f4e5e00f4c581b473"
+    },
+    {
+      "path": "scripts/canvas-layer-oracle.mjs",
+      "sha256": "c350a2e9531cdccbe355f4f0e1694ebc7997802e5d6abe87081174b4932b8828"
+    },
+    {
+      "path": "scripts/canvas-layer-negative.mjs",
+      "sha256": "e92288b412e67865ee319fac62dba8a05346001f5b383caac0584b33e592787c"
+    },
+    {
+      "path": "scripts/canvas-layer-audit.mjs",
+      "sha256": "8d4f3468c4b3a5d4084efab65aa80349818d9d056aa2a59c933fd63634f6dc49"
+    },
+    {
+      "path": "docs/webgl-canvas-layers.md",
+      "sha256": "68d2623b9242c52a795541a07581e39c201ec436bcb58347bd5ca8c8108b6912"
+    },
+    {
+      "path": "docs/webgl-port.md",
+      "sha256": "76192710d7ce3e6b46890f82a8ed4577bed8c80f56974b8bc1d750ff60056820"
+    },
+    {
+      "path": ".pi/swarm/skills/canvas-layer-check/SKILL.md",
+      "sha256": "71ebe30220474abbe51f404e746e6da71a14ea53d64038bb35a7ea7576a2668d"
+    },
+    {
+      "path": "results/canvas-layer/before-phase-fix-canvas_layer.rs.txt",
+      "sha256": "dcd4f0adac523a7df0ac5a8abcab6f7600bdf9f73aabb939c90496e908797c8e"
+    },
+    {
+      "path": "results/canvas-layer/before-phase-fix-canvas_layer_text.rs.txt",
+      "sha256": "36ba79ba3d0919d5087439c6074738acc95d588f1da354733bebfab9dd1afe00"
+    },
+    {
+      "path": "results/canvas-layer/browser-before-consumer-glyph.json",
+      "sha256": "208c1095767bf2d373da5beb6145fbb086ead54557c3ec8c8df4dc9843976d43"
+    },
+    {
+      "path": "results/canvas-layer/browser-before-warmup-observer.json",
+      "sha256": "7bc21a3d9140539310d46792fbe2d52aa615f481068de81b7d44c2f1ce94b8ab"
+    },
+    {
+      "path": "results/canvas-layer/browser-commands.mjs.txt",
+      "sha256": "7cec563d4a23a89e0b7298fd8b90061d2c15878a199eebbc81dfd6f059a3cd41"
+    },
+    {
+      "path": "results/canvas-layer/browser-final.json",
+      "sha256": "990c79920026ed0a4368eeb462d19756827383e0e45d7e21268d1a1c7b921bfd"
+    },
+    {
+      "path": "results/canvas-layer/browser-final.log",
+      "sha256": "2bd1c067e3dd1daebcf41ed37da5068ecbb02e39e32e34e84629a560d3124ac0"
+    },
+    {
+      "path": "results/canvas-layer/browser-initial.json",
+      "sha256": "4d2b917a2d6eece26bcd76501ad75d6e0504fc8710f84f827c67acf85b1de06e"
+    },
+    {
+      "path": "results/canvas-layer/browser-initial.log",
+      "sha256": "2bd1c067e3dd1daebcf41ed37da5068ecbb02e39e32e34e84629a560d3124ac0"
+    },
+    {
+      "path": "results/canvas-layer/browser-negative.json",
+      "sha256": "26f33ed77eca684f33656dd1c7c29bca225a52517fabf604610ebbf66264c538"
+    },
+    {
+      "path": "results/canvas-layer/browser-phase-negative.json",
+      "sha256": "d5683d20f8fce817c973c522a3e1917e491780e143a5bbd853e0d1fb07eb0b27"
+    },
+    {
+      "path": "results/canvas-layer/browser-ten-final.json",
+      "sha256": "e0851eb5a8832bec8de49c5a09da1517c18b0fd3ab0ddc46535556cbda6c4901"
+    },
+    {
+      "path": "results/canvas-layer/browser-ten-initial.json",
+      "sha256": "014ea0d9072c3f1d85e0d1b3d4eec57c6c7111b9ce16388e59775c4b6ff3237a"
+    },
+    {
+      "path": "results/canvas-layer/browser-ten-negative.json",
+      "sha256": "3f9ae6e9e3d75869eaf90c4233a7f36c9b1370ee0cf72ea86cfea122fb403bc4"
+    },
+    {
+      "path": "results/canvas-layer/clippy-native.log",
+      "sha256": "930f0a62d991c965ff377a4973e785e1b5afec13f1615ad82c4b2a704da212be"
+    },
+    {
+      "path": "results/canvas-layer/clippy-wasm-final.log",
+      "sha256": "596dc335f5fdc31eada2b80809e9e25de1923b9623da623ff99936edfdc459b9"
+    },
+    {
+      "path": "results/canvas-layer/clippy-wasm.log",
+      "sha256": "9ca42cc85ef87f0b9a1115097a07cec59294b1582daa6e0252f38690178cc185"
+    },
+    {
+      "path": "results/canvas-layer/commands.mjs.txt",
+      "sha256": "51a8bfa8572cf239abd81e41208c35abb618496f455914945bc84696f6db2f14"
+    },
+    {
+      "path": "results/canvas-layer/final-commands.mjs.txt",
+      "sha256": "bc5a0333f36b0c63cac318b6c5773fa7341611439004685d6d7f76e89f9191ff"
+    },
+    {
+      "path": "results/canvas-layer/fmt-web-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/canvas-layer/fmt-web.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/canvas-layer/fmt-workspace-final.log",
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "path": "results/canvas-layer/fmt-workspace.log",
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "path": "results/canvas-layer/native-final.log",
+      "sha256": "521e011e8d0895ffa2acf7b9ba172252153c7c0b07e5ac37c4254bbc712bdaa9"
+    },
+    {
+      "path": "results/canvas-layer/native.log",
+      "sha256": "ff5a1d296f510ff68680ecc64cc0683add9f96d8da1556d60518ebf9db083c33"
+    },
+    {
+      "path": "results/canvas-layer/negative-driver.log",
+      "sha256": "32587f02b5e816ffc1cf48aa2572a3ccc4842d3fa3110b193dbe573bd42b23c5"
+    },
+    {
+      "path": "results/canvas-layer/negative-mutant.rs.txt",
+      "sha256": "a9029d3b637101c3ce3978ac5455df1e438eee35decd88b47a6ded18495c50d5"
+    },
+    {
+      "path": "results/canvas-layer/negative.json",
+      "sha256": "59dfbca3cbb8ba32fa710fbd6d2bd03b92d09ac61337cdae280ebc717de951c7"
+    },
+    {
+      "path": "results/canvas-layer/negative.log",
+      "sha256": "6b0c74cd3111a5535d9b76f6c97782946a72128c6ffdb4ce40412c69323d49e8"
+    },
+    {
+      "path": "results/canvas-layer/oracle-final.log",
+      "sha256": "9c2293f7a97e1a5f7c465e6009b3692c30b76676ba5bd84e5a44cd5c1bbb07a3"
+    },
+    {
+      "path": "results/canvas-layer/oracle.log",
+      "sha256": "9c2293f7a97e1a5f7c465e6009b3692c30b76676ba5bd84e5a44cd5c1bbb07a3"
+    },
+    {
+      "path": "results/canvas-layer/phase-negative-driver.log",
+      "sha256": "066a4a3a4a07734f3933f9a9a76c00f8be5e775701f91548de02b6f9321b4f6c"
+    },
+    {
+      "path": "results/canvas-layer/phase-negative.json",
+      "sha256": "d7b490708ed2e588c28eed0a8c79491eb73ad8b344f9cc6a82cac1ac53e308b0"
+    },
+    {
+      "path": "results/canvas-layer/phase-negative.log",
+      "sha256": "6b0c74cd3111a5535d9b76f6c97782946a72128c6ffdb4ce40412c69323d49e8"
+    },
+    {
+      "path": "results/canvas-layer/reference-before-final.log",
+      "sha256": "a7cbfe6b22f8a27128e2cb003ec8d983e325617788e6b80b73805dfb58642336"
+    },
+    {
+      "path": "results/canvas-layer/reference-before.log",
+      "sha256": "13e5bb6595b0d83dfd3721880edda42142a196c07fe034b1731f097a0ca70786"
+    },
+    {
+      "path": "results/canvas-layer/refresh-commands.mjs.txt",
+      "sha256": "b4f6e1bfb91ff9be11ed8aec6cacd5cc293a114c46bf90e0484906ff1fe74b54"
+    },
+    {
+      "path": "results/canvas-layer/source-inputs.json",
+      "sha256": "c79891babe1a6f571c32119ea006efc89695cd75689d274c66e047541b7ec674"
+    },
+    {
+      "path": "results/canvas-layer/ten-negative.json",
+      "sha256": "d6db6cabb71b96bc64bf95f01e1d71cf7c4e9e44fcccd98bac6293e246c6e23b"
+    },
+    {
+      "path": "results/canvas-layer/toolchain.log",
+      "sha256": "e6fadad433a77932a519560f07afea853c61d60d690ee74c5d9eb4ba7ab0b422"
+    },
+    {
+      "path": "results/canvas-layer/wasm-build-final.log",
+      "sha256": "a07fe7fe5a4c8dbe70f32b176ac21dfe91d30324a61760877b1359419302b918"
+    },
+    {
+      "path": "results/canvas-layer/wasm-build.log",
+      "sha256": "9a4205ab38b3fb51402504a9cc8982933bbf19ff721c95c794668b4ff6642324"
+    }
+  ],
+  "runtime": [
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "sha256": "f06e1cd2ea10032205fc102c28221edbb71c9fd5cf6147ffc1b07eea92c2fdc7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "sha256": "13b682d8c55b320d48427edade0ff4cf9d40ba2daf1d70bbbbbdf6aafcf557d6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "sha256": "8a4799850637002d5b79e0ee05d9853685f1d0fc6af8300e42d082bb2dfc30d3"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "sha256": "1491902e7ae7b416228a4c2ed21113825327e7d8e3a01edd84f7357abeff2a12"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline35.js",
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline36.js",
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline37.js",
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/mouse_name_error.js",
+      "sha256": "6b48b2cda404a9a2d45c73d7e4db13e0ba303fc190a17db3cd1d0c645cecc18e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/mouse_wheel.js",
+      "sha256": "8b51ba0dcce6fd164880526a0905a54ae5ffe2ed490e9bdc7a5f886f485ef231"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/snippets/xterm-web-f147851b6cb0c0ef/tests/canvas_layer_probe.js",
+      "sha256": "2905120302c1b7db390ca4ce8f3f8c537eb483696e47218f826cd0435c895b91"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/suite.d.ts",
+      "sha256": "bcc853fe0f913d6c94af75bcb7ce65917e628f9efb18923f827283a18e29d444"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/suite.js",
+      "sha256": "2999c0c903c24fc438709ea29b1c3bbf4be93e27aed24044f8cc70c9598810da"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/suite_bg.wasm",
+      "sha256": "1244bcd984c78ee98b448b7d195633b89954841c7785090b3a9485473b2226b2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-40-310Z-9cafb6c4-28c0-4bf4-a288-b2c558a10f76/artifacts/suite_bg.wasm.d.ts",
+      "sha256": "c6cf170d6105ce4e21b657075d0abd26589340e8311f536330b1589fad315487"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "sha256": "13b682d8c55b320d48427edade0ff4cf9d40ba2daf1d70bbbbbdf6aafcf557d6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "sha256": "8a4799850637002d5b79e0ee05d9853685f1d0fc6af8300e42d082bb2dfc30d3"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline35.js",
+      "sha256": "f06e1cd2ea10032205fc102c28221edbb71c9fd5cf6147ffc1b07eea92c2fdc7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline36.js",
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline37.js",
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "sha256": "8e63e0678e25e461d80f9e48faafdf129fb71dae04d494e97b7dae8e56a7b0b2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/mouse_name_error.js",
+      "sha256": "6b48b2cda404a9a2d45c73d7e4db13e0ba303fc190a17db3cd1d0c645cecc18e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/mouse_wheel.js",
+      "sha256": "8b51ba0dcce6fd164880526a0905a54ae5ffe2ed490e9bdc7a5f886f485ef231"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/snippets/xterm-web-f147851b6cb0c0ef/tests/canvas_layer_probe.js",
+      "sha256": "2905120302c1b7db390ca4ce8f3f8c537eb483696e47218f826cd0435c895b91"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/suite.d.ts",
+      "sha256": "61e722e2be3a3bc9919f7d194a551b870cba188f5bcea3c368328c2198b81bf1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/suite.js",
+      "sha256": "e9d0f380b97bf642f3c81af8f00d7bf357adad093502f5824f83b21423145d8f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/suite_bg.wasm",
+      "sha256": "337d0b8fe7f3375ef5d28329f3d007f5bcd42d1c6456ed47d6abeca405806199"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-13-57-657Z-223f8d4f-ce16-452e-897f-d3e897d8a2e0/artifacts/suite_bg.wasm.d.ts",
+      "sha256": "ac824762fa8f9d5fa4cd439fc9752765360c99b00ca8581403c6be6fda82124d"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "sha256": "13b682d8c55b320d48427edade0ff4cf9d40ba2daf1d70bbbbbdf6aafcf557d6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "sha256": "8a4799850637002d5b79e0ee05d9853685f1d0fc6af8300e42d082bb2dfc30d3"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline35.js",
+      "sha256": "f06e1cd2ea10032205fc102c28221edbb71c9fd5cf6147ffc1b07eea92c2fdc7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline36.js",
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline37.js",
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "sha256": "8e63e0678e25e461d80f9e48faafdf129fb71dae04d494e97b7dae8e56a7b0b2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/mouse_name_error.js",
+      "sha256": "6b48b2cda404a9a2d45c73d7e4db13e0ba303fc190a17db3cd1d0c645cecc18e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/mouse_wheel.js",
+      "sha256": "8b51ba0dcce6fd164880526a0905a54ae5ffe2ed490e9bdc7a5f886f485ef231"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/snippets/xterm-web-f147851b6cb0c0ef/tests/canvas_layer_probe.js",
+      "sha256": "2905120302c1b7db390ca4ce8f3f8c537eb483696e47218f826cd0435c895b91"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/suite.d.ts",
+      "sha256": "61e722e2be3a3bc9919f7d194a551b870cba188f5bcea3c368328c2198b81bf1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/suite.js",
+      "sha256": "e9d0f380b97bf642f3c81af8f00d7bf357adad093502f5824f83b21423145d8f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/suite_bg.wasm",
+      "sha256": "c848654e6c0eb664c5b4bc090bcd1e2d783e5a2cbc1d263036c244d514c34f0a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-23-811Z-da99c406-0aa4-4755-b2f0-a2e45eae23fe/artifacts/suite_bg.wasm.d.ts",
+      "sha256": "ac824762fa8f9d5fa4cd439fc9752765360c99b00ca8581403c6be6fda82124d"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-font-addons-91879fe097c75eac/src/ligature_host.js",
+      "sha256": "d8a30e72fe77d954821e9e7f2c61761e4ea8ea3e7d2c481e7d99af1ff0a60b73"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline0.js",
+      "sha256": "de4e485e930f7cda8a9ce550cfe26c807e3dd1d1e80c434413532b2a5b420e9d"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline1.js",
+      "sha256": "292f2511fdb63c2b7487433bbba6acaa69019ed839f7039b21697a1bc1e74de1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline2.js",
+      "sha256": "a851e7d53c20c29b062e7a256c7f6325913b746516250a2045843e15fdb4836e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline3.js",
+      "sha256": "7321456f6ef5529bca9fbe7a91f83ddf66ffbbbca23931c63fd9cb619f01b09c"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline4.js",
+      "sha256": "fe784870f96bd48e28e139b6f89b699553b8ae68f875b2a55ebe2ba98375dd8a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline5.js",
+      "sha256": "1e6f58ef7f27ae6d54ae9140abf399bf7462854321b8ad056cd525cfdbd1f48b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline6.js",
+      "sha256": "783fe571663c89ee3df67788d86e602ab4761de28d4d2c3418be3c8825543c8e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/inline7.js",
+      "sha256": "c1cac729b3fbfc98a3c821c904322ac04b0bd794f98fb67204978bb7b30955ad"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/addon_bridge.js",
+      "sha256": "79f1ac60404844cd2f78eb16f423626d5fd2661fa9b46025becf1ab96c2c72f7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/buffer_shape.js",
+      "sha256": "ac1672867d2a205dd4abc8b8658f662f87c11a22a799977ec9826a36d1600cd2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-wasm-support-11516dc9b8bb3743/src/public_api/parser_identifier_bridge.js",
+      "sha256": "5f56e4b5db6defea5127807a4b082e3e872a10bfb3d6d572013800e8f8e949e1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline0.js",
+      "sha256": "77805109d24d2fc4e296b8cc30efa71d05cd583a7bdd7597defa3c5ed9f5c7e5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline1.js",
+      "sha256": "ebaf5bda1a55fb73f6defad9cc1d02ef7826fe97f388a6bfc364795061f01453"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline10.js",
+      "sha256": "dabcdb0445c8e13da9d4283bea4e0722a26a38c9e3b2598813fdf1696d0e8389"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline11.js",
+      "sha256": "35c279b9bff235e2ed3ba1f2d394742e9dbdf0d43555e47f9b109a7a39bc57a6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline12.js",
+      "sha256": "8e67f4883a133bb0ad73aff16827e047e1b680c4b382b6a3d019515c024ff4ea"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline13.js",
+      "sha256": "fe635785ec693cd38a0381847742c8729d33422c5cf697e35ec288d7ae53460f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline14.js",
+      "sha256": "ae0cfd92121cf0c213940294f05902a331cfaeb9d9f4059dd1b17cd118696475"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline15.js",
+      "sha256": "1ae28c409e9fbd1efcec43107f9e9c035eb5c8596864bae5210d1091ddbb8969"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline16.js",
+      "sha256": "13b682d8c55b320d48427edade0ff4cf9d40ba2daf1d70bbbbbdf6aafcf557d6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline17.js",
+      "sha256": "9b0cfaa56c08f3fe2ab57fa088057464cdf0ce8cce21c8eeaf71c4bf78e016c2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline18.js",
+      "sha256": "d2e79943768fa04ec055ed1eef1c0afeb034cf42b0d8ef86a6b7f2f2c9e7e76b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline19.js",
+      "sha256": "7208a28a755c8609b1b2f9294937f2418f9f3c0dee9b11fa1c0d4feabb4a7783"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline2.js",
+      "sha256": "67320b545da1470a62b712601387375f05accf3b425b2f6098a93a05a8728fdb"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline20.js",
+      "sha256": "8a4799850637002d5b79e0ee05d9853685f1d0fc6af8300e42d082bb2dfc30d3"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline21.js",
+      "sha256": "d21c66fcc0b26a3ef78feefeb4f859cf4d4f7fb2566eb356975937c0f84f8c66"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline22.js",
+      "sha256": "6687384caa57150cf1218a599da0e21e55b3d994ecbb13cf3a800a20bd9ad9ff"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline23.js",
+      "sha256": "3052e1ade55765d0445e8710812f59948f6501f701ebea675dfd9d74286a9af5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline24.js",
+      "sha256": "1799e450fa81c463910c6b8b7a6b7e00d844b7469c734739136efc8666dc37c3"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline25.js",
+      "sha256": "99cc3e102135da2cfd62aca8a21991f1f4846ac8724f25c5bb178ed008bf10e4"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline26.js",
+      "sha256": "449f50af26e6eec23a2c5e5f8224d47c313f685bc4125f81228658949a9aa9ca"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline27.js",
+      "sha256": "d14f9f4659878d63aa506a3406eb9f18425e175ff507f674db10b1072f170eb4"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline28.js",
+      "sha256": "fec399e64c20a5c1e46f28365149e4b1eb42ea9864deda03dae6c8e4e9c422b5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline29.js",
+      "sha256": "88429dc7ddaae7677a9961758af357b9926c79e4dc14cf654f3e267e6b1bc098"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline3.js",
+      "sha256": "ac254d40273711a7fcec0fa07079497d683e3ec8da051b4bd2cae49e94de5d0e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline30.js",
+      "sha256": "33f7531024d02d43aaac103ec354c83fca79bb2cb719f9b013afc8364b981a1a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline31.js",
+      "sha256": "6efca513626782a77cc0c389058532dba8fd46060c7cfa9bbb71f91e886f86c2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline32.js",
+      "sha256": "4e0dc49d3f5e4be4ed3fb22bdd2b7151d5eec123914fb420dbbfe8763e7e1420"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline33.js",
+      "sha256": "94c67eee5a651c25dca0cf974988909e66da2e98d506cdb2231dc296c98e899a"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline34.js",
+      "sha256": "327d7ca797597761a7d523a26885b19246f32f8c50e0ad34f04fa15278d13ae6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline35.js",
+      "sha256": "f06e1cd2ea10032205fc102c28221edbb71c9fd5cf6147ffc1b07eea92c2fdc7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline36.js",
+      "sha256": "5b81a8324247fffc6281813a7cb4ebc708b474d0f1c1d51bbf2fbe79e05829a8"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline37.js",
+      "sha256": "0977c94f33af4592a2a2df5a4f38c6faddac5690439f12c3490c0069589b2bec"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline4.js",
+      "sha256": "35e8802a3bd6a9cdd8c3c6b60faa1e5c76d4add8bed3a0376de597fe0eb8bd27"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline5.js",
+      "sha256": "9b8c8fe8feba2f025d4db4ca7c0ac0b6f6f6317481a4e5faf1c0c41e0e37d1d6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline6.js",
+      "sha256": "0ba7d921b939d5a18bc449a0cec939e2590ca6a9dd163adf542e8e04fe4c5562"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline7.js",
+      "sha256": "be9dce800be895a21a694375dd02be83bad94925262f13682c556a70fdcdaa94"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline8.js",
+      "sha256": "8e63e0678e25e461d80f9e48faafdf129fb71dae04d494e97b7dae8e56a7b0b2"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/inline9.js",
+      "sha256": "9b28981ca17185a29b7f528e383826e3a2445b65a209bdff44a37a7f6aa18861"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/core_browser_microtask.js",
+      "sha256": "0e48b1666f9e7e4c2255ed049870c41689986eebf8b81d1b3564fef3e008eef0"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/handlers.js",
+      "sha256": "5a4451b4152871b90e65ae627ecac5cd31594f677641bd5da14796dc8bfcfb99"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/inspection.js",
+      "sha256": "fdd0e49565d38ab62c3fb3a2974001cc5741460a7d83801260947a3a5dbbc5cf"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/addon/option_inspection.js",
+      "sha256": "41899ae76de4d356a95e7b08aba42c766fde86c3f359cc7f61b56ac6162af585"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/kitty_host.js",
+      "sha256": "00006bee1ae83a53203da0518eb10491f71a21c6dfaca73c5e27a2309a336768"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/placeholder.js",
+      "sha256": "770aecedfcce7344771dd73bc9b3335f1978125eb3b81a2daa6c1b764ccf6586"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/image/sixel_errors.js",
+      "sha256": "ecb97f6854ce8c36b0762b7e0b7294c51df369500ecb580f60d87b334c7b56d5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/kitty_tables.js",
+      "sha256": "00cbbbf0e3a4378cc9c3b2f73d5bf1190427bc9dcddf1ded2cfe1f973469f07e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/input/win32_tables.js",
+      "sha256": "91e6c09c1e5255223495f79e3aa3852bd169736f4083aa687bbeca9f9b485caf"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_link_bridge.js",
+      "sha256": "e58ba4566734cfcab5b0b5dad658bb4b82c4e61009fab5d41110d179e18a42c6"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/links/raw_osc_bridge.js",
+      "sha256": "884bdde884899ad68fe08e893387482414ada15dda474a23422d8fc2f6e89114"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/renderer/decoration_microtask.js",
+      "sha256": "2bdd2dc09d8b2934dcf603f97571148a998c0286ae00966a3039ab733bb04fb5"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/task_queue_bridge.js",
+      "sha256": "cda54ac02301bf8034ac688ae102e47e198123f29c025cabb35344c999aa8b1f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/internal_render.js",
+      "sha256": "a76cee2c9eae4ddc1998e5b4783d2e52b8b358288c1f0babd74834aa82b68ee1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/mouse_name_error.js",
+      "sha256": "6b48b2cda404a9a2d45c73d7e4db13e0ba303fc190a17db3cd1d0c645cecc18e"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/terminal/mouse_wheel.js",
+      "sha256": "8b51ba0dcce6fd164880526a0905a54ae5ffe2ed490e9bdc7a5f886f485ef231"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/utility_addons/raw_link_bridge.js",
+      "sha256": "8917d70ef9ab11951ee7d41935e5bfcbe6d40366394e91b7bb68fa32156a075b"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/atlas_baseline.js",
+      "sha256": "bbefd924bb5e709999c0b04c70cb8c14f9893d7191f4cd12392590bc181eba6f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/webgl/custom_glyphs/patterns.js",
+      "sha256": "cb26ee8116b931ce37a9ae320058065efbaa67044dba71b4d15efa309483d36f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/src/write_scheduler_bridge.js",
+      "sha256": "bb75408c713f7a671c5e02be5afe7b313e040a037a879f7f23d0af5f258bf7f7"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/snippets/xterm-web-f147851b6cb0c0ef/tests/canvas_layer_probe.js",
+      "sha256": "2905120302c1b7db390ca4ce8f3f8c537eb483696e47218f826cd0435c895b91"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/suite.d.ts",
+      "sha256": "61e722e2be3a3bc9919f7d194a551b870cba188f5bcea3c368328c2198b81bf1"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/suite.js",
+      "sha256": "e9d0f380b97bf642f3c81af8f00d7bf357adad093502f5824f83b21423145d8f"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/suite_bg.wasm",
+      "sha256": "337d0b8fe7f3375ef5d28329f3d007f5bcd42d1c6456ed47d6abeca405806199"
+    },
+    {
+      "path": "O:/xterm-rust-swarm-16/tmp/worktrees/ColtonLayers/results/browser-host/wasm_webgl_canvas_layer/2026-11-06T00-14-37-693Z-df48a33d-f7db-482c-b8b2-316dbdad42e8/artifacts/suite_bg.wasm.d.ts",
+      "sha256": "ac824762fa8f9d5fa4cd439fc9752765360c99b00ca8581403c6be6fda82124d"
+    },
+    {
+      "path": "results/acceptance-artifacts/6c331409c2b823537ccc806e781121e0edb5cbc9703f31462012ae2e0809fa07/artifact.wasm",
+      "sha256": "6c331409c2b823537ccc806e781121e0edb5cbc9703f31462012ae2e0809fa07"
+    },
+    {
+      "path": "tmp/canvas-layer/source.js",
+      "sha256": "0578ece326601ce28049385659a818bd419d722a14ff87d9078fdf8cd6b77643"
+    }
+  ],
+  "scope": "Typed actual canvas base/link layers only. WebglRenderer/Addon/Root/full suites remain306. Full equivalence NOT PROVEN."
+}

@@ -1,0 +1,18 @@
+import {mkdir,copyFile} from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
+import {runCommand} from '../../scripts/quality-process.mjs';
+const root=process.cwd();await mkdir('tmp/os',{recursive:true});await mkdir('results/canvas-layer',{recursive:true});
+const probe=spawnSync('C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe',['-NoProfile','-Command','$m=(Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory*1KB; $d=(Get-PSDrive O).Free; Write-Output "RAM=$m O=$d"; if($m -lt 8GB -or $d -lt 10GB){exit 2}'],{encoding:'utf8',timeout:30000});
+console.log(probe.stdout);if(probe.status!==0)throw new Error('headroom');
+const env={...process.env,PATH:'C:/Users/user/.cargo/bin;C:/Program Files/Git/cmd;'+process.env.PATH,CARGO_TARGET_DIR:root+'/target',CARGO_BUILD_JOBS:'2',TMP:root+'/tmp/os',TEMP:root+'/tmp/os',SOURCE_ROOT:'P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo',
+ WASM_TEST:'wasm_webgl_canvas_layer',WASM_PRELUDE:root+'/tmp/canvas-layer/source.js',
+ WASM_BINDGEN:'P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe',
+ PLAYWRIGHT_MODULE:'P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules/playwright/index.mjs'};
+for(const [args,name] of [[['scripts/canvas-layer-negative.mjs'],'negative-driver'],[['scripts/browser-host-check.mjs'],'browser-final']]){
+ const result=await runCommand(process.execPath,args,{cwd:root,env,timeoutMs:240000,log:'results/canvas-layer/'+name+'.log'});
+ console.log(name,result.status,result.exitCode);
+ if(name==='browser-final')await copyFile('results/browser-host/wasm_webgl_canvas_layer-results.json','results/canvas-layer/browser-final.json');
+ if(result.status!=='passed')throw new Error(name+' failed');
+}
+const result=await runCommand('C:/Users/user/.cargo/bin/cargo.exe',['clippy','-p','xterm-web','--lib','--test','wasm_webgl_canvas_layer','--target','wasm32-unknown-unknown','--all-features','-j2','--','-D','warnings'],{cwd:root,env,timeoutMs:240000,log:'results/canvas-layer/clippy-wasm-final.log'});
+console.log('clippy-wasm-final',result.status,result.exitCode);if(result.status!=='passed')throw new Error('final lint failed');

@@ -29,6 +29,9 @@ for(const browser of final.browsers){
  const snapshots=found.get('rust:link').filter(row=>row[0]==='snapshot');
  assert.equal(snapshots.length,4);assert.notEqual(snapshots[0].at(-1),snapshots[1].at(-1));
  assert.equal(snapshots[1].at(-1),snapshots[3].at(-1));
+ const theme=found.get('rust:theme');
+ assert.ok(theme.some(row=>row[0]==='note'&&row[1]==='shared:true'));
+ assert.deepEqual(theme.filter(row=>row[0]==='note'&&row[1].startsWith('scheduled:')).map(row=>row[1]),['scheduled:1','scheduled:2','scheduled:2']);
 }
 const negative=await json(dir+'/negative.json');
 assert.equal(negative.expectedFailureObserved,true);assert.equal(negative.restored,true);
@@ -51,7 +54,7 @@ if(process.argv.includes('--record')){
   'crates/xterm-web/tests/wasm_webgl_canvas_layer.rs','crates/xterm-web/tests/support/canvas_layer.rs',
   'crates/xterm-web/tests/canvas_layer_probe.js','crates/xterm-web/tests/reference/canvas-layer.mjs',
   'scripts/canvas-layer-oracle.mjs','scripts/canvas-layer-negative.mjs','scripts/canvas-layer-audit.mjs',
-  'docs/webgl-canvas-layers.md','.pi/swarm/skills/canvas-layer-check/SKILL.md'];
+  'docs/webgl-canvas-layers.md','docs/webgl-port.md','.pi/swarm/skills/canvas-layer-check/SKILL.md'];
  const evidence=(await readdir(dir)).filter(n=>/\.(json|log|txt)$/.test(n)&&!['verification.json','cleanup.json'].includes(n)).sort().map(n=>dir+'/'+n);
  const runtime=new Set();
  async function tree(root){for(const e of await readdir(root,{withFileTypes:true})){

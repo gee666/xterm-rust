@@ -1,0 +1,22 @@
+import {mkdir} from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
+import {runCommand} from '../../scripts/quality-process.mjs';
+const root=process.cwd(),out=root+'/results/canvas-layer';
+await mkdir(out,{recursive:true});await mkdir(root+'/tmp/os',{recursive:true});
+const check=spawnSync('C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe',['-NoProfile','-Command',
+ '$m=(Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory*1KB; $d=(Get-PSDrive O).Free; Write-Output "RAM=$m O=$d"; if($m -lt 8GB -or $d -lt 10GB){exit 2}'],
+ {encoding:'utf8',timeout:30000});
+console.log(check.stdout);if(check.status!==0)throw new Error('Headroom');
+const env={...process.env,PATH:'C:/Users/user/.cargo/bin;C:/Program Files/Git/cmd;'+process.env.PATH,CARGO_BUILD_JOBS:'2',CARGO_TARGET_DIR:root+'/target',TMP:root+'/tmp/os',TEMP:root+'/tmp/os'};
+const commands=[
+ ['test','-p','xterm-web','--test','webgl','--all-features','-j2'],
+ ['test','-p','xterm-web','--test','wasm_webgl_canvas_layer','--target','wasm32-unknown-unknown','--all-features','--no-run','-j2'],
+ ['clippy','-p','xterm-web','--lib','--test','webgl','--all-features','-j2','--','-D','warnings'],
+ ['clippy','-p','xterm-web','--lib','--test','wasm_webgl_canvas_layer','--target','wasm32-unknown-unknown','--all-features','-j2','--','-D','warnings'],
+];
+const names=['native','wasm-build','clippy-native','clippy-wasm'];
+for(let i=0;i<commands.length;i++){
+ const record=await runCommand('C:/Users/user/.cargo/bin/cargo.exe',commands[i],{cwd:root,env,timeoutMs:240000,log:out+'/'+names[i]+'.log'});
+ console.log(names[i],record.status,record.exitCode);
+ if(record.status!=='passed')throw new Error(names[i]+' failed');
+}
