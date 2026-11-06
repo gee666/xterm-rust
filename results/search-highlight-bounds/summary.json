@@ -1,0 +1,362 @@
+{
+  "task": 560,
+  "scope": "Native Search highlight bounds ordering only. Browser raw matching347 fails earlier; full equivalence NOT PROVEN.",
+  "sourceFrozen": "6e411202046dc480c2fba42db99066c67c9a259e",
+  "base": "224d1b339a43eddf899c2944d9dad734d8c44234",
+  "native": {
+    "passed": 106,
+    "failed": 0,
+    "ignored": 0,
+    "filtered": 0,
+    "targets": {
+      "search_addon": 71,
+      "search_cache": 18,
+      "search_differential": 3,
+      "search_integration": 6,
+      "search_ring": 8
+    },
+    "newFunctions": 2,
+    "newAddonScenarios": 8,
+    "oldControl": {
+      "passed": 0,
+      "failed": 1,
+      "filtered": 70,
+      "intendedError": "MissingOptions instead of InvalidColumn"
+    }
+  },
+  "source": {
+    "casesPerEngine": 8,
+    "engines": 3,
+    "fixture": {
+      "path": "crates/xterm-web/tests/fixtures/search-highlight-bounds.js",
+      "bytes": 2391,
+      "sha256": "dba6ad42f2dda3eeb6f0e94da0be4243c6e5e8709da22776537b3960d55c83c2"
+    }
+  },
+  "publicWasm": {
+    "status": "KNOWN FAILURE retained, not a passing bounds regression",
+    "runs": [
+      {
+        "label": "initial",
+        "report": "results/search-highlight-bounds/public-initial/wasm_search_highlight_bounds-results.json",
+        "artifacts": {
+          "compiler": {
+            "path": "results/acceptance-artifacts/4026e0ecd086795d9e3a65766bfc2dea59925134fe0fa1f3eac6d5ce270ba399/artifact.wasm",
+            "sha256": "4026e0ecd086795d9e3a65766bfc2dea59925134fe0fa1f3eac6d5ce270ba399",
+            "bytes": 19709541,
+            "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JohnBounds560\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_search_highlight_bounds-f8818d93b4924544.wasm"
+          },
+          "wasm": {
+            "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JohnBounds560\\results\\browser-host\\wasm_search_highlight_bounds\\2026-11-06T02-37-30-973Z-ccb3139b-ff74-4441-8aed-5bdfe76918c9\\artifacts\\suite_bg.wasm",
+            "bytes": 16538635,
+            "sha256": "95abcad3e1df7c9e187a7303caa5d1085a76a60b94d46f97c3be6e4c1f462171"
+          },
+          "bindings": {
+            "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JohnBounds560\\results\\browser-host\\wasm_search_highlight_bounds\\2026-11-06T02-37-30-973Z-ccb3139b-ff74-4441-8aed-5bdfe76918c9\\artifacts\\suite.js",
+            "bytes": 251974,
+            "sha256": "b745ee67e22a1ef02bd8f8bd5bad113b763338bcd0a558d5b35c0ef7250b689d"
+          },
+          "css": {
+            "path": "crates/xterm-web/assets/xterm.css",
+            "bytes": 8154,
+            "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+          },
+          "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+          "testSourceSha256": "746bffc91914947c58b9bbc04fafd489b52af0e48eda8347b028c9f24a091457"
+        },
+        "counts": {
+          "passed": 0,
+          "failed": 1,
+          "ignored": 0,
+          "filtered": 0
+        }
+      },
+      {
+        "label": "final",
+        "report": "results/search-highlight-bounds/public-final/wasm_search_highlight_bounds-results.json",
+        "artifacts": {
+          "compiler": {
+            "path": "results/acceptance-artifacts/ec21444ad36e64e4d4078ca60c52b72dd84ee82cce05a646f5c777e807762977/artifact.wasm",
+            "sha256": "ec21444ad36e64e4d4078ca60c52b72dd84ee82cce05a646f5c777e807762977",
+            "bytes": 19709541,
+            "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JohnBounds560\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_search_highlight_bounds-f8818d93b4924544.wasm"
+          },
+          "wasm": {
+            "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JohnBounds560\\results\\browser-host\\wasm_search_highlight_bounds\\2026-11-06T02-38-51-134Z-7dc3abd1-7d5f-476e-9a5d-fa55b21d69ec\\artifacts\\suite_bg.wasm",
+            "bytes": 16538635,
+            "sha256": "1ec535fa586cbb33e9f1ae9637cca144e4753e96c01ccad07d0a9dba0c8317f1"
+          },
+          "bindings": {
+            "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JohnBounds560\\results\\browser-host\\wasm_search_highlight_bounds\\2026-11-06T02-38-51-134Z-7dc3abd1-7d5f-476e-9a5d-fa55b21d69ec\\artifacts\\suite.js",
+            "bytes": 251974,
+            "sha256": "b745ee67e22a1ef02bd8f8bd5bad113b763338bcd0a558d5b35c0ef7250b689d"
+          },
+          "css": {
+            "path": "crates/xterm-web/assets/xterm.css",
+            "bytes": 8154,
+            "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+          },
+          "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+          "testSourceSha256": "746bffc91914947c58b9bbc04fafd489b52af0e48eda8347b028c9f24a091457"
+        },
+        "counts": {
+          "passed": 0,
+          "failed": 1,
+          "ignored": 0,
+          "filtered": 0
+        }
+      }
+    ],
+    "engines": 1,
+    "expectedFailure": "Raw term text rejects object after2length reads, before expected second guard at4. See final raw output."
+  },
+  "quality": {
+    "strictNative": "PASS scoped core integration and web search targets",
+    "wasmLibCheck": "PASS",
+    "aggregateFmt": "FAIL WindowsOS206",
+    "wholeMemberFmt": "PASS all5 members",
+    "workspaceAllFeatures": "UNRUN for560",
+    "release": "UNRUN",
+    "fullOriginalSuites": "UNRUN",
+    "nativeLinuxMac": "UNRUN"
+  },
+  "reference": [
+    {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JohnBounds560\\source_repo",
+      "files": 776,
+      "mismatches": 0
+    },
+    {
+      "path": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo",
+      "files": 776,
+      "mismatches": 0
+    }
+  ],
+  "inputs": 1909,
+  "runtimePins": 12,
+  "environment": {
+    "platform": "win32",
+    "node": "v24.15.0",
+    "rust": "rustc 1.85.1 (4eb161250 2025-03-15)",
+    "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+    "finalFixtureEmbedded": true,
+    "finalCompilerSha256": "ec21444ad36e64e4d4078ca60c52b72dd84ee82cce05a646f5c777e807762977"
+  },
+  "durablePins": [
+    {
+      "path": "crates/xterm-addons/src/search/find.rs",
+      "bytes": 12064,
+      "sha256": "2ca631f5c441cdbf719009920a5ee81f106ea2561326d42c35013c7cd9faa54c"
+    },
+    {
+      "path": "crates/xterm-core/src/search/engine.rs",
+      "bytes": 11178,
+      "sha256": "d7ab69787acad515129cceb0ddb096609bf993f75fa6799e79a19016ac45b940"
+    },
+    {
+      "path": "crates/xterm-core/tests/search_integration.rs",
+      "bytes": 4692,
+      "sha256": "690c24d1fc904a478762dcd72ab9353ef08ff8fc876125a8a57c479a7667f0d3"
+    },
+    {
+      "path": "crates/xterm-web/tests/fixtures/search-highlight-bounds.js",
+      "bytes": 2391,
+      "sha256": "dba6ad42f2dda3eeb6f0e94da0be4243c6e5e8709da22776537b3960d55c83c2"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_addon.rs",
+      "bytes": 11094,
+      "sha256": "d2a894c3e0136fab6ac2d6c3b895c54960a7a040c1bd640bd4d3247d7b5bfab6"
+    },
+    {
+      "path": "crates/xterm-web/tests/search_cases/highlight_bounds.rs",
+      "bytes": 4404,
+      "sha256": "5383bbe96699891c251bef1894cfb5723552c2181e77f6a81afd6811a7667e0e"
+    },
+    {
+      "path": "docs/search-highlight-bounds.md",
+      "bytes": 6491,
+      "sha256": "118156296f90314d552fde3c775369ceb3ad7341b17a3eec447cf198b50e4515"
+    },
+    {
+      "path": "results/search-highlight-bounds/check-wasm.log",
+      "bytes": 1449,
+      "sha256": "554dc4627cccddf60cfe3223e8de1b6f11666e8a178aad7c2423c87293f453ce"
+    },
+    {
+      "path": "results/search-highlight-bounds/clippy-native-core.log",
+      "bytes": 163,
+      "sha256": "fd5ae362514b6355ad4c18160ca07402337d37dee22079d0fe502508660a51d9"
+    },
+    {
+      "path": "results/search-highlight-bounds/clippy-native-web.log",
+      "bytes": 874,
+      "sha256": "38f3334176ff7cad406f2ca9ac4f15e0c31aeea43f0cd78c588d101cb3ad1219"
+    },
+    {
+      "path": "results/search-highlight-bounds/commands.json",
+      "bytes": 2015,
+      "sha256": "aed09a85914bf00dafe8cb0b3a820b739c12179bfb3ec982126311ad97818176"
+    },
+    {
+      "path": "results/search-highlight-bounds/environment.json",
+      "bytes": 272,
+      "sha256": "93b9eedc94142b21084624f7acc8506400b8ead2e4902e275f26e5c5b9967ce3"
+    },
+    {
+      "path": "results/search-highlight-bounds/fmt-all.log",
+      "bytes": 817,
+      "sha256": "a3c64adc493a218a5a8332dfc60b9e9fd0cf455d8215931a5888f9bc84a29c70"
+    },
+    {
+      "path": "results/search-highlight-bounds/fmt-xterm-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-highlight-bounds/fmt-xterm-core.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-highlight-bounds/fmt-xterm-font-addons.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-highlight-bounds/fmt-xterm-wasm-support.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-highlight-bounds/fmt-xterm-web.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-highlight-bounds/inputs.json",
+      "bytes": 330501,
+      "sha256": "c20d2ccf442be891930ee330f1d20fad29bd83b744d0ae6a3a4cd77e3132a08d"
+    },
+    {
+      "path": "results/search-highlight-bounds/native-final.log",
+      "bytes": 6933,
+      "sha256": "077f60d62cbe586da1ee4d9498f629da8f3bb15f5ae240e65582b417036a28b0"
+    },
+    {
+      "path": "results/search-highlight-bounds/native-old.log",
+      "bytes": 1745,
+      "sha256": "c6f5a75bb02d8ac27e737151fcc564525ca4d2718eaa532bf4e3f8ffd03c3f2f"
+    },
+    {
+      "path": "results/search-highlight-bounds/native-reproduce.mjs",
+      "bytes": 2677,
+      "sha256": "5742b22cc559e057e4f3bbcdf1e9f5c53f3aa1ba98e410ec7f3cfee3a3fa4d69"
+    },
+    {
+      "path": "results/search-highlight-bounds/native-restore.json",
+      "bytes": 243,
+      "sha256": "df29b8d42d491206487249c8b215bef538debf22c10c936c457bab327aca32e2"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-counterexample.rs",
+      "bytes": 1464,
+      "sha256": "746bffc91914947c58b9bbc04fafd489b52af0e48eda8347b028c9f24a091457"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-final/commands.json",
+      "bytes": 1759,
+      "sha256": "360a50595e1e3dec44c00a4c547faf670be77c80996d8a5931e68e2a4e81657c"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-final/wasm_search_highlight_bounds-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-final/wasm_search_highlight_bounds-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-final/wasm_search_highlight_bounds-build.log",
+      "bytes": 47332,
+      "sha256": "9acf01275405922ce5bff90c786a8ae8172b3def6e0b1ae213eee92ae8390c67"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-final/wasm_search_highlight_bounds-chromium.log",
+      "bytes": 2696,
+      "sha256": "b28494b991318664f313fcca77cf3c8524fef5a3f3a053376ae76a76a059eede"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-final/wasm_search_highlight_bounds-results.json",
+      "bytes": 6826,
+      "sha256": "afef4c9ef43efa9cc109fb2fe7c99a6af0834b23b56531ccef207abfcbbf636e"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-initial/commands.json",
+      "bytes": 1770,
+      "sha256": "709a3210a316fa156254a9d87e68bb3869cc1990156e4c2008347c2cbb1babd4"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-initial/wasm_search_highlight_bounds-bindgen-version.log",
+      "bytes": 21,
+      "sha256": "28784176a1cbc35c947245d5b7809e115fc963c2072e1fc6e57fca7035a54fc7"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-initial/wasm_search_highlight_bounds-bindgen.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-initial/wasm_search_highlight_bounds-build.log",
+      "bytes": 48464,
+      "sha256": "39125cb9f2a709883b8ada34e05098825af731c5fa9796c9de66e85a17bd5815"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-initial/wasm_search_highlight_bounds-chromium.log",
+      "bytes": 2722,
+      "sha256": "fb5e55e5e14481c6cf82414755c265a52934f6d96153dd19c88ed90de6705cfd"
+    },
+    {
+      "path": "results/search-highlight-bounds/public-initial/wasm_search_highlight_bounds-results.json",
+      "bytes": 6864,
+      "sha256": "0769f4cc34a21af08cdd75e0afb44be2838760293de91449deb73c7cebbf41af"
+    },
+    {
+      "path": "results/search-highlight-bounds/runtime-pins.json",
+      "bytes": 2643,
+      "sha256": "a256d3afb951c5921bfd3ae4b1e551d0895b166ea2cd89fef389b1da5ed2dff3"
+    },
+    {
+      "path": "results/search-highlight-bounds/search_cache.log",
+      "bytes": 1357,
+      "sha256": "3182ceebad176bd42b3c8fbee259c39ac44d975658ad8dcfe2e2d96eeeeee81f"
+    },
+    {
+      "path": "results/search-highlight-bounds/search_differential.log",
+      "bytes": 552,
+      "sha256": "85bd6db6a63d907f12baf9af7e5bd0ea85490af526fda6616f9d31087821ee19"
+    },
+    {
+      "path": "results/search-highlight-bounds/search_integration.log",
+      "bytes": 797,
+      "sha256": "39afdc2ac12356c23ed187370bfd0345ca69b65f1619a090273c202ef138d334"
+    },
+    {
+      "path": "results/search-highlight-bounds/search_ring.log",
+      "bytes": 984,
+      "sha256": "d74a68630b81ad5b81a90e28227b34a027a4b97a9fa78e986e3386fdda0cbf9c"
+    },
+    {
+      "path": "results/search-highlight-bounds/source.json",
+      "bytes": 2408,
+      "sha256": "07f7c9bb2241b35d84d4411620fd1e02db2a54abc1fa1b87eff6a1d07b8c9f87"
+    },
+    {
+      "path": "scripts/search-call-args-source.mjs",
+      "bytes": 6696,
+      "sha256": "b9f81f520b1ee7a816eeb83290ae297a131e577db5ca23291eaf78ca6643118d"
+    }
+  ]
+}
