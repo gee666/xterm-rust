@@ -1,0 +1,21 @@
+# Lopamudra task536 handoff
+
+Task536 ACCEPTED at78b42ebd, no findings. Own536 commits in order are672ad246,75ebe308,7c8fc18f,f6dfe2e4,78b42ebd, followed by this review/handoff metadata commit. The only private prerequisite is f1303695, a cherry-pick of accepted535 source9ccf5eaf onto clean main0442. Exclude f1303695 from future536 pickup. Integrate535's original reviewed own4 independently if not already present. No replay of prior531/535 cleanup, canonical gates, main ref changes or CI work occurred here.
+
+## Application and proof
+
+Portable AttachListener adds repeatable fallible removal, try_dispose propagates exact host errors and stops the live loop, and infallible Disposable callers can retrieve the last compatibility error. Browser dispose throws the original JS value. Browser callbacks transfer to JS GC ownership before registration so failed registration or removal cannot leave a JS-retained function pointing at a dropped Rust closure. Literal method calls preserve receiver, current getter, exact two arguments and source TypeError generation. No dependency or unsafe change.
+
+Native addon all-target/all-feature initial/final runs each passed213 functions across52 harness summaries, zero failed/ignored/filtered. New native2 functions cover36 full source traces and compatibility error retention. A deliberate swallowed-error control failed both, then source was finally SHA-restored. Strictnative addon alltargets/features and actual WASM library/two new test Clippy passed. The later Result-reporting edit also received a current strict WASM lint pass. All5memberfmt passed; exact aggregate fullfmt still fails Windows OS206, retained honestly.
+
+Actual Rust/WASM shared93-case function and direct listener-lifetime function each passed initially/finally in Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. Exact535 three original production files made Chromium fail0P1F with the intended missing repeated calls; fixed source restoration is SHA-verified. Initial/final fixed WASM hashes match, old hash differs and all three runtime artifacts embed both current fixtures. Initial lifetime compile legitimately reused a valid cache; compiler records retain freshness honestly. Retained53554-case reactivation function and404twofunction/realWS regression passed in all engines. Peer/server/browser cleanup ran in finally. All compiler/browser allocations released4606, zero jobs remain.
+
+Independent final review verified2293 input pins/52 cached binaries/43 raw receipts/531 runtime files and reran9 native functions plus93 source scenarios against original and physical copy, all776 hashes before/after both. See docs/attach-removal.md, docs/reviews/lopamudra536.md and results/attach-removal. Driver.txt files are workstation receipts, not portable automation claims. Compiler/runtime paths become historical once cleanup completes.
+
+## Owned cleanup
+
+At this metadata commit, safe owned cleanup is the next action, not a completed claim. Preflight counted17727 files/3169 directories, zero links/redirects/owned workers. It verified original776 and43 immutable raw pins. Exactly589 untracked files belong to the seven recorded browser runs and their four latest reports. No other owners' files are in that deletion set. These generated files remain available through the completed review.
+
+Next actions are a fresh preflight, archive/Lopamudra536-complete at this metadata tip, hash-checked unlink of only those owned untracked generated files, normal git worktree remove of ONLY O:/xterm-rust-swarm-16/tmp/worktrees/LopamudraAttachRemoval, and post-removal verification that root is absent/unregistered and original776/archive43 pins still pass. The private final receipt .pi/swarm/work/2/lopamudra536-cleanup-final.json and continuation file record whether those actions subsequently completed. Do not replay cleanup from this pre-action document without checking that final receipt.
+
+No other owned temporary roots, processes or promised replies remain. Full equivalence is NOT PROVEN. Full323 remains open, including the previously recorded Progress dynamic Math clamp contract. Resource policy currently permits a measured trial of3 browser matrices within4 heavy jobs, Cargo-j2 and fresh8GiB RAM/10GiB O: guards, per post409/comment4542. This is not permission to start an uncoordinated job.
