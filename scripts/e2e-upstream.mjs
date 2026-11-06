@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import { runCommand } from './quality-process.mjs';
 import { startFixtureServer } from './e2e/fixture-server.mjs';
-import { configForRust, testCounts } from './e2e/upstream-config.mjs';
+import { configForRust, testCounts, validateTestReport } from './e2e/upstream-config.mjs';
 import { buildBootstrap } from './e2e/build-bootstrap.mjs';
 import { artifactIdentity, sourceIdentity, verifyBuiltPackage } from './e2e/build-identity.mjs';
 
@@ -88,10 +88,9 @@ try {
   report.commands.push({ stage: 'playwright', ...result, log: 'playwright.log' });
   const raw = JSON.parse(await readFile(rawFile, 'utf8'));
   report.counts = testCounts(raw);
-  report.errors = raw.errors ?? [];
+  report.errors = Array.isArray(raw.errors) ? raw.errors : [];
   report.playwrightStats = raw.stats;
-  if (!report.counts.discovered) throw new Error('No original tests discovered');
-  if (!options.list && !report.counts.executed) throw new Error('No Rust-backed browser assertions executed');
+  validateTestReport(raw, { list: options.list });
   if (controller.signal.aborted) throw controller.signal.reason;
   if (result.status !== 'passed' || report.errors.length) throw new Error('Original Playwright assertions failed against Rust');
   if ((await sourceIdentity(root)).sha256 !== report.source.sha256

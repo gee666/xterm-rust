@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import { runCommand } from './quality-process.mjs';
 import { startDemoServer } from './serve-demo.mjs';
-import { testCounts } from './e2e/upstream-config.mjs';
+import { testCounts, validateTestReport } from './e2e/upstream-config.mjs';
 import { artifactIdentity, sourceIdentity, verifyBuiltPackage } from './e2e/build-identity.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -43,8 +43,9 @@ async function resources() {
 }
 try {
   report.source = await sourceIdentity(root);
-  const fixtureFiles = ['scripts/demo-e2e.mjs', 'scripts/serve-demo.mjs', 'scripts/quality-process.mjs',
-    'scripts/quality-tree.mjs', 'scripts/owned-command.mjs', 'scripts/windows-owned-job.ps1',
+  const fixtureFiles = ['scripts/demo-e2e.mjs', 'scripts/e2e/upstream-config.mjs',
+    'scripts/serve-demo.mjs', 'scripts/quality-process.mjs', 'scripts/quality-tree.mjs',
+    'scripts/owned-command.mjs', 'scripts/windows-owned-job.ps1',
     'scripts/windows-owned-job.cs', 'scripts/demo-e2e/support.cjs',
     'scripts/demo-e2e/addon-probes.cjs', `scripts/demo-e2e/${options.case}.spec.cjs`,
     'browser/demo/index.html', 'browser/demo/app.mjs', 'browser/demo/controls.mjs', 'browser/demo/addons.mjs',
@@ -83,9 +84,9 @@ module.exports = { ...original, testDir: ${JSON.stringify(join(root, 'scripts/de
     timeoutMs: options.timeout, resourceCheck: resources, signal: controller.signal, containDescendants: true });
   report.commands.push({ stage: 'playwright', ...result, log: 'playwright.log' });
   const raw = JSON.parse(await readFile(rawFile, 'utf8'));
-  report.counts = testCounts(raw); report.errors = raw.errors ?? []; report.stats = raw.stats;
-  if (!report.counts.discovered) throw new Error('No demo tests discovered');
-  if (!options.list && !report.counts.executed) throw new Error('No demo assertions executed');
+  report.counts = testCounts(raw);
+  report.errors = Array.isArray(raw.errors) ? raw.errors : []; report.stats = raw.stats;
+  validateTestReport(raw, { list: options.list });
   if (result.status !== 'passed' || report.errors.length || controller.signal.aborted) throw new Error('Demo assertions failed or execution interrupted');
   if ((await sourceIdentity(root)).sha256 !== report.source.sha256
       || JSON.stringify(await artifactIdentity(root, fixtureFiles)) !== JSON.stringify(report.fixture)) {

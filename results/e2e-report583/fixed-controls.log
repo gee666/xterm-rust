@@ -1,0 +1,65 @@
+✔ runtime accepts complete results, original skips and expected failures (1.058ms)
+✔ discovery accepts unexecuted cases but does not pretend runtime ran them (0.2731ms)
+✔ one passing case cannot hide missing results or beforeAll fallout (0.1619ms)
+✔ unknown or malformed results fail even beside a passing case (0.2607ms)
+✔ failed, timed out, interrupted and unexpected passes cannot report success (0.1672ms)
+✔ invalid report structures and suite errors fail closed (0.1978ms)
+✔ both actual entrypoints validate before assigning a successful status (5.3925ms)
+(node:22296) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ e2e-upstream.mjs keeps complete runtime and discovery outcomes distinct (7.4897ms)
+✖ e2e-upstream.mjs rejects exit0 with missing result and retains cleanup/accounting (3.0635ms)
+✖ e2e-upstream.mjs rejects exit0 with beforeAll fallout and retains cleanup/accounting (2.1377ms)
+✖ e2e-upstream.mjs rejects exit0 with unknown status and retains cleanup/accounting (1.8199ms)
+✖ e2e-upstream.mjs rejects exit0 with unexpected failure and retains cleanup/accounting (2.2793ms)
+✖ e2e-upstream.mjs still rejects a failed command beside a complete passing report (2.0051ms)
+✔ demo-e2e.mjs keeps complete runtime and discovery outcomes distinct (6.5117ms)
+✔ demo-e2e.mjs rejects exit0 with missing result and retains cleanup/accounting (1.6105ms)
+✔ demo-e2e.mjs rejects exit0 with beforeAll fallout and retains cleanup/accounting (2.0079ms)
+✔ demo-e2e.mjs rejects exit0 with unknown status and retains cleanup/accounting (1.9915ms)
+✔ demo-e2e.mjs rejects exit0 with unexpected failure and retains cleanup/accounting (2.412ms)
+✔ demo-e2e.mjs still rejects a failed command beside a complete passing report (1.4537ms)
+✔ retains original browser projects, assertions directory and settings (1.0478ms)
+✔ distinguishes discovered, executed, passed, failed, skipped and unrun (0.5706ms)
+✔ beforeAll fallout is unrun, not an original skip (0.8131ms)
+✔ empty output cannot acquire a positive test count (0.121ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 17
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 105.7092
+
+✖ failing tests:
+
+test at scripts\e2e\runner-report.test.mjs:62:3
+✖ e2e-upstream.mjs keeps complete runtime and discovery outcomes distinct (7.4897ms)
+  Error: Original addon suite inventory is missing
+      at file:///O:/xterm-rust-swarm-16/tmp/worktrees/TylerE05/scripts/e2e-upstream.mjs:30:24
+
+test at scripts\e2e\runner-report.test.mjs:78:5
+✖ e2e-upstream.mjs rejects exit0 with missing result and retains cleanup/accounting (3.0635ms)
+  Error: Original addon suite inventory is missing
+      at file:///O:/xterm-rust-swarm-16/tmp/worktrees/TylerE05/scripts/e2e-upstream.mjs:30:24
+
+test at scripts\e2e\runner-report.test.mjs:78:5
+✖ e2e-upstream.mjs rejects exit0 with beforeAll fallout and retains cleanup/accounting (2.1377ms)
+  Error: Original addon suite inventory is missing
+      at file:///O:/xterm-rust-swarm-16/tmp/worktrees/TylerE05/scripts/e2e-upstream.mjs:30:24
+
+test at scripts\e2e\runner-report.test.mjs:78:5
+✖ e2e-upstream.mjs rejects exit0 with unknown status and retains cleanup/accounting (1.8199ms)
+  Error: Original addon suite inventory is missing
+      at file:///O:/xterm-rust-swarm-16/tmp/worktrees/TylerE05/scripts/e2e-upstream.mjs:30:24
+
+test at scripts\e2e\runner-report.test.mjs:78:5
+✖ e2e-upstream.mjs rejects exit0 with unexpected failure and retains cleanup/accounting (2.2793ms)
+  Error: Original addon suite inventory is missing
+      at file:///O:/xterm-rust-swarm-16/tmp/worktrees/TylerE05/scripts/e2e-upstream.mjs:30:24
+
+test at scripts\e2e\runner-report.test.mjs:87:3
+✖ e2e-upstream.mjs still rejects a failed command beside a complete passing report (2.0051ms)
+  Error: Original addon suite inventory is missing
+      at file:///O:/xterm-rust-swarm-16/tmp/worktrees/TylerE05/scripts/e2e-upstream.mjs:30:24
