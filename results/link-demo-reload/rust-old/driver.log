@@ -1,0 +1,128 @@
+
+Running 3 tests using 2 workers
+FFF
+
+  1) [Chromium] › scripts\demo-e2e\demo-06.spec.cjs:7:28 › web-links load, reload, behavior and unload use the visible session 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('.xterm-cursor-pointer')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.xterm-cursor-pointer')[22m
+
+
+       at addon-probes.cjs:105
+
+      103 |     const x = box.x + box.width / dimensions[0] * 3, y = box.y + box.height / dimensions[1] / 2;
+      104 |     await page.mouse.move(x, y);
+    > 105 |     await expect(page.locator('.xterm-cursor-pointer')).toBeVisible();
+          |                                                         ^
+      106 |     const popupPromise = page.waitForEvent('popup');
+      107 |     await page.mouse.click(x, y);
+      108 |     const popup = await popupPromise;
+        at probe (O:\xterm-rust-swarm-16\tmp\worktrees\Chagatai566\scripts\demo-e2e\addon-probes.cjs:105:57)
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Chagatai566\scripts\demo-e2e\demo-06.spec.cjs:31:3
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-Chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-Chromium\error-context.md
+
+    attachment #7: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-Chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-Chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [FirefoxStable] › scripts\demo-e2e\demo-06.spec.cjs:7:28 › web-links load, reload, behavior and unload use the visible session 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('.xterm-cursor-pointer')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.xterm-cursor-pointer')[22m
+
+
+       at addon-probes.cjs:105
+
+      103 |     const x = box.x + box.width / dimensions[0] * 3, y = box.y + box.height / dimensions[1] / 2;
+      104 |     await page.mouse.move(x, y);
+    > 105 |     await expect(page.locator('.xterm-cursor-pointer')).toBeVisible();
+          |                                                         ^
+      106 |     const popupPromise = page.waitForEvent('popup');
+      107 |     await page.mouse.click(x, y);
+      108 |     const popup = await popupPromise;
+        at probe (O:\xterm-rust-swarm-16\tmp\worktrees\Chagatai566\scripts\demo-e2e\addon-probes.cjs:105:57)
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Chagatai566\scripts\demo-e2e\demo-06.spec.cjs:31:3
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-FirefoxStable\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-FirefoxStable\error-context.md
+
+    attachment #7: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-FirefoxStable\trace.zip
+    Usage:
+
+        npx playwright show-trace results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-FirefoxStable\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [WebKit] › scripts\demo-e2e\demo-06.spec.cjs:7:28 › web-links load, reload, behavior and unload use the visible session 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('.xterm-cursor-pointer')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('.xterm-cursor-pointer')[22m
+
+
+       at addon-probes.cjs:105
+
+      103 |     const x = box.x + box.width / dimensions[0] * 3, y = box.y + box.height / dimensions[1] / 2;
+      104 |     await page.mouse.move(x, y);
+    > 105 |     await expect(page.locator('.xterm-cursor-pointer')).toBeVisible();
+          |                                                         ^
+      106 |     const popupPromise = page.waitForEvent('popup');
+      107 |     await page.mouse.click(x, y);
+      108 |     const popup = await popupPromise;
+        at probe (O:\xterm-rust-swarm-16\tmp\worktrees\Chagatai566\scripts\demo-e2e\addon-probes.cjs:105:57)
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Chagatai566\scripts\demo-e2e\demo-06.spec.cjs:31:3
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-WebKit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-WebKit\error-context.md
+
+    attachment #7: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-WebKit\trace.zip
+    Usage:
+
+        npx playwright show-trace results\link-demo-reload\rust-old\artifacts\demo-06-web-links-load-rel-6be1e-oad-use-the-visible-session-WebKit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [Chromium] › scripts\demo-e2e\demo-06.spec.cjs:7:28 › web-links load, reload, behavior and unload use the visible session 
+    [FirefoxStable] › scripts\demo-e2e\demo-06.spec.cjs:7:28 › web-links load, reload, behavior and unload use the visible session 
+    [WebKit] › scripts\demo-e2e\demo-06.spec.cjs:7:28 › web-links load, reload, behavior and unload use the visible session 

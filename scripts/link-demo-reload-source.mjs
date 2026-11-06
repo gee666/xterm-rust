@@ -36,7 +36,8 @@ try {
       report.browsers.push(entry);
       try {
         const page = await browser.newPage();
-        page.setDefaultTimeout(10_000);
+        // Match the existing directed source-browser helpers' setup bound.
+        page.setDefaultTimeout(30_000);
         page.on('pageerror', error => entry.errors.push(error.message));
         await page.context().route('https://example.com/**', route => route.fulfill({ body: 'source reload target' }));
         await page.goto(url);

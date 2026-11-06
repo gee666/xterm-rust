@@ -27,10 +27,31 @@ SOURCE_ROOT=/path/to/exact/source_repo node scripts/link-demo-reload-source.mjs
 
 The source browser script uses real Chromium, Firefox and WebKit pointer input against unchanged source bundles. It checks the bundle sourcemaps against the source, first hover and actual popup, reload through an outside button, a same-cell negative control, then different-row return with second hover and actual popup. Each browser closes in `finally`; the artifact server closes its own connections. Use an owned O: `TEMP`, `TMP` and `TMPDIR` and a granted browser allocation.
 
-The actual source browser run and matching current Rust demo rerun are pending. Do not infer their results from the unit control or historical trace.
+## Actual browser results
+
+Under grant `409#5033`, the corrected directed source run passed in Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4. Each observed the same-cell negative, both real hovers and both real popups. `source.json` records the actual cache/current-link state at every stage.
+
+The first source attempt passed Chromium, then failed Firefox navigation before creating a terminal under this new helper's 10-second setup bound. WebKit was unrun. `source-initial.json` and `source-initial.log` retain that attempt. The helper now uses the existing directed source-browser scripts' 30-second setup default. No upstream hook, demo case deadline or assertion changed. The complete corrected source attempt passed all three engines.
+
+Current-main Rust inputs matched the borrowed integration554 package exactly. The same three custom demo cases ran twice through the actual Rust/WASM demo, with the original two workers, 30-second case timeout, zero retries and unchanged assertions:
+
+| Probe | Discovered | Executed | Passed | Failed | Skipped | Unrun |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Old pointer path | 3 | 3 | 0 | 3 | 0 | 0 |
+| Different-row path | 3 | 3 | 3 | 0 | 0 | 0 |
+
+All old failures reached the intended pointer assertion on the second probe. All three fixed cases completed both hover and popup checks, reload, unload, post-unload output and input. `rust-summary.json`, `rust-old/` and `rust-fixed/` preserve commands, reports, errors, screenshots, trace ZIPs and attachments. The temporary old probe was restored byte-for-byte in `finally`; the server closed and source identity remained unchanged. The exact scoped driver/config are retained as evidence, not portable application code.
+
+The initial discovery-only command used an anchored grep that matched no test titles. Its exit 1 and zero discovered cases remain in `rust-list-initial.*`. The corrected unanchored grep discovered three cases before runtime. This was a discovery error, not an application pass or a skipped runtime case.
+
+The original and owned physical reference copies both passed all 776 manifest hashes after execution. No compiler ran in this lane. Native OS matrices, full demo06, full core/addon suites and full equivalence remain open under task327 and the other family tasks.
 
 ## Package staging
 
 Authorization `714#4985` allowed a read-only copy from the integration554 owner's debug package, with no donor hold. `results/link-demo-reload/package-copy.json` records all 84 package files and 97 copied files including report/pins/demo assets. Every copy was hashed and reread against the donor. Its Rust source identity is `19ffb731fe479eb0630bf8b01c74464c7be91ae039ab4641ab11e56d18b7cf95`, 1965 inputs, from frozen `24be32786b32729def781ff130ec0700900b0bcc`.
 
-That package is staged only under the owned temporary root. It must not run as a current build before the actual Rust inputs match accepted554/current main and `verifyBuiltPackage` passes. No compiler or browser operation was authorized by the copy. The package is not a release or benchmark artifact.
+After main advanced to `14139449bae2792afb019f42e8438b074938cfe7`, this branch rebased cleanly and its actual 1965 Rust inputs matched that digest. All 84 package files and every build-report artifact were verified, then `verifyBuiltPackage` passed in the owned root before runtime. The local build pointer was installed only after preserving its original bytes. After execution, the used pointer was snapshotted durably and the exact original bytes restored. The restored latest pointer is not evidence for this run. See `current-input.json`, `package-installed.json` and `pointer-restoration.json`.
+
+The first install copied the package but stopped at missing generated `browser/xterm.css` before changing the pointer. `package-install-initial.json` records the error, independent verification of all 84 copied files and the untouched pointer. The already hash-verified staged CSS was then copied, all build artifacts rechecked and installation completed. No failed build or browser attempt was hidden.
+
+The copy authorization alone did not authorize runtime. Browser execution used the separate explicit grant5033, released at `409#5049`. The package is not a release or benchmark artifact.
