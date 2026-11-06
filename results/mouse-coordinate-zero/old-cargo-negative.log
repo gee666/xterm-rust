@@ -1,0 +1,24 @@
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\KaylaMouseZero\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 2.61s
+     Running tests\mouse_coordinate_zero.rs (target\debug\deps\mouse_coordinate_zero-2ac24ee8003bc799.exe)
+
+running 1 test
+test source_coordinate_zero_signs_and_nonfinite_bounds ... FAILED
+
+failures:
+
+---- source_coordinate_zero_signs_and_nonfinite_bounds stdout ----
+
+thread 'source_coordinate_zero_signs_and_nonfinite_bounds' panicked at crates\xterm-web\tests\mouse_coordinate_zero.rs:16:9:
+assertion `left == right` failed: row 1356 field 16: actual 0.0, expected -0.0
+  left: 0
+ right: 9223372036854775808
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    source_coordinate_zero_signs_and_nonfinite_bounds
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-web --test mouse_coordinate_zero`
