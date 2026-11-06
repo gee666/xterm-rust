@@ -1,0 +1,123 @@
+// Copyright (c) 2026 xterm-rust contributors. Licensed under MIT.
+// Sparse rows are boundary mutations of the real unchanged InputHandler.
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {createRequire} from 'node:module';
+import {mkdirSync, readFileSync, writeFileSync, rmSync, mkdtempSync} from 'node:fs';
+import {resolve, join} from 'node:path';
+process.chdir(resolve(import.meta.dirname, '..'));
+const source = resolve(process.env.XTERM_SOURCE_ROOT ?? 'source_repo');
+const require = createRequire(join(resolve(process.env.XTERM_SOURCE_DEPENDENCIES ?? source), 'package.json'));
+const esbuild = require('esbuild'), Mocha = require('mocha');
+const manifest = JSON.parse(readFileSync('docs/baseline/reference-manifest.json', 'utf8'));
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+function verify() {
+  for (const entry of manifest) {
+    const bytes = readFileSync(join(source, entry.path));
+    assert.equal(bytes.length, entry.bytes, entry.path);
+    assert.equal(hash(bytes), entry.sha256, entry.path);
+  }
+}
+// Unlike the older dense-only snapshot, this scoped projection retains holes.
+function buffer(b) {
+  const rows = [];
+  for (let y = 0; y < b.lines.length; y++) {
+    const row = b.lines.get(y), cells = [];
+    if (!row) { rows.push('-'); continue; }
+    for (let x = 0; x < row.length; x++) {
+      const c = row.getCell(x);
+      cells.push([c.content >>> 0, c.fg >>> 0, c.bg >>> 0,
+        Array.from(c.getChars(), c => c.codePointAt(0).toString(16)).join(','),
+        c.extended.ext >>> 0, c.extended.urlId].join(','));
+    }
+    rows.push(`${+row.isWrapped}:${cells.join(';')}`);
+  }
+  return [b.x,b.y,b.ybase,b.ydisp,b.scrollTop,b.scrollBottom].join(',') + '/' + rows.join('/');
+}
+function snapshot(core) {
+  return buffer(core.buffers.normal) + '|' + buffer(core.buffers.alt);
+}
+verify();
+mkdirSync('tmp', {recursive:true});
+const scratch = mkdtempSync('tmp/backspace-sparse-');
+try {
+  async function bundle(entry, name) {
+    const output = resolve(scratch, name + '.cjs');
+    await esbuild.build({entryPoints:[join(source, entry)], outfile:output,
+      bundle:true, platform:'node', format:'cjs', logLevel:'silent',
+      tsconfig:join(source, 'src/common/tsconfig.json'), nodePaths:[join(source, 'src')],
+      plugins:[{name:'chai', setup(build) {
+        build.onResolve({filter:/^chai$/}, () => ({path:require.resolve('chai'),external:true}));
+      }}]});
+    return output;
+  }
+  const outcomes = [];
+  class Reporter {
+    constructor(runner) {
+      runner.on('pass', test => outcomes.push({name:test.fullTitle(), status:'passed'}));
+      runner.on('fail', (test,error) => outcomes.push({name:test.fullTitle(),status:'failed',error:String(error)}));
+      runner.on('pending', test => outcomes.push({name:test.fullTitle(),status:'pending'}));
+    }
+  }
+  const mocha = new Mocha({reporter:Reporter,grep:/^InputHandler BS with reverseWraparound set\/unset /,timeout:10000});
+  mocha.addFile(await bundle('src/common/InputHandler.test.ts', 'original'));
+  const failures = await new Promise(done => mocha.run(done));
+  assert.equal(failures, 0);
+  assert.equal(outcomes.length, 8, 'Both complete original BS suites must run');
+  assert.ok(outcomes.every(test => test.status === 'passed'));
+  const {Terminal} = require(await bundle('src/headless/public/Terminal.ts', 'terminal'));
+  const records = [];
+  for (const alternate of [false,true]) for (const origin of [false,true])
+  for (const reverse of [false,true]) for (const x of [0,5,7])
+  for (const y of [0,2,4,7]) for (const shape of ['hole','empty','unwrapped','wrapped','short','wide','padding','missing-previous']) {
+    const terminal = new Terminal({cols:5,rows:5,scrollback:3,allowProposedApi:true});
+    const core = terminal._core, parse = text => core._inputHandler.parse(text);
+    try {
+      if (alternate) parse('\x1b[?1049h');
+      parse('AAAAA\r\nBBBBB\r\nCCCCC\r\nDDDDD\r\nEEEEE\r\nFFFFF\x1b[2;4r');
+      if (origin) parse('\x1b[?6h');
+      if (reverse) parse('\x1b[?45h');
+      const b = core.buffer, row = origin ? Math.max(1,Math.min(y,3)) : Math.min(y,4);
+      const current = b.ybase + row;
+      b.x = x; b.y = y;
+      b.setWrapped(current, shape !== 'unwrapped');
+      if (shape === 'hole') b.lines.set(current, undefined);
+      if (shape === 'empty') b.lines.length = 0;
+      if (current > 0 && ['short','wide','padding','missing-previous'].includes(shape)) {
+        if (shape === 'missing-previous') b.lines.set(current-1, undefined);
+        else {
+          const previous = b.lines.get(current-1);
+          if (shape === 'short') previous.resize(2,b.getNullCell());
+          if (shape === 'wide') previous.setCellFromCodepoint(4,0,0,core._inputHandler.getAttrData());
+          if (shape === 'padding') previous.setCellFromCodepoint(4,0,1,core._inputHandler.getAttrData());
+        }
+      }
+      const events = [];
+      core.onCursorMove(() => events.push('C'));
+      core.onRender(e => events.push(`R${e.start}:${e.end}`));
+      let error = false;
+      try { parse('\x08'); } catch (failure) {
+        assert.ok(failure instanceof TypeError);
+        assert.equal(shape, 'missing-previous');
+        error = true;
+      }
+      records.push([+alternate,+origin,+reverse,x,y,shape,+error,snapshot(core),events.join('/')].join('\t'));
+    } finally { terminal.dispose(); }
+  }
+  const text = records.join('\n') + '\n';
+  const fixture = 'crates/xterm-core/tests/fixtures/backspace-sparse.tsv';
+  if (process.argv.includes('--generate')) writeFileSync(fixture,text);
+  else assert.equal(readFileSync(fixture,'utf8').replaceAll('\r\n','\n'),text);
+  verify();
+  mkdirSync('results/backspace-sparse',{recursive:true});
+  writeFileSync('results/backspace-sparse/source.json',JSON.stringify({
+    command:process.argv.slice(1),node:process.version,platform:process.platform,
+    referenceFilesVerifiedBeforeAndAfter:manifest.length,cases:records.length,
+    original:outcomes,fixture,fixtureSha256:hash(text),
+    scope:'Real headless InputHandler BS, both buffers, origin/reverse-wrap margins, sparse and short rows. Not full equivalence.'
+  },null,2)+'\n');
+  console.log(`source cases=${records.length}; original=${outcomes.length}; reference=${manifest.length} pre/post PASS`);
+} finally {
+  esbuild.stop();
+  rmSync(scratch,{recursive:true,force:true});
+}

@@ -1,0 +1,182 @@
+// Copyright (c) 2026 xterm-rust contributors. Licensed under MIT.
+// This projection deliberately includes holes, unlike the dense terminal helper.
+use std::fmt::Write;
+use xterm_core::{
+    buffer::{constants::content::WIDTH_SHIFT, Buffer, CellData},
+    terminal::{CoreTerminal, TerminalEvent},
+};
+
+fn buffer_snapshot(b: &Buffer) -> String {
+    let mut result = format!(
+        "{},{},{},{},{},{}/",
+        b.x, b.y, b.ybase, b.ydisp, b.scroll_top, b.scroll_bottom
+    );
+    for y in 0..b.lines.len() {
+        if y != 0 {
+            result.push('/');
+        }
+        let Some(row) = b.lines.get(y) else {
+            result.push('-');
+            continue;
+        };
+        let row = row.borrow();
+        write!(result, "{}:", u8::from(row.is_wrapped)).unwrap();
+        for x in 0..row.len() {
+            if x != 0 {
+                result.push(';');
+            }
+            let c = row.get_cell(x).unwrap();
+            let chars = c
+                .get_chars()
+                .iter()
+                .map(|unit| format!("{unit:x}"))
+                .collect::<Vec<_>>()
+                .join(",");
+            write!(
+                result,
+                "{},{},{},{},{},{}",
+                c.content,
+                c.fg,
+                c.bg,
+                chars,
+                c.extended.ext(),
+                c.extended.url_id()
+            )
+            .unwrap();
+        }
+    }
+    result
+}
+fn snapshot(t: &CoreTerminal) -> String {
+    let state = t.state();
+    let normal = state.buffers.normal();
+    let alt = state.buffers.alt();
+    format!(
+        "{}|{}",
+        buffer_snapshot(&normal.borrow()),
+        buffer_snapshot(&alt.borrow())
+    )
+}
+fn events(t: &mut CoreTerminal) -> String {
+    t.drain_events()
+        .into_iter()
+        .filter_map(|event| match event {
+            TerminalEvent::CursorMove => Some("C".to_owned()),
+            TerminalEvent::Render { start, end } => Some(format!("R{start}:{end}")),
+            _ => None,
+        })
+        .collect::<Vec<_>>()
+        .join("/")
+}
+
+fn setup(fields: &[&str]) -> CoreTerminal {
+    let mut t = CoreTerminal::new(5, 5, 3).unwrap();
+    if fields[0] == "1" {
+        t.write("\x1b[?1049h").unwrap();
+    }
+    t.write("AAAAA\r\nBBBBB\r\nCCCCC\r\nDDDDD\r\nEEEEE\r\nFFFFF\x1b[2;4r")
+        .unwrap();
+    let origin = fields[1] == "1";
+    if origin {
+        t.write("\x1b[?6h").unwrap();
+    }
+    if fields[2] == "1" {
+        t.write("\x1b[?45h").unwrap();
+    }
+    {
+        let active = t.state().active_buffer();
+        let mut b = active.borrow_mut();
+        let x = fields[3].parse::<usize>().unwrap();
+        let y = fields[4].parse::<usize>().unwrap();
+        let row = if origin { y.clamp(1, 3) } else { y.min(4) };
+        let current = b.ybase + row;
+        b.x = x;
+        b.y = y;
+        let shape = fields[5];
+        b.set_wrapped(current, shape != "unwrapped").unwrap();
+        if shape == "hole" {
+            b.lines.set(current, None).unwrap();
+        }
+        if shape == "empty" {
+            b.lines.set_length(0);
+        }
+        if current > 0 {
+            match shape {
+                "missing-previous" => b.lines.set(current - 1, None).unwrap(),
+                "short" => {
+                    let previous = b.lines.get(current - 1).unwrap();
+                    let fill = b.get_null_cell(None);
+                    previous.borrow_mut().resize(2, &fill);
+                }
+                "wide" | "padding" => {
+                    let previous = b.lines.get(current - 1).unwrap();
+                    let width = u32::from(shape == "padding");
+                    let cell = CellData {
+                        content: width << WIDTH_SHIFT,
+                        attributes: t.state().attributes.clone(),
+                        ..Default::default()
+                    };
+                    previous.borrow_mut().set_cell(4, &cell);
+                }
+                _ => {}
+            }
+        }
+    }
+    events(&mut t);
+    t
+}
+
+#[test]
+fn backspace_matches_unchanged_source_for_sparse_and_short_rows() {
+    let mut failures = Vec::new();
+    let mut count = 0;
+    for (index, record) in include_str!("fixtures/backspace-sparse.tsv")
+        .lines()
+        .enumerate()
+    {
+        let fields: Vec<_> = record.split('\t').collect();
+        assert_eq!(fields.len(), 9);
+        let mut t = setup(&fields);
+        let result = t.write("\x08");
+        if let Err(error) = &result {
+            assert!(matches!(error, xterm_core::terminal::TerminalError::MissingLine));
+        }
+        let error = result.is_err();
+        let actual = snapshot(&t);
+        let notifications = events(&mut t);
+        if error != (fields[6] == "1") || actual != fields[7] || notifications != fields[8] {
+            failures.push(format!("line {} {:?}: error={error}\nexpected {}\nactual {actual}\nevents expected {} actual {notifications}",index+1,&fields[..7],fields[7],fields[8]));
+        }
+        count += 1;
+    }
+    let output =
+        std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../results/backspace-sparse");
+    std::fs::create_dir_all(&output).unwrap();
+    std::fs::write(output.join("counterexamples.txt"), failures.join("\n")).unwrap();
+    std::fs::write(
+        output.join("native-summary.txt"),
+        format!(
+            "cases={count}\npassed={}\nfailed={}\n",
+            count - failures.len(),
+            failures.len()
+        ),
+    )
+    .unwrap();
+    for failure in failures.iter().take(2) {
+        eprintln!("{failure}");
+    }
+    assert_eq!(count, 768);
+    assert!(failures.is_empty(), "{} source mismatches", failures.len());
+}
+
+#[test]
+fn fixture_really_contains_absent_and_short_lines() {
+    let t = setup(&["0", "0", "1", "0", "2", "hole"]);
+    let active = t.state().active_buffer();
+    let b = active.borrow();
+    assert!(b.lines.get(b.ybase + b.y).is_none());
+    let t = setup(&["0", "0", "1", "0", "2", "short"]);
+    let active = t.state().active_buffer();
+    let b = active.borrow();
+    assert_eq!(b.lines.get(b.ybase + b.y - 1).unwrap().borrow().len(), 2);
+}

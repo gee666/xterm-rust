@@ -1,0 +1,46 @@
+{
+  "command": [
+    "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\KarnaBackspace\\scripts\\backspace-sparse-oracle.mjs"
+  ],
+  "node": "v24.15.0",
+  "platform": "win32",
+  "referenceFilesVerifiedBeforeAndAfter": 776,
+  "cases": 768,
+  "original": [
+    {
+      "name": "InputHandler BS with reverseWraparound set/unset reverseWraparound set should not reverse outside of scroll margins",
+      "status": "passed"
+    },
+    {
+      "name": "InputHandler BS with reverseWraparound set/unset reverseWraparound unset (default) cannot delete last cell",
+      "status": "passed"
+    },
+    {
+      "name": "InputHandler BS with reverseWraparound set/unset reverseWraparound unset (default) cannot access prev line",
+      "status": "passed"
+    },
+    {
+      "name": "InputHandler BS with reverseWraparound set/unset reverseWraparound set can delete last cell",
+      "status": "passed"
+    },
+    {
+      "name": "InputHandler BS with reverseWraparound set/unset reverseWraparound set can access prev line if wrapped",
+      "status": "passed"
+    },
+    {
+      "name": "InputHandler BS with reverseWraparound set/unset reverseWraparound set should lift isWrapped",
+      "status": "passed"
+    },
+    {
+      "name": "InputHandler BS with reverseWraparound set/unset reverseWraparound set stops at hard NLs",
+      "status": "passed"
+    },
+    {
+      "name": "InputHandler BS with reverseWraparound set/unset reverseWraparound set handles wide chars correctly",
+      "status": "passed"
+    }
+  ],
+  "fixture": "crates/xterm-core/tests/fixtures/backspace-sparse.tsv",
+  "fixtureSha256": "aa6bbcc4d5d7823387d6f2452d97d2790264bd57b2b1aa9fd7d1c7452c3f7184",
+  "scope": "Real headless InputHandler BS, both buffers, origin/reverse-wrap margins, sparse and short rows. Not full equivalence."
+}

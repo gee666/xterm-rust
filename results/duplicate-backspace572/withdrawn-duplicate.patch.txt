@@ -1,0 +1,23 @@
+diff --git a/crates/xterm-core/src/terminal/controls.rs b/crates/xterm-core/src/terminal/controls.rs
+index 72b7d8d3..e3416b78 100644
+--- a/crates/xterm-core/src/terminal/controls.rs
++++ b/crates/xterm-core/src/terminal/controls.rs
+@@ -179,12 +179,13 @@ impl TerminalState {
+         if b.x > 0 {
+             b.x -= 1;
+         } else if reverse && b.y > b.scroll_top && b.y <= b.scroll_bottom {
+-            let line = b
+-                .lines
++            // Source optional-chains the current row. A sparse row cannot
++            // reverse a wrap, but still reaches the final cursor restriction.
++            if b.lines
+                 .get(b.ybase + b.y)
+-                .ok_or(TerminalError::MissingLine)?;
+-            if line.borrow().is_wrapped {
+-                line.borrow_mut().is_wrapped = false;
++                .is_some_and(|line| line.borrow().is_wrapped)
++            {
++                b.set_wrapped(b.ybase + b.y, false)?;
+                 b.y -= 1;
+                 b.x = self.cols() - 1;
+                 let previous = b
