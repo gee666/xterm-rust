@@ -12,7 +12,11 @@ The generated fixture exceeds 350 lines because each line retains one complete s
 
 ## Verification status
 
-Source generation passed 468 cases and one unchanged headless assertion, with all 776 reference hashes verified before and after. Native compilation, old-production negative control, scoped quality gates and unchanged six-case browser DSR subset are pending. No native Linux/macOS, full original suite, CI, release, performance or overall-equivalence pass is claimed.
+Source generation passed 468 cases, four non-996 short-circuit commands and one unchanged headless assertion, with all 776 reference hashes verified before and after. The native regression passed all three test functions. Replacing exactly four production files with main11ad rejected all 468 cases with the intended Borrowed failures, exit 101. Finally restoration verified all four fixed hashes, and the regression passed again.
+
+Native Windows core all-target/all-feature tests passed 1,577 tests across 252 summaries with no failures, ignored, measured or filtered tests. Strict native core Clippy and actual WASM xterm-web dependent library check and Clippy passed. Full cargo fmt failed with Windows OS206, retained verbatim. Each of the five package-wide fmt checks passed. Three historical generated report changes are retained reversibly with before/after bytes and hashes, and their original bytes were restored. Receipts are under results/dsr-option.
+
+The unchanged six-case browser DSR subset and broader workspace quality are pending. No native Linux/macOS, full original suite, CI, release, performance or overall-equivalence pass is claimed.
 
 ## Commands
 
@@ -21,6 +25,7 @@ Run from an isolated worktree with bounded compiler/browser grants, Cargo -j2 an
 ```sh
 node scripts/dsr-option-oracle.mjs
 cargo test --locked -p xterm-core --test dsr_option -j2
+node scripts/dsr-browser-original.mjs
 node scripts/build-demo.mjs --debug
 node scripts/e2e-upstream.mjs --suite core --grep 'DSR: Device Status Report' --no-build --timeout-ms 180000
 ```
