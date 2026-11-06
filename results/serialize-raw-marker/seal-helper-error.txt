@@ -1,0 +1,5 @@
+Initial private summary helper exited 1 before any output writes:
+TypeError: values.filter is not a function
+    at file:///O:/xterm-rust-swarm-16/tmp/worktrees/RichardMarker/tmp/seal.mjs:18:61
+
+Cause: result.values selected inherited Array.prototype.values for the array-valued third case. Fixed helper uses Array.isArray before selecting the object-owned values array. No source, fixture, compiler output, browser assertion or raw report changed. Actual side effects inspected: failure preceded summary write and build-tree copies.

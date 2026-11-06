@@ -14,4 +14,28 @@ Valid arbitrary-object row traversal is still incomplete. Source comparisons, ra
 
 ## Verification
 
-Pending actual negative-control and fixed execution. No results are claimed by this file before raw receipts exist. Run the existing `scripts/build-demo.mjs --debug` and `scripts/serialize-browser-check.mjs --suite` from an owned O: worktree with explicit team resource grants, Cargo -j2 and literal O: TEMP/TMP/TMPDIR. The source bundle and original tests must retain their content hashes. The debug browser distribution is for functionality, not performance comparison.
+Windows Rust 1.85.1, Cargo 1.85.1 and Node 24.15.0 were used. The exact old production control matches 90/93 cases in Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4. All three new groups fail in each engine; the prior 90 cases remain matching. The control uses accepted 531's full 75-file package, copied with donor permission and verified before and after transfer. Both its exact 1,866-input source identity and runtime pins are checked around execution. Source and package swaps restore the final owned bytes in `finally`.
+
+The first fixed execution matches 93/93 in Chromium and WebKit but 92/93 in Firefox. Firefox's nonprimitive-conversion TypeError includes operand identifiers. The glue originally used `end`/`start`, while the source uses `endRow`/`startRow`. Commit `acb63750` preserves those source names instead of normalizing or weakening the comparison. The complete initial failure is retained under `results/serialize-raw-marker/initial-fixed/`.
+
+The final execution matches 93/93 in all three engines. It also runs every unchanged original SerializeAddon assertion, 120/120 against source and 120/120 against Rust, with zero failed, skipped or unrun tests and no retries. The earlier fixed attempt also passed those complete original suites. The browser runner uses the actual Rust Terminal/SerializeAddon and retains full public-cell restoration traces and three screenshots. These are functionality results for a debug distribution, not speed measurements.
+
+Final `cargo test --locked -j2 -p xterm-web --lib --all-features` passes 56 tests, zero failed, ignored, measured or filtered. Native all-feature library Clippy and WASM library Clippy both pass with `-D warnings`. The exact aggregate `cargo fmt --all -- --check` still fails with Windows OS error 206. All five separate whole-package formatting checks pass; this does not waive the failed aggregate command or close task 304. Full workspace/native-OS/release matrices were not run by task 549. Raw log whitespace is retained, not trimmed to make a check pass.
+
+Both original and physical reference copies pass all 776 manifest entries before and after execution. No source_repo assertion, AGENTS rule, dependency, unrelated producer or canonical main content was changed. Resource grant 4665 was started only after task 547's actual release, and was explicitly released in comment 4710 after all compiler/browser/server processes had exited. TEMP, TMP, TMPDIR and the private Cargo target use literal owned O: paths. This file does not itself confirm final worktree removal.
+
+## Reproduction and retained evidence
+
+From an owned worktree at the final producer source, with the required toolchain, matching wasm-bindgen 0.2.100 and reference dependencies:
+
+```sh
+cargo test --locked -j2 -p xterm-web --lib --all-features
+cargo clippy --locked -j2 -p xterm-web --lib --all-features -- -D warnings
+cargo clippy --locked -j2 -p xterm-web --lib --target wasm32-unknown-unknown -- -D warnings
+CARGO_BUILD_JOBS=2 node scripts/build-demo.mjs --debug
+SOURCE_ROOT=/path/to/source_repo node scripts/serialize-browser-check.mjs --suite
+```
+
+Set literal O: TEMP/TMP/TMPDIR and Cargo target paths before those commands. `WASM_BINDGEN` can select the matching CLI. Do not start compiler/browser work without the current team's bounded allocation. To reproduce the negative control, preserve the final source commit, restore only `crates/xterm-web/src/serialize_addon/options.rs` from `0442e357`, rebuild, and run the same 93-case fixture. It must report the three named failures per engine. Restore the final file and rebuild before checking the fix. Never use an old package with a different source identity.
+
+`results/serialize-raw-marker/` retains complete `before`, `initial-fixed` and `after` browser reports, raw source/Rust traces and original-suite reports. `summary.json` adds per-group/subcase counts without changing their contents. `compile.json`, final native/lint logs, initial compiler logs and copied build report trees retain command outcomes. `package-copy.json` and `borrowed-build-report.json` describe the negative package provenance. `runtime-pins.json` identifies the actual native executable, compiler WASM, served WASM, binding JS, all generated snippets, CSS and build receipt. `producer-pins.json` identifies the changed source, fixture, docs and retained evidence. Runtime locations become historical after cleanup; hashes and source receipts remain durable. `source-node.json` is an additional cached original BrowserTerminal replay under Node, not browser or Rust coverage.

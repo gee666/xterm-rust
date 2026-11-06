@@ -1,0 +1,108 @@
+{
+  "mode": "after",
+  "environment": {
+    "TEMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\RichardMarker\\tmp\\runtime",
+    "TMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\RichardMarker\\tmp\\runtime",
+    "TMPDIR": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\RichardMarker\\tmp\\runtime",
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_TARGET_DIR": "O:/xterm-rust-swarm-16/tmp/worktrees/RichardMarker/target",
+    "SOURCE_ROOT": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo"
+  },
+  "originalSource": {
+    "revision": "b1b0a742e9fae7bdef196fc34068be5a8c97a0aa",
+    "sha256": "423372e24dcc93584480af19226b5b6e19aa9fb78b72a729a7f7278c2223753c",
+    "files": 1866
+  },
+  "sourceRestored": true,
+  "resources": {
+    "freeRamGiB": 28.432140350341797,
+    "freeDiskGiB": 2493.023670196533
+  },
+  "source": {
+    "revision": "b1b0a742e9fae7bdef196fc34068be5a8c97a0aa",
+    "sha256": "423372e24dcc93584480af19226b5b6e19aa9fb78b72a729a7f7278c2223753c",
+    "files": 1866
+  },
+  "build": {
+    "report": "results/demos/build/2026-11-06T01-54-19-522Z/report.json",
+    "source": {
+      "revision": "b1b0a742e9fae7bdef196fc34068be5a8c97a0aa",
+      "sha256": "423372e24dcc93584480af19226b5b6e19aa9fb78b72a729a7f7278c2223753c",
+      "files": 1866
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 240458,
+        "sha256": "a924b3ce1b9b518c2828ae589fa1d4664a2f616c245d121bae090ec5b6c5f58b"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 16063913,
+        "sha256": "f009921397cf235c322811ab214578cbc6c158659dfeffd63599c3d8670abed1"
+      }
+    ]
+  },
+  "command": {
+    "command": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "scripts/serialize-browser-check.mjs",
+      "--suite"
+    ],
+    "exitCode": 1,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 65242.271799999995,
+    "status": "failed"
+  },
+  "copied": [
+    "verification.json",
+    "chromium-source.json",
+    "chromium-rust.json",
+    "chromium-terminal.png",
+    "firefox-source.json",
+    "firefox-rust.json",
+    "firefox-terminal.png",
+    "webkit-source.json",
+    "webkit-rust.json",
+    "webkit-terminal.png",
+    "source-suite/playwright.log",
+    "source-suite/playwright.json",
+    "source-suite/configuration.cjs.txt",
+    "rust-suite/playwright.log",
+    "rust-suite/playwright.json",
+    "rust-suite/configuration.cjs.txt"
+  ],
+  "results": [
+    {
+      "name": "chromium",
+      "passed": 93,
+      "executed": 93,
+      "mismatches": []
+    },
+    {
+      "name": "firefox",
+      "passed": 92,
+      "executed": 93,
+      "mismatches": [
+        {
+          "name": "ansi-raw-marker-coercion-throws",
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n... Skipped lines\n\n  {\n    name: 'ansi-raw-marker-coercion-throws',\n    result: {\n      state: {\n        active: 'normal',\n...\n            error: 'TypeError',\n+           message: \"can't convert end to number: its [Symbol.toPrimitive] method returned an object\"\n-           message: \"can't convert endRow to number: its [Symbol.toPrimitive] method returned an object\"\n          },\n          same: false\n        },\n        {\n          log: [\n...\n            error: 'TypeError',\n+           message: \"can't convert start to number: its [Symbol.toPrimitive] method returned an object\"\n-           message: \"can't convert startRow to number: its [Symbol.toPrimitive] method returned an object\"\n          },\n          same: false\n        }\n      ]\n    },\n"
+        }
+      ]
+    },
+    {
+      "name": "webkit",
+      "passed": 93,
+      "executed": 93,
+      "mismatches": []
+    }
+  ],
+  "status": "failed",
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at file:///O:/xterm-rust-swarm-16/tmp/worktrees/RichardMarker/tmp/run-serialization.mjs:36:66"
+}
