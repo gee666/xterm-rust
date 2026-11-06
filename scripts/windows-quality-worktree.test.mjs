@@ -26,7 +26,7 @@ test('native gates and artifacts use the selected physical root without changing
 });
 
 test('the current target inventory fits the shortened hosted Windows command line', () => {
-  const expression = "[IO.Path]::GetFullPath((Join-Path $env:RUNNER_TEMP '../q'))";
+  const expression = "[IO.Path]::GetFullPath((Join-Path $env:RUNNER_TEMP '../../q'))";
   assert.ok(setup.includes(expression));
   assert.ok(cleanup.includes(expression));
   const result = spawnSync('cargo', ['metadata', '--no-deps', '--format-version', '1', '--locked'], {
@@ -37,7 +37,7 @@ test('the current target inventory fits the shortened hosted Windows command lin
   const metadata = JSON.parse(result.stdout);
   const packages = metadata.packages.filter(pkg => metadata.workspace_members.includes(pkg.id));
   const groups = Object.groupBy(packages.flatMap(pkg => pkg.targets), target => target.edition);
-  const hostedRoot = 'D:/a/q';
+  const hostedRoot = 'D:/q';
   const windowsCommandLineLimit = 32767;
   // Reserve the executable, --edition, --check and other non-file arguments.
   const nonFileArgumentReserve = 512;
@@ -55,7 +55,8 @@ test('Windows setup and cleanup preserve ownership, source identity and linked d
   mkdirSync(path.join(root, 'tmp'), {recursive: true});
   const fixture = mkdtempSync(path.join(root, 'tmp', 'windows-quality-'));
   const repo = path.join(fixture, 'repo');
-  const temporary = path.join(fixture, 'runner-temp');
+  // Match the hosted two-level parent calculation without leaving our fixture.
+  const temporary = path.join(fixture, 'runner', 'runner-temp');
   const short = path.join(fixture, 'q');
   const environment = path.join(fixture, 'github-env');
   const setupPath = path.join(fixture, 'setup.ps1');
@@ -83,7 +84,7 @@ test('Windows setup and cleanup preserve ownership, source identity and linked d
   }
   try {
     mkdirSync(repo);
-    mkdirSync(temporary);
+    mkdirSync(temporary, {recursive: true});
     writeFileSync(path.join(temporary, 'keep.txt'), 'runner temporary data\n');
     writeFileSync(setupPath, setup);
     writeFileSync(cleanupPath, cleanup);
