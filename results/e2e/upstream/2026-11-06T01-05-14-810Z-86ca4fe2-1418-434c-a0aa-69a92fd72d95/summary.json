@@ -1,0 +1,158 @@
+{
+  "status": "failed",
+  "engine": "Rust WASM",
+  "suite": "core",
+  "project": "all original projects",
+  "mode": "runtime",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "counts": {
+    "discovered": 0,
+    "executed": 0,
+    "passed": 0,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0
+  },
+  "errors": [
+    {
+      "message": "Error: Cannot find module '@lunapaint/png-codec'\nRequire stack:\n- O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\test\\playwright\\SharedRendererTests.ts\n- O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\test\\playwright\\Renderer.test.ts\n- O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\node_modules\\playwright\\lib\\common\\index.js\n- O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\node_modules\\playwright\\lib\\program.js\n- O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+      "stack": "Error: Cannot find module '@lunapaint/png-codec'\nRequire stack:\n- O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\test\\playwright\\SharedRendererTests.ts\n- O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\test\\playwright\\Renderer.test.ts\n- O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\node_modules\\playwright\\lib\\common\\index.js\n- O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\node_modules\\playwright\\lib\\program.js\n- O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\node_modules\\@playwright\\test\\cli.js\n    at Object.<anonymous> (O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\test\\playwright\\SharedRendererTests.ts:6:1)\n    at Object.<anonymous> (O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\test\\playwright\\Renderer.test.ts:8:1)",
+      "location": {
+        "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\test\\playwright\\SharedRendererTests.ts",
+        "column": 1,
+        "line": 6
+      },
+      "snippet": "   at SharedRendererTests.ts:6\n\n  4 |  */\n  5 |\n> 6 | import { IImage32, decodePng } from '@lunapaint/png-codec';\n    | ^\n  7 | import { LocatorScreenshotOptions, test } from '@playwright/test';\n  8 | import { ITheme } from '@xterm/xterm';\n  9 | import { ITestContext, openTerminal, pollFor, pollForApproximate } from './TestUtils';"
+    },
+    "Error: No original tests discovered\n    at file:///O:/xterm-rust-swarm-16/tmp/worktrees/SarahDecoration/scripts/e2e-upstream.mjs:90:40"
+  ],
+  "commands": [
+    {
+      "stage": "playwright",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+        "test",
+        "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\tmp\\e2e\\2026-11-06T01-05-14-810Z-86ca4fe2-1418-434c-a0aa-69a92fd72d95\\playwright.cjs",
+        "--reporter=json",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=239500",
+        "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\results\\e2e\\upstream\\2026-11-06T01-05-14-810Z-86ca4fe2-1418-434c-a0aa-69a92fd72d95\\artifacts",
+        "--grep=registerDecoration|decoration color overrides"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1393.9551000000001,
+      "status": "failed",
+      "log": "playwright.log"
+    }
+  ],
+  "scope": "This run does not establish complete terminal or cross-platform equivalence.",
+  "source": {
+    "revision": "5c01866a3fe182d32cb677b85758706542fe6b79",
+    "sha256": "09ebf2ad5cefc5706d248553cfdc31beb82642863be913c50fa159babbba627d",
+    "files": 1872
+  },
+  "reference": [
+    {
+      "path": "demo/test.html",
+      "bytes": 545,
+      "sha256": "35f81ad165aee291f49ac3ffea10068bf164207aad8d5fe4e5a558ada0e5ceed"
+    },
+    {
+      "path": "test/playwright/playwright.config.ts",
+      "bytes": 622,
+      "sha256": "0cdbe7c97fb5a60a6d02ae7e097368a1b9ca8bb5ba1451da24c6cd7190af7d02"
+    }
+  ],
+  "fixture": [
+    {
+      "path": "scripts/e2e-upstream.mjs",
+      "bytes": 7780,
+      "sha256": "12d881e3127c7865f00d7a55251bad4de8b611c24403fe3e14867798e6e16977"
+    },
+    {
+      "path": "scripts/e2e/fixture-server.mjs",
+      "bytes": 7410,
+      "sha256": "4790325527ed20905ecbaf0ceba34272325ccdecdd36060c9cf6bf5ec7a0b2ef"
+    },
+    {
+      "path": "scripts/e2e/test-page.mjs",
+      "bytes": 1867,
+      "sha256": "58a7f3ff1c587dff8b78d8c5775b9b7a3ac72b144f800d893d80bd8e98d20b28"
+    },
+    {
+      "path": "scripts/e2e/build-bootstrap.mjs",
+      "bytes": 905,
+      "sha256": "487154862b39623222d248d465c66aa06ee08467631b6dacdbe5c43f3a51f801"
+    },
+    {
+      "path": "scripts/e2e/upstream-config.mjs",
+      "bytes": 1388,
+      "sha256": "0ff88d3d995ad09fa7308bd6ac5675a82d10992f22f5b9b8304a9fee9590aa2f"
+    },
+    {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    }
+  ],
+  "build": {
+    "report": "results/demos/build/2026-11-06T01-05-12-184Z/report.json",
+    "source": {
+      "revision": "5c01866a3fe182d32cb677b85758706542fe6b79",
+      "sha256": "09ebf2ad5cefc5706d248553cfdc31beb82642863be913c50fa159babbba627d",
+      "files": 1872
+    },
+    "artifacts": [
+      {
+        "path": "browser/pkg/xterm_web.js",
+        "bytes": 242753,
+        "sha256": "5af02f92647971ebc6f06462f55c1ecc7c5b65cacb710fb1895558a5b8bc358d"
+      },
+      {
+        "path": "browser/pkg/xterm_web_bg.wasm",
+        "bytes": 16164220,
+        "sha256": "cb65e163dbb5e5810bb30de4bdc3dd33d907221b75f2859385578b141b3395d9"
+      }
+    ]
+  },
+  "bindings": [
+    {
+      "path": "browser/xterm.mjs",
+      "bytes": 1817,
+      "sha256": "1171d2d1d5287d95252976d6d5e1795850936e170dcb37172aea69bf8fe1efc0"
+    }
+  ],
+  "command": [
+    "C:\\nvm4w\\nodejs\\node.exe",
+    "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\source_repo\\node_modules\\@playwright\\test\\cli.js",
+    "test",
+    "--config=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\tmp\\e2e\\2026-11-06T01-05-14-810Z-86ca4fe2-1418-434c-a0aa-69a92fd72d95\\playwright.cjs",
+    "--reporter=json",
+    "--workers=2",
+    "--retries=0",
+    "--global-timeout=239500",
+    "--output=O:\\xterm-rust-swarm-16\\tmp\\worktrees\\SarahDecoration\\results\\e2e\\upstream\\2026-11-06T01-05-14-810Z-86ca4fe2-1418-434c-a0aa-69a92fd72d95\\artifacts",
+    "--grep=registerDecoration|decoration color overrides"
+  ],
+  "playwrightStats": {
+    "startTime": "2026-11-06T01:05:16.850Z",
+    "duration": 770.637,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "requests": [],
+  "serverErrors": [],
+  "runtimes": []
+}
