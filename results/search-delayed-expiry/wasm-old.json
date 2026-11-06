@@ -1,0 +1,124 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_search_delayed_expiry",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-06T02:05:14.228Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_search_delayed_expiry",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 31630.550499999998,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 9.684699999997974,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EricCache\\results\\acceptance-artifacts\\85c8c5af09d75dfd866136acd0d48d8316e1288594d2b5286ec9d8fec79b0d09\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EricCache\\results\\browser-host\\wasm_search_delayed_expiry\\2026-11-06T02-05-14-226Z-6d877a42-f364-4301-813c-0ed9c26cb683\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1085.7316000000028,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_search_delayed_expiry::delayed_cache_expiry_matches_source_in_both_directions"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "148.0.7778.96",
+      "output": "running 1 test\ntest delayed_cache_expiry_matches_source_in_both_directions ... FAIL\n\nfailures:\n\n---- delayed_cache_expiry_matches_source_in_both_directions output ----\n    JS exception that was thrown:\n        Error: JsValue(Error: findNext delayed=15000: actual false expected true\n        Error: findNext delayed=15000: actual false expected true\n            at checkSearchCallArgs (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:52496/suite.js:6072:21), <anonymous>:67:17)\n            at async eval (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:52496/suite.js:6072:21), <anonymous>:83:69))\n            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:52496/suite.js:7053:21)\n            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[37675]:0xb0a987)\n            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.wasm_bindgen::JsError::new::h3154e12c595b4f2c (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[33985]:0xaf1e64)\n            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h4552df855aec41d5 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[6338]:0x71ad0c)\n            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.core::result::Result<T,E>::map_err::h43fe53f67485ea33 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[18135]:0x9a72f5)\n            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::h0f71084c82128f8d (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[24603]:0xa60d63)\n            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::hb2466030b6c68e58 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[3512]:0x5d67df)\n            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::he026d4e005005681 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[16846]:0x978306)\n            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[26969]:0xa91f4f)\n            at __wbg_adapter_1350 (http://127.0.0.1:52496/suite.js:630:10)\n\nfailures:\n\n    delayed_cache_expiry_matches_source_in_both_directions\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.13s\n\n",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/85c8c5af09d75dfd866136acd0d48d8316e1288594d2b5286ec9d8fec79b0d09/artifact.wasm",
+      "sha256": "85c8c5af09d75dfd866136acd0d48d8316e1288594d2b5286ec9d8fec79b0d09",
+      "bytes": 20092791,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EricCache\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_search_delayed_expiry-5f88cee169fe89c9.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EricCache\\results\\browser-host\\wasm_search_delayed_expiry\\2026-11-06T02-05-14-226Z-6d877a42-f364-4301-813c-0ed9c26cb683\\artifacts\\suite_bg.wasm",
+      "bytes": 16892014,
+      "sha256": "72ab3876e35d8a7d998c410548071f5c891b7c538edf2762e9c00c14bf8cfda0"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EricCache\\results\\browser-host\\wasm_search_delayed_expiry\\2026-11-06T02-05-14-226Z-6d877a42-f364-4301-813c-0ed9c26cb683\\artifacts\\suite.js",
+      "bytes": 252620,
+      "sha256": "a7c1e989247fb382e59ac105da5d7b1caef667218e06f4bd2cc9401a20cba600"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "f5b946afca2322d4b931a5fbc1c3d3b20e899635d0e00ecb7a171c9249e850ab"
+  },
+  "finishedAt": "2026-11-06T02:05:47.687Z"
+}

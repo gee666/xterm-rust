@@ -1,0 +1,31 @@
+   Compiling allocator-api2 v0.2.21
+   Compiling equivalent v1.0.3
+   Compiling foldhash v0.1.5
+   Compiling hashbrown v0.15.5
+   Compiling memchr v2.8.3
+   Compiling regress v0.10.4
+   Compiling ryu-js v1.0.3
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\EricCache\crates\xterm-core)
+    Finished `test` profile [unoptimized] target(s) in 8.00s
+     Running tests\search_cache.rs (target\debug\deps\search_cache-fe2796b0eff856ab.exe)
+
+running 1 test
+test overdue_access_retains_rows_until_the_host_expiry_callback ... FAILED
+
+failures:
+
+---- overdue_access_retains_rows_until_the_host_expiry_callback stdout ----
+
+thread 'overdue_access_retains_rows_until_the_host_expiry_callback' panicked at crates\xterm-core\tests\search_cache.rs:47:9:
+assertion `left == right` failed
+  left: None
+ right: Some(LineCacheEntry { text: [114, 101, 116, 97, 105, 110, 101, 100], offsets: [0] })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    overdue_access_retains_rows_until_the_host_expiry_callback
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 18 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-core --test search_cache`

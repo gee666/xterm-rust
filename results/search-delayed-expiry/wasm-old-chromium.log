@@ -1,0 +1,28 @@
+running 1 test
+test delayed_cache_expiry_matches_source_in_both_directions ... FAIL
+
+failures:
+
+---- delayed_cache_expiry_matches_source_in_both_directions output ----
+    JS exception that was thrown:
+        Error: JsValue(Error: findNext delayed=15000: actual false expected true
+        Error: findNext delayed=15000: actual false expected true
+            at checkSearchCallArgs (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:52496/suite.js:6072:21), <anonymous>:67:17)
+            at async eval (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:52496/suite.js:6072:21), <anonymous>:83:69))
+            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:52496/suite.js:7053:21)
+            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[37675]:0xb0a987)
+            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.wasm_bindgen::JsError::new::h3154e12c595b4f2c (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[33985]:0xaf1e64)
+            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h4552df855aec41d5 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[6338]:0x71ad0c)
+            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.core::result::Result<T,E>::map_err::h43fe53f67485ea33 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[18135]:0x9a72f5)
+            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::h0f71084c82128f8d (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[24603]:0xa60d63)
+            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::hb2466030b6c68e58 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[3512]:0x5d67df)
+            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::he026d4e005005681 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[16846]:0x978306)
+            at wasm_search_delayed_expiry-5f88cee169fe89c9.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:52496/suite_bg.wasm:wasm-function[26969]:0xa91f4f)
+            at __wbg_adapter_1350 (http://127.0.0.1:52496/suite.js:630:10)
+
+failures:
+
+    delayed_cache_expiry_matches_source_in_both_directions
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.13s
+
