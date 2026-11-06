@@ -10,7 +10,7 @@ import {referenceIntegrity} from '../../scripts/upstream-baseline-utils.mjs';
 import {sourceIdentity, verifyBuiltPackage} from '../../scripts/e2e/build-identity.mjs';
 const root = process.cwd(), out = join(root, 'results/integration554');
 const mode = process.argv[2];
-assert(['light', 'quality', 'canonical'].includes(mode));
+assert(['light', 'quality', 'canonical', 'production-build'].includes(mode));
 const json = async file => JSON.parse(await readFile(file, 'utf8'));
 const save = (name, data) => writeFile(join(out, name), JSON.stringify(data, null, 2) + '\n');
 await mkdir(join(root, 'tmp/554-system'), {recursive:true});
@@ -65,6 +65,13 @@ if (mode === 'quality') {
     ['native-all-features',['test','--locked','-j2','--workspace','--all-targets','--all-features']],
     ['native-doctests',['test','--locked','-j2','--workspace','--doc','--all-features']]
   ]) assert.equal((await run(name,cargo,args)).status,'passed',name);
+}
+if (mode === 'production-build') {
+  assert.equal((await run('production-build', process.execPath, ['scripts/build-demo.mjs','--debug'], 300000)).status, 'passed');
+  const input = await sourceIdentity(root), build = await verifyBuiltPackage(root, input);
+  await save('production-input.json', input);
+  await save('production-artifacts.json', build);
+  await cp(join(root,'results/demos/build/latest.json'),join(out,'production-build-pointer.json'));
 }
 if (mode === 'canonical') {
   assert.equal((await run('canonical-merge', process.execPath, ['scripts/worktree-merge.mjs'], 1200000)).status, 'passed');
