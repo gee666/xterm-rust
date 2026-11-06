@@ -20,5 +20,6 @@ The criterion numbers above are historical. Active criterion471 and full-family 
 - CompositionHelper.compositionend and _finalizeComposition map to input/composition.rs and input/dom/composition.rs. Task395 preserves DOM removal before flag/range capture, including thrown removal and synchronous nested composition. See docs/composition-end-order.md and results/composition395.
 
 - Task399 preserves CompositionHelper.compositionstart overlay text setter ordering and prior sent-data state across failure/reentry. See docs/composition-start-order.md and results/composition399.
+- Task570 maps CompositionHelper.updateCompositionElements bounds handling to input/composition_geometry.rs and the live DOM/Terminal route. It preserves Math.max NaN behavior with native, unchanged-source and three-engine controls. See docs/composition-geometry.md and results/composition-geometry.
 
 These scoped contributions do not close the full original input/accessibility suites, every decorated event field, native-platform proof or overall parity.
