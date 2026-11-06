@@ -1,0 +1,13 @@
+# Torsten571 continuation
+
+Task571 accepted with no findings. OWN source c0dd1ce1 and evidence3d61149c on base main14139449. No private prerequisites, and no copies of accepted557/564. A third receipt-only review/cleanup tail will be identified in the final coordination post and archive/Torsten571-complete. Canonical integration belongs to309, not this producer. The source touches selection/dom.rs and dom_events.rs plus terminal/selection_services.rs; it should combine with564's separate DOM teardown fields, preserving both changes.
+
+Word separator conversion is now lazy. Normal click/drag/up/shift/triple and link priority no longer coerce an unused object. Word mode still uses the typed UTF-16 algorithm. Dynamic source-timed indexOf and getter reentry remain321 obligations. No dependency, unsafe or engine delegation.
+
+New shared public program has12 cases, source EACH3engine PASS, actualRust1function EACH3PASS0pageerrors. Additional SelectionDom2functions EACH3PASS. Old exact main141 production actualChrome0P1F intended wholetrace mismatch,8poisonDOMpageerrors retained. No oldFF/WK run. Program/fixture/test bytes identical across old/fixed; compiler/servedWASM/bindings differ. Retained component8/reentry1/teardown1with18cases EACH3PASS. Nativeweb alltargets/features434PASS across191EXE summaries; strictnativeweb and WASMlib/5targets PASS; exactfullfmtOS206/memberfmtPASS.
+
+Independent reviewer ran4pinnednativeEXEs36PASS and verified1969inputs/74receipts/24runtime/9source/776original+776physicalcopy, source maps and compilerembeddedprogram/fixture. No compiler/browser review reruns. Reviewer found no concrete issue. Durable docs/selection-lazy-separator.md and results/selection-lazy-separator contain scope, exact commands/logs/pins. Runtime pins are temporary historical metadata after cleanup.
+
+All heavy grants released409/5123 before review. Owned O:TorstenSelection cleanup is pending this handoff's initial commit and will be recorded in private .pi/swarm/work/2/torsten571-cleanup.json and final409/724 posts. Do not replay cleanup from this historical paragraph; inspect actual current existence/processes/ref pins. Source archive is preserved before any normal Git worktree removal. Original source/dependencies/tools remain read-only and are not part of owned deletion.
+
+Full321, raw options/indexOf/Number/timer/RAF/GC/link closure, full original suites/nativeOS/workspace gates and equivalence remainOPEN/NOT PROVEN. Initial571 resize proposal duplicated557, caught before edits; do not implement it again. Same16-agent swarm2 continues. Discover current main/NEXT/grants before more work.
