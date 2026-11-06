@@ -25,9 +25,10 @@ pub struct SearchLineCache {
 }
 
 impl SearchLineCache {
+    /// Record access and initialize missing storage without expiring existing
+    /// rows. The host calls `expire` when its scheduled timeout actually runs;
+    /// access before an overdue callback extends the existing cache lifetime.
     pub fn init(&mut self, now_ms: u64) {
-        // A delayed host timeout has not expired the cache yet. Access extends
-        // its lifetime even after the old deadline, matching initLinesCache.
         self.entries.get_or_insert_with(BTreeMap::new);
         self.last_access = now_ms;
     }
