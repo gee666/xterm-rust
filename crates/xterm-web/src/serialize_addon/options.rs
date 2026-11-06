@@ -4,7 +4,8 @@ use wasm_bindgen::prelude::*;
 use xterm_core::{options::OptionValue, serialize::LineRange};
 
 #[wasm_bindgen(inline_js = "
-export function serializeRowDifference(end, start) { return end - start; }
+// Firefox includes operand names in nonprimitive-conversion diagnostics.
+export function serializeRowDifference(endRow, startRow) { return endRow - startRow; }
 export function checkSerializeArrayLength(length) { new Array(length); }
 ")]
 extern "C" {
