@@ -52,10 +52,15 @@ impl PrintRun {
             } else {
                 2
             };
-            self.row
-                .try_borrow_mut()
-                .map_err(|_| TerminalError::Borrowed)?
-                .add_codepoint_to_cell(x.saturating_sub(offset), code, width as i32);
+            // A custom provider may join after a zero-width first cell. The
+            // source then writes a negative typed-array index, which is ignored.
+            // Do not clamp that target onto the first visible cell.
+            if let Some(target) = x.checked_sub(offset) {
+                self.row
+                    .try_borrow_mut()
+                    .map_err(|_| TerminalError::Borrowed)?
+                    .add_codepoint_to_cell(target, code, width as i32);
+            }
             for column in 0..width.saturating_sub(old_width) {
                 self.row
                     .try_borrow_mut()
