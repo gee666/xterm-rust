@@ -103,13 +103,28 @@
       "docs/utility-addons-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/attach.rs",
+      "crates/xterm-web/src/utility_addons/bindings.rs",
+      "crates/xterm-web/src/utility_addons/attach_terminal.rs",
+      "crates/xterm-web/src/utility_addons/socket.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_utility_bindings.rs",
+      "crates/xterm-web/tests/wasm_attach_reentry.rs",
+      "crates/xterm-addons/tests/utility_attach.rs"
+    ],
+    "evidence": [
+      "docs/utility-addons.md",
+      "docs/attach-reentry.md",
+      "results/utility-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_utility_bindings node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-attach",
+    "binding": "AttachAddon is a Rust WASM class over browser WebSocket and the live Rust queued writer. Native AttachAddon uses host traits, not a JS socket implementation.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Full raw socket/structural-host, repeated activation and teardown/GC contracts remain family323 work. Historical six-case original-suite pass is not a final integrated run or full native assertion mapping."
   },
   {
     "source": "source_repo/addons/addon-attach/test/playwright.config.ts",
@@ -143,13 +158,28 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/attach.rs",
+      "crates/xterm-web/src/utility_addons/bindings.rs",
+      "crates/xterm-web/src/utility_addons/attach_terminal.rs",
+      "crates/xterm-web/src/utility_addons/socket.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_utility_bindings.rs",
+      "crates/xterm-web/tests/wasm_attach_reentry.rs",
+      "crates/xterm-addons/tests/utility_attach.rs"
+    ],
+    "evidence": [
+      "docs/utility-addons.md",
+      "docs/attach-reentry.md",
+      "results/utility-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_utility_bindings node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-attach",
+    "binding": "AttachAddon is a Rust WASM class over browser WebSocket and the live Rust queued writer. Native AttachAddon uses host traits, not a JS socket implementation.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Full raw socket/structural-host, repeated activation and teardown/GC contracts remain family323 work. Historical six-case original-suite pass is not a final integrated run or full native assertion mapping."
   },
   {
     "source": "source_repo/addons/addon-clipboard/test/ClipboardAddon.test.ts",
@@ -518,13 +548,30 @@
       "docs/utility-addons-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/clipboard.rs",
+      "crates/xterm-addons/src/base64.rs",
+      "crates/xterm-web/src/utility_addons/clipboard.rs",
+      "crates/xterm-web/src/utility_addons/clipboard_bindings.rs",
+      "crates/xterm-web/src/utility_addons/bindings.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_utility_bindings.rs",
+      "crates/xterm-web/tests/wasm_clipboard_values.rs",
+      "crates/xterm-addons/tests/utility_clipboard.rs"
+    ],
+    "evidence": [
+      "docs/utility-addons.md",
+      "docs/base64-encode-host.md",
+      "docs/base64-decode-host.md",
+      "results/utility-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_utility_bindings node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-clipboard",
+    "binding": "ClipboardAddon, Base64 and BrowserClipboardProvider export Rust WASM classes; provider/codec methods preserve JS callbacks at the host boundary. Native APIs use explicit provider traits.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Clipboard host permissions and original conditional skips must remain visible. Scoped raw codec fixes and the historical original-suite pass do not close all callback/ownership and OS/browser clipboard paths in323/330."
   },
   {
     "source": "source_repo/addons/addon-clipboard/test/playwright.config.ts",
@@ -558,13 +605,30 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/clipboard.rs",
+      "crates/xterm-addons/src/base64.rs",
+      "crates/xterm-web/src/utility_addons/clipboard.rs",
+      "crates/xterm-web/src/utility_addons/clipboard_bindings.rs",
+      "crates/xterm-web/src/utility_addons/bindings.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_utility_bindings.rs",
+      "crates/xterm-web/tests/wasm_clipboard_values.rs",
+      "crates/xterm-addons/tests/utility_clipboard.rs"
+    ],
+    "evidence": [
+      "docs/utility-addons.md",
+      "docs/base64-encode-host.md",
+      "docs/base64-decode-host.md",
+      "results/utility-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_utility_bindings node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-clipboard",
+    "binding": "ClipboardAddon, Base64 and BrowserClipboardProvider export Rust WASM classes; provider/codec methods preserve JS callbacks at the host boundary. Native APIs use explicit provider traits.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Clipboard host permissions and original conditional skips must remain visible. Scoped raw codec fixes and the historical original-suite pass do not close all callback/ownership and OS/browser clipboard paths in323/330."
   },
   {
     "source": "source_repo/addons/addon-fit/test/FitAddon.test.ts",
@@ -885,13 +949,26 @@
       "docs/utility-addons-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/fit.rs",
+      "crates/xterm-web/src/utility_addons/fit.rs",
+      "crates/xterm-web/src/utility_addons/fit_bindings.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_utility_bindings.rs",
+      "crates/xterm-web/tests/wasm_fit_reactivation.rs"
+    ],
+    "evidence": [
+      "docs/utility-addons.md",
+      "docs/fit-browser-geometry.md",
+      "docs/fit-reactivation.md",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_fit_reactivation node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-fit",
+    "binding": "FitAddon exports Rust fit/proposeDimensions over live DOM geometry and Terminal.resize. Native fit consumes measured geometry; it does not claim browser measurement equivalence.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Original browser checkpoint has17/27 passing and10 geometry failures, also present in retained JS baseline. Keep original bounds unchanged. Final integrated geometry and full raw reactivation/lifecycle remain323."
   },
   {
     "source": "source_repo/addons/addon-fit/test/playwright.config.ts",
@@ -925,13 +1002,26 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/fit.rs",
+      "crates/xterm-web/src/utility_addons/fit.rs",
+      "crates/xterm-web/src/utility_addons/fit_bindings.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_utility_bindings.rs",
+      "crates/xterm-web/tests/wasm_fit_reactivation.rs"
+    ],
+    "evidence": [
+      "docs/utility-addons.md",
+      "docs/fit-browser-geometry.md",
+      "docs/fit-reactivation.md",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_fit_reactivation node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-fit",
+    "binding": "FitAddon exports Rust fit/proposeDimensions over live DOM geometry and Terminal.resize. Native fit consumes measured geometry; it does not claim browser measurement equivalence.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Original browser checkpoint has17/27 passing and10 geometry failures, also present in retained JS baseline. Keep original bounds unchanged. Final integrated geometry and full raw reactivation/lifecycle remain323."
   },
   {
     "source": "source_repo/addons/addon-image/src/IIPHeaderParser.test.ts",
@@ -1245,7 +1335,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 15,
         "executed": 15,
         "passed": 15,
@@ -1268,13 +1358,49 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/image/addon/bindings.rs",
+      "crates/xterm-web/src/image/addon/activation.rs",
+      "crates/xterm-web/src/image/addon/options.rs",
+      "browser/xterm.mjs",
+      "crates/xterm-web/src/image/iip_protocol.rs",
+      "crates/xterm-web/src/image/iip_decode.rs",
+      "crates/xterm-addons/src/image/iip/mod.rs",
+      "crates/xterm-addons/src/image/header.rs",
+      "crates/xterm-addons/src/image/header_codec.rs",
+      "crates/xterm-web/src/image/storage.rs",
+      "crates/xterm-addons/src/image/storage/mod.rs",
+      "crates/xterm-addons/src/image/metrics.rs",
+      "crates/xterm-web/src/image/lifecycle.rs",
+      "crates/xterm-web/src/image/drawing.rs",
+      "crates/xterm-web/src/image/layers.rs",
+      "crates/xterm-web/src/image/sixel_protocol.rs",
+      "crates/xterm-addons/src/image/sixel/mod.rs",
+      "crates/xterm-addons/src/image/types.rs",
+      "crates/xterm-addons/src/image/options.rs",
+      "crates/xterm-web/src/image/kitty_protocol.rs",
+      "crates/xterm-addons/src/image/kitty/mod.rs",
+      "crates/xterm-addons/src/image/kitty/command.rs",
+      "crates/xterm-addons/src/image/kitty/handler_types.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/image_addon_browser.rs",
+      "crates/xterm-web/tests/image_iip_terminal_browser.rs",
+      "crates/xterm-web/tests/image_sixel_terminal_browser.rs",
+      "crates/xterm-web/tests/image_kitty_terminal_browser.rs"
+    ],
+    "evidence": [
+      "docs/image-addon.md",
+      "docs/image-activation-contract.md",
+      "results/image-addon/verification.json",
+      "results/image-addon/browser-host.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=image_addon_browser node scripts/image-canvas-check.mjs; node scripts/e2e-upstream.mjs --suite addon-image",
+    "binding": "Rust ImageAddon owns native protocol/storage/render coordination. The supported browser/xterm.mjs subclass retains activation hosts through JS heap ownership only. Component storage implementations are shared rather than separate per-protocol JS classes.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. The live coordinator and directed three-protocol matrices exist; unchanged complete639-case original image matrix and img01..48 are not certified.311/324 retain raw options/private facades, pending/partial registration, GC and full protocol/coordinator gaps."
   },
   {
     "source": "source_repo/addons/addon-image/src/IIPMetrics.test.ts",
@@ -1322,7 +1448,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 1,
         "executed": 1,
         "passed": 1,
@@ -1345,13 +1471,49 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/image/addon/bindings.rs",
+      "crates/xterm-web/src/image/addon/activation.rs",
+      "crates/xterm-web/src/image/addon/options.rs",
+      "browser/xterm.mjs",
+      "crates/xterm-web/src/image/iip_protocol.rs",
+      "crates/xterm-web/src/image/iip_decode.rs",
+      "crates/xterm-addons/src/image/iip/mod.rs",
+      "crates/xterm-addons/src/image/header.rs",
+      "crates/xterm-addons/src/image/header_codec.rs",
+      "crates/xterm-web/src/image/storage.rs",
+      "crates/xterm-addons/src/image/storage/mod.rs",
+      "crates/xterm-addons/src/image/metrics.rs",
+      "crates/xterm-web/src/image/lifecycle.rs",
+      "crates/xterm-web/src/image/drawing.rs",
+      "crates/xterm-web/src/image/layers.rs",
+      "crates/xterm-web/src/image/sixel_protocol.rs",
+      "crates/xterm-addons/src/image/sixel/mod.rs",
+      "crates/xterm-addons/src/image/types.rs",
+      "crates/xterm-addons/src/image/options.rs",
+      "crates/xterm-web/src/image/kitty_protocol.rs",
+      "crates/xterm-addons/src/image/kitty/mod.rs",
+      "crates/xterm-addons/src/image/kitty/command.rs",
+      "crates/xterm-addons/src/image/kitty/handler_types.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/image_addon_browser.rs",
+      "crates/xterm-web/tests/image_iip_terminal_browser.rs",
+      "crates/xterm-web/tests/image_sixel_terminal_browser.rs",
+      "crates/xterm-web/tests/image_kitty_terminal_browser.rs"
+    ],
+    "evidence": [
+      "docs/image-addon.md",
+      "docs/image-activation-contract.md",
+      "results/image-addon/verification.json",
+      "results/image-addon/browser-host.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=image_addon_browser node scripts/image-canvas-check.mjs; node scripts/e2e-upstream.mjs --suite addon-image",
+    "binding": "Rust ImageAddon owns native protocol/storage/render coordination. The supported browser/xterm.mjs subclass retains activation hosts through JS heap ownership only. Component storage implementations are shared rather than separate per-protocol JS classes.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. The live coordinator and directed three-protocol matrices exist; unchanged complete639-case original image matrix and img01..48 are not certified.311/324 retain raw options/private facades, pending/partial registration, GC and full protocol/coordinator gaps."
   },
   {
     "source": "source_repo/addons/addon-image/src/kitty/KittyGraphicsTypes.test.ts",
@@ -1859,7 +2021,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 23,
         "executed": 23,
         "passed": 23,
@@ -1882,13 +2044,49 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/image/addon/bindings.rs",
+      "crates/xterm-web/src/image/addon/activation.rs",
+      "crates/xterm-web/src/image/addon/options.rs",
+      "browser/xterm.mjs",
+      "crates/xterm-web/src/image/iip_protocol.rs",
+      "crates/xterm-web/src/image/iip_decode.rs",
+      "crates/xterm-addons/src/image/iip/mod.rs",
+      "crates/xterm-addons/src/image/header.rs",
+      "crates/xterm-addons/src/image/header_codec.rs",
+      "crates/xterm-web/src/image/storage.rs",
+      "crates/xterm-addons/src/image/storage/mod.rs",
+      "crates/xterm-addons/src/image/metrics.rs",
+      "crates/xterm-web/src/image/lifecycle.rs",
+      "crates/xterm-web/src/image/drawing.rs",
+      "crates/xterm-web/src/image/layers.rs",
+      "crates/xterm-web/src/image/sixel_protocol.rs",
+      "crates/xterm-addons/src/image/sixel/mod.rs",
+      "crates/xterm-addons/src/image/types.rs",
+      "crates/xterm-addons/src/image/options.rs",
+      "crates/xterm-web/src/image/kitty_protocol.rs",
+      "crates/xterm-addons/src/image/kitty/mod.rs",
+      "crates/xterm-addons/src/image/kitty/command.rs",
+      "crates/xterm-addons/src/image/kitty/handler_types.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/image_addon_browser.rs",
+      "crates/xterm-web/tests/image_iip_terminal_browser.rs",
+      "crates/xterm-web/tests/image_sixel_terminal_browser.rs",
+      "crates/xterm-web/tests/image_kitty_terminal_browser.rs"
+    ],
+    "evidence": [
+      "docs/image-addon.md",
+      "docs/image-activation-contract.md",
+      "results/image-addon/verification.json",
+      "results/image-addon/browser-host.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=image_addon_browser node scripts/image-canvas-check.mjs; node scripts/e2e-upstream.mjs --suite addon-image",
+    "binding": "Rust ImageAddon owns native protocol/storage/render coordination. The supported browser/xterm.mjs subclass retains activation hosts through JS heap ownership only. Component storage implementations are shared rather than separate per-protocol JS classes.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. The live coordinator and directed three-protocol matrices exist; unchanged complete639-case original image matrix and img01..48 are not certified.311/324 retain raw options/private facades, pending/partial registration, GC and full protocol/coordinator gaps."
   },
   {
     "source": "source_repo/addons/addon-image/test/ImageAddon.test.ts",
@@ -2731,13 +2929,49 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/image/addon/bindings.rs",
+      "crates/xterm-web/src/image/addon/activation.rs",
+      "crates/xterm-web/src/image/addon/options.rs",
+      "browser/xterm.mjs",
+      "crates/xterm-web/src/image/iip_protocol.rs",
+      "crates/xterm-web/src/image/iip_decode.rs",
+      "crates/xterm-addons/src/image/iip/mod.rs",
+      "crates/xterm-addons/src/image/header.rs",
+      "crates/xterm-addons/src/image/header_codec.rs",
+      "crates/xterm-web/src/image/storage.rs",
+      "crates/xterm-addons/src/image/storage/mod.rs",
+      "crates/xterm-addons/src/image/metrics.rs",
+      "crates/xterm-web/src/image/lifecycle.rs",
+      "crates/xterm-web/src/image/drawing.rs",
+      "crates/xterm-web/src/image/layers.rs",
+      "crates/xterm-web/src/image/sixel_protocol.rs",
+      "crates/xterm-addons/src/image/sixel/mod.rs",
+      "crates/xterm-addons/src/image/types.rs",
+      "crates/xterm-addons/src/image/options.rs",
+      "crates/xterm-web/src/image/kitty_protocol.rs",
+      "crates/xterm-addons/src/image/kitty/mod.rs",
+      "crates/xterm-addons/src/image/kitty/command.rs",
+      "crates/xterm-addons/src/image/kitty/handler_types.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/image_addon_browser.rs",
+      "crates/xterm-web/tests/image_iip_terminal_browser.rs",
+      "crates/xterm-web/tests/image_sixel_terminal_browser.rs",
+      "crates/xterm-web/tests/image_kitty_terminal_browser.rs"
+    ],
+    "evidence": [
+      "docs/image-addon.md",
+      "docs/image-activation-contract.md",
+      "results/image-addon/verification.json",
+      "results/image-addon/browser-host.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=image_addon_browser node scripts/image-canvas-check.mjs; node scripts/e2e-upstream.mjs --suite addon-image",
+    "binding": "Rust ImageAddon owns native protocol/storage/render coordination. The supported browser/xterm.mjs subclass retains activation hosts through JS heap ownership only. Component storage implementations are shared rather than separate per-protocol JS classes.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. The live coordinator and directed three-protocol matrices exist; unchanged complete639-case original image matrix and img01..48 are not certified.311/324 retain raw options/private facades, pending/partial registration, GC and full protocol/coordinator gaps."
   },
   {
     "source": "source_repo/addons/addon-image/test/KittyGraphics.test.ts",
@@ -6933,13 +7167,49 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/image/addon/bindings.rs",
+      "crates/xterm-web/src/image/addon/activation.rs",
+      "crates/xterm-web/src/image/addon/options.rs",
+      "browser/xterm.mjs",
+      "crates/xterm-web/src/image/iip_protocol.rs",
+      "crates/xterm-web/src/image/iip_decode.rs",
+      "crates/xterm-addons/src/image/iip/mod.rs",
+      "crates/xterm-addons/src/image/header.rs",
+      "crates/xterm-addons/src/image/header_codec.rs",
+      "crates/xterm-web/src/image/storage.rs",
+      "crates/xterm-addons/src/image/storage/mod.rs",
+      "crates/xterm-addons/src/image/metrics.rs",
+      "crates/xterm-web/src/image/lifecycle.rs",
+      "crates/xterm-web/src/image/drawing.rs",
+      "crates/xterm-web/src/image/layers.rs",
+      "crates/xterm-web/src/image/sixel_protocol.rs",
+      "crates/xterm-addons/src/image/sixel/mod.rs",
+      "crates/xterm-addons/src/image/types.rs",
+      "crates/xterm-addons/src/image/options.rs",
+      "crates/xterm-web/src/image/kitty_protocol.rs",
+      "crates/xterm-addons/src/image/kitty/mod.rs",
+      "crates/xterm-addons/src/image/kitty/command.rs",
+      "crates/xterm-addons/src/image/kitty/handler_types.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/image_addon_browser.rs",
+      "crates/xterm-web/tests/image_iip_terminal_browser.rs",
+      "crates/xterm-web/tests/image_sixel_terminal_browser.rs",
+      "crates/xterm-web/tests/image_kitty_terminal_browser.rs"
+    ],
+    "evidence": [
+      "docs/image-addon.md",
+      "docs/image-activation-contract.md",
+      "results/image-addon/verification.json",
+      "results/image-addon/browser-host.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=image_addon_browser node scripts/image-canvas-check.mjs; node scripts/e2e-upstream.mjs --suite addon-image",
+    "binding": "Rust ImageAddon owns native protocol/storage/render coordination. The supported browser/xterm.mjs subclass retains activation hosts through JS heap ownership only. Component storage implementations are shared rather than separate per-protocol JS classes.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. The live coordinator and directed three-protocol matrices exist; unchanged complete639-case original image matrix and img01..48 are not certified.311/324 retain raw options/private facades, pending/partial registration, GC and full protocol/coordinator gaps."
   },
   {
     "source": "source_repo/addons/addon-image/test/playwright.config.ts",
@@ -6973,13 +7243,49 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/image/addon/bindings.rs",
+      "crates/xterm-web/src/image/addon/activation.rs",
+      "crates/xterm-web/src/image/addon/options.rs",
+      "browser/xterm.mjs",
+      "crates/xterm-web/src/image/iip_protocol.rs",
+      "crates/xterm-web/src/image/iip_decode.rs",
+      "crates/xterm-addons/src/image/iip/mod.rs",
+      "crates/xterm-addons/src/image/header.rs",
+      "crates/xterm-addons/src/image/header_codec.rs",
+      "crates/xterm-web/src/image/storage.rs",
+      "crates/xterm-addons/src/image/storage/mod.rs",
+      "crates/xterm-addons/src/image/metrics.rs",
+      "crates/xterm-web/src/image/lifecycle.rs",
+      "crates/xterm-web/src/image/drawing.rs",
+      "crates/xterm-web/src/image/layers.rs",
+      "crates/xterm-web/src/image/sixel_protocol.rs",
+      "crates/xterm-addons/src/image/sixel/mod.rs",
+      "crates/xterm-addons/src/image/types.rs",
+      "crates/xterm-addons/src/image/options.rs",
+      "crates/xterm-web/src/image/kitty_protocol.rs",
+      "crates/xterm-addons/src/image/kitty/mod.rs",
+      "crates/xterm-addons/src/image/kitty/command.rs",
+      "crates/xterm-addons/src/image/kitty/handler_types.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/image_addon_browser.rs",
+      "crates/xterm-web/tests/image_iip_terminal_browser.rs",
+      "crates/xterm-web/tests/image_sixel_terminal_browser.rs",
+      "crates/xterm-web/tests/image_kitty_terminal_browser.rs"
+    ],
+    "evidence": [
+      "docs/image-addon.md",
+      "docs/image-activation-contract.md",
+      "results/image-addon/verification.json",
+      "results/image-addon/browser-host.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=image_addon_browser node scripts/image-canvas-check.mjs; node scripts/e2e-upstream.mjs --suite addon-image",
+    "binding": "Rust ImageAddon owns native protocol/storage/render coordination. The supported browser/xterm.mjs subclass retains activation hosts through JS heap ownership only. Component storage implementations are shared rather than separate per-protocol JS classes.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. The live coordinator and directed three-protocol matrices exist; unchanged complete639-case original image matrix and img01..48 are not certified.311/324 retain raw options/private facades, pending/partial registration, GC and full protocol/coordinator gaps."
   },
   {
     "source": "source_repo/addons/addon-ligatures/src/fontLigatures/index.test.ts",
@@ -7225,7 +7531,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 436,
         "executed": 436,
         "passed": 436,
@@ -7252,13 +7558,39 @@
       "docs/font-addon-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-font-addons/src/ligatures_addon.rs",
+      "crates/xterm-font-addons/src/ligature_state.rs",
+      "crates/xterm-web/src/terminal/joiner_api.rs",
+      "crates/xterm-font-addons/src/local_fonts.rs",
+      "crates/xterm-addons/src/ligatures/font.rs",
+      "crates/xterm-addons/src/ligatures/parse.rs",
+      "crates/xterm-addons/src/ligatures/font_tree.rs",
+      "crates/xterm-addons/src/ligatures/font_merge.rs",
+      "crates/xterm-addons/src/ligatures/font_merge_range.rs",
+      "crates/xterm-addons/src/ligatures/font_walk.rs",
+      "crates/xterm-addons/src/ligatures/font_tables.rs",
+      "crates/xterm-addons/src/ligatures/font_gsub_chain.rs",
+      "crates/xterm-addons/src/ligatures/font_gsub_other.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/font_addons.rs",
+      "crates/xterm-font-addons/tests/ligatures_browser.rs",
+      "crates/xterm-web/tests/wasm_font_shaping.rs",
+      "crates/xterm-web/tests/wasm_raw_font_terminal.rs"
+    ],
+    "evidence": [
+      "docs/font-terminal-integration.md",
+      "docs/font-legacy-and-shaping.md",
+      "docs/font-addons.md",
+      "results/font-terminal/summary.json",
+      "results/font-legacy/legacy-results.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "node scripts/ligature-legacy-check.mjs tmp/font-node/xterm_font_addons.js; WASM_TEST=wasm_font_shaping node scripts/browser-host-check.mjs",
+    "binding": "LigaturesAddon and enableLigatures execute Rust font parsing/shaping and register real Terminal character joiners. Core font logic is portable xterm-addons; browser discovery/lifecycle is xterm-font-addons.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 342 retains malformed/optional font parser and family closure;335 retains raw joiner/lifecycle contracts. Empty fallback source hang has a documented safety divergence, not equivalence approval. No original ligatures Playwright config exists; legacy Node assertions and real-font tests are separate evidence."
   },
   {
     "source": "source_repo/addons/addon-ligatures/src/fontLigatures/merge.test.ts",
@@ -7434,7 +7766,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 5,
         "executed": 5,
         "passed": 5,
@@ -7461,13 +7793,39 @@
       "docs/font-addon-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-font-addons/src/ligatures_addon.rs",
+      "crates/xterm-font-addons/src/ligature_state.rs",
+      "crates/xterm-web/src/terminal/joiner_api.rs",
+      "crates/xterm-font-addons/src/local_fonts.rs",
+      "crates/xterm-addons/src/ligatures/font.rs",
+      "crates/xterm-addons/src/ligatures/parse.rs",
+      "crates/xterm-addons/src/ligatures/font_tree.rs",
+      "crates/xterm-addons/src/ligatures/font_merge.rs",
+      "crates/xterm-addons/src/ligatures/font_merge_range.rs",
+      "crates/xterm-addons/src/ligatures/font_walk.rs",
+      "crates/xterm-addons/src/ligatures/font_tables.rs",
+      "crates/xterm-addons/src/ligatures/font_gsub_chain.rs",
+      "crates/xterm-addons/src/ligatures/font_gsub_other.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/font_addons.rs",
+      "crates/xterm-font-addons/tests/ligatures_browser.rs",
+      "crates/xterm-web/tests/wasm_font_shaping.rs",
+      "crates/xterm-web/tests/wasm_raw_font_terminal.rs"
+    ],
+    "evidence": [
+      "docs/font-terminal-integration.md",
+      "docs/font-legacy-and-shaping.md",
+      "docs/font-addons.md",
+      "results/font-terminal/summary.json",
+      "results/font-legacy/legacy-results.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "node scripts/ligature-legacy-check.mjs tmp/font-node/xterm_font_addons.js; WASM_TEST=wasm_font_shaping node scripts/browser-host-check.mjs",
+    "binding": "LigaturesAddon and enableLigatures execute Rust font parsing/shaping and register real Terminal character joiners. Core font logic is portable xterm-addons; browser discovery/lifecycle is xterm-font-addons.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 342 retains malformed/optional font parser and family closure;335 retains raw joiner/lifecycle contracts. Empty fallback source hang has a documented safety divergence, not equivalence approval. No original ligatures Playwright config exists; legacy Node assertions and real-font tests are separate evidence."
   },
   {
     "source": "source_repo/addons/addon-ligatures/src/fontLigatures/mergeRange.test.ts",
@@ -7684,7 +8042,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 8,
         "executed": 8,
         "passed": 8,
@@ -7711,13 +8069,39 @@
       "docs/font-addon-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-font-addons/src/ligatures_addon.rs",
+      "crates/xterm-font-addons/src/ligature_state.rs",
+      "crates/xterm-web/src/terminal/joiner_api.rs",
+      "crates/xterm-font-addons/src/local_fonts.rs",
+      "crates/xterm-addons/src/ligatures/font.rs",
+      "crates/xterm-addons/src/ligatures/parse.rs",
+      "crates/xterm-addons/src/ligatures/font_tree.rs",
+      "crates/xterm-addons/src/ligatures/font_merge.rs",
+      "crates/xterm-addons/src/ligatures/font_merge_range.rs",
+      "crates/xterm-addons/src/ligatures/font_walk.rs",
+      "crates/xterm-addons/src/ligatures/font_tables.rs",
+      "crates/xterm-addons/src/ligatures/font_gsub_chain.rs",
+      "crates/xterm-addons/src/ligatures/font_gsub_other.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/font_addons.rs",
+      "crates/xterm-font-addons/tests/ligatures_browser.rs",
+      "crates/xterm-web/tests/wasm_font_shaping.rs",
+      "crates/xterm-web/tests/wasm_raw_font_terminal.rs"
+    ],
+    "evidence": [
+      "docs/font-terminal-integration.md",
+      "docs/font-legacy-and-shaping.md",
+      "docs/font-addons.md",
+      "results/font-terminal/summary.json",
+      "results/font-legacy/legacy-results.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "node scripts/ligature-legacy-check.mjs tmp/font-node/xterm_font_addons.js; WASM_TEST=wasm_font_shaping node scripts/browser-host-check.mjs",
+    "binding": "LigaturesAddon and enableLigatures execute Rust font parsing/shaping and register real Terminal character joiners. Core font logic is portable xterm-addons; browser discovery/lifecycle is xterm-font-addons.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 342 retains malformed/optional font parser and family closure;335 retains raw joiner/lifecycle contracts. Empty fallback source hang has a documented safety divergence, not equivalence approval. No original ligatures Playwright config exists; legacy Node assertions and real-font tests are separate evidence."
   },
   {
     "source": "source_repo/addons/addon-ligatures/src/parse.test.ts",
@@ -8118,7 +8502,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 16,
         "executed": 16,
         "passed": 16,
@@ -8145,13 +8529,39 @@
       "docs/font-addon-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-font-addons/src/ligatures_addon.rs",
+      "crates/xterm-font-addons/src/ligature_state.rs",
+      "crates/xterm-web/src/terminal/joiner_api.rs",
+      "crates/xterm-font-addons/src/local_fonts.rs",
+      "crates/xterm-addons/src/ligatures/font.rs",
+      "crates/xterm-addons/src/ligatures/parse.rs",
+      "crates/xterm-addons/src/ligatures/font_tree.rs",
+      "crates/xterm-addons/src/ligatures/font_merge.rs",
+      "crates/xterm-addons/src/ligatures/font_merge_range.rs",
+      "crates/xterm-addons/src/ligatures/font_walk.rs",
+      "crates/xterm-addons/src/ligatures/font_tables.rs",
+      "crates/xterm-addons/src/ligatures/font_gsub_chain.rs",
+      "crates/xterm-addons/src/ligatures/font_gsub_other.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/font_addons.rs",
+      "crates/xterm-font-addons/tests/ligatures_browser.rs",
+      "crates/xterm-web/tests/wasm_font_shaping.rs",
+      "crates/xterm-web/tests/wasm_raw_font_terminal.rs"
+    ],
+    "evidence": [
+      "docs/font-terminal-integration.md",
+      "docs/font-legacy-and-shaping.md",
+      "docs/font-addons.md",
+      "results/font-terminal/summary.json",
+      "results/font-legacy/legacy-results.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "node scripts/ligature-legacy-check.mjs tmp/font-node/xterm_font_addons.js; WASM_TEST=wasm_font_shaping node scripts/browser-host-check.mjs",
+    "binding": "LigaturesAddon and enableLigatures execute Rust font parsing/shaping and register real Terminal character joiners. Core font logic is portable xterm-addons; browser discovery/lifecycle is xterm-font-addons.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 342 retains malformed/optional font parser and family closure;335 retains raw joiner/lifecycle contracts. Empty fallback source hang has a documented safety divergence, not equivalence approval. No original ligatures Playwright config exists; legacy Node assertions and real-font tests are separate evidence."
   },
   {
     "source": "source_repo/addons/addon-ligatures/test/LigaturesAddon.test.ts",
@@ -8355,13 +8765,39 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-font-addons/src/ligatures_addon.rs",
+      "crates/xterm-font-addons/src/ligature_state.rs",
+      "crates/xterm-web/src/terminal/joiner_api.rs",
+      "crates/xterm-font-addons/src/local_fonts.rs",
+      "crates/xterm-addons/src/ligatures/font.rs",
+      "crates/xterm-addons/src/ligatures/parse.rs",
+      "crates/xterm-addons/src/ligatures/font_tree.rs",
+      "crates/xterm-addons/src/ligatures/font_merge.rs",
+      "crates/xterm-addons/src/ligatures/font_merge_range.rs",
+      "crates/xterm-addons/src/ligatures/font_walk.rs",
+      "crates/xterm-addons/src/ligatures/font_tables.rs",
+      "crates/xterm-addons/src/ligatures/font_gsub_chain.rs",
+      "crates/xterm-addons/src/ligatures/font_gsub_other.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/font_addons.rs",
+      "crates/xterm-font-addons/tests/ligatures_browser.rs",
+      "crates/xterm-web/tests/wasm_font_shaping.rs",
+      "crates/xterm-web/tests/wasm_raw_font_terminal.rs"
+    ],
+    "evidence": [
+      "docs/font-terminal-integration.md",
+      "docs/font-legacy-and-shaping.md",
+      "docs/font-addons.md",
+      "results/font-terminal/summary.json",
+      "results/font-legacy/legacy-results.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "node scripts/ligature-legacy-check.mjs tmp/font-node/xterm_font_addons.js; WASM_TEST=wasm_font_shaping node scripts/browser-host-check.mjs",
+    "binding": "LigaturesAddon and enableLigatures execute Rust font parsing/shaping and register real Terminal character joiners. Core font logic is portable xterm-addons; browser discovery/lifecycle is xterm-font-addons.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 342 retains malformed/optional font parser and family closure;335 retains raw joiner/lifecycle contracts. Empty fallback source hang has a documented safety divergence, not equivalence approval. No original ligatures Playwright config exists; legacy Node assertions and real-font tests are separate evidence."
   },
   {
     "source": "source_repo/addons/addon-program-status/src/ProgramStatus.test.ts",
@@ -9454,7 +9890,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 38,
         "executed": 38,
         "passed": 38,
@@ -9481,13 +9917,29 @@
       "docs/status-addons-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/program_status/parse.rs",
+      "crates/xterm-addons/src/program_status/store.rs",
+      "crates/xterm-addons/src/program_status/addon.rs",
+      "crates/xterm-web/src/status_addons/program.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/program_status_store.rs",
+      "crates/xterm-addons/tests/program_status_addon.rs",
+      "crates/xterm-web/tests/wasm_status_addons.rs",
+      "crates/xterm-web/tests/wasm_status_clear.rs"
+    ],
+    "evidence": [
+      "docs/status-addons.md",
+      "docs/status-clear-coercion.md",
+      "results/status-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "node --experimental-transform-types scripts/status-addons-oracle.mjs; WASM_TEST=wasm_status_addons node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-program-status",
+    "binding": "ProgramStatusAddon browser class forwards live parser registration and status event/store behavior to Rust; native managed addon attaches to the same portable terminal engine.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Source parser/store and scoped real-terminal tests are linked, not full suite assertion certification. Final integrated lifecycle/raw record mutation/GC audit and all-family mapping remain323/328."
   },
   {
     "source": "source_repo/addons/addon-program-status/src/ProgramStatusAddon.test.ts",
@@ -9842,7 +10294,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 15,
         "executed": 15,
         "passed": 15,
@@ -9869,13 +10321,29 @@
       "docs/status-addons-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/program_status/parse.rs",
+      "crates/xterm-addons/src/program_status/store.rs",
+      "crates/xterm-addons/src/program_status/addon.rs",
+      "crates/xterm-web/src/status_addons/program.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/program_status_store.rs",
+      "crates/xterm-addons/tests/program_status_addon.rs",
+      "crates/xterm-web/tests/wasm_status_addons.rs",
+      "crates/xterm-web/tests/wasm_status_clear.rs"
+    ],
+    "evidence": [
+      "docs/status-addons.md",
+      "docs/status-clear-coercion.md",
+      "results/status-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "node --experimental-transform-types scripts/status-addons-oracle.mjs; WASM_TEST=wasm_status_addons node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-program-status",
+    "binding": "ProgramStatusAddon browser class forwards live parser registration and status event/store behavior to Rust; native managed addon attaches to the same portable terminal engine.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Source parser/store and scoped real-terminal tests are linked, not full suite assertion certification. Final integrated lifecycle/raw record mutation/GC audit and all-family mapping remain323/328."
   },
   {
     "source": "source_repo/addons/addon-program-status/test/ProgramStatusAddon.test.ts",
@@ -10027,13 +10495,29 @@
       "docs/status-addons-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/program_status/parse.rs",
+      "crates/xterm-addons/src/program_status/store.rs",
+      "crates/xterm-addons/src/program_status/addon.rs",
+      "crates/xterm-web/src/status_addons/program.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/program_status_store.rs",
+      "crates/xterm-addons/tests/program_status_addon.rs",
+      "crates/xterm-web/tests/wasm_status_addons.rs",
+      "crates/xterm-web/tests/wasm_status_clear.rs"
+    ],
+    "evidence": [
+      "docs/status-addons.md",
+      "docs/status-clear-coercion.md",
+      "results/status-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "node --experimental-transform-types scripts/status-addons-oracle.mjs; WASM_TEST=wasm_status_addons node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-program-status",
+    "binding": "ProgramStatusAddon browser class forwards live parser registration and status event/store behavior to Rust; native managed addon attaches to the same portable terminal engine.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Source parser/store and scoped real-terminal tests are linked, not full suite assertion certification. Final integrated lifecycle/raw record mutation/GC audit and all-family mapping remain323/328."
   },
   {
     "source": "source_repo/addons/addon-program-status/test/playwright.config.ts",
@@ -10067,13 +10551,29 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/program_status/parse.rs",
+      "crates/xterm-addons/src/program_status/store.rs",
+      "crates/xterm-addons/src/program_status/addon.rs",
+      "crates/xterm-web/src/status_addons/program.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/program_status_store.rs",
+      "crates/xterm-addons/tests/program_status_addon.rs",
+      "crates/xterm-web/tests/wasm_status_addons.rs",
+      "crates/xterm-web/tests/wasm_status_clear.rs"
+    ],
+    "evidence": [
+      "docs/status-addons.md",
+      "docs/status-clear-coercion.md",
+      "results/status-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "node --experimental-transform-types scripts/status-addons-oracle.mjs; WASM_TEST=wasm_status_addons node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-program-status",
+    "binding": "ProgramStatusAddon browser class forwards live parser registration and status event/store behavior to Rust; native managed addon attaches to the same portable terminal engine.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Source parser/store and scoped real-terminal tests are linked, not full suite assertion certification. Final integrated lifecycle/raw record mutation/GC audit and all-family mapping remain323/328."
   },
   {
     "source": "source_repo/addons/addon-progress/test/ProgressAddon.test.ts",
@@ -10363,13 +10863,26 @@
       "docs/status-addons-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/progress.rs",
+      "crates/xterm-web/src/status_addons/progress.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/progress_upstream.rs",
+      "crates/xterm-addons/tests/status_live_terminal.rs",
+      "crates/xterm-web/tests/wasm_status_addons.rs"
+    ],
+    "evidence": [
+      "docs/status-addons.md",
+      "docs/browser-progress.md",
+      "results/status-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "node --experimental-transform-types scripts/status-addons-oracle.mjs; WASM_TEST=wasm_status_addons node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-progress",
+    "binding": "ProgressAddon exports a Rust WASM class and shared mutable JS event objects over native progress parsing. Native callers receive typed progress state and managed lifetime handles.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Historical30-case original browser pass does not certify every raw callback/disposal/reentry state or final integrated build. Full323 and cross-addon event/ownership closure remain open."
   },
   {
     "source": "source_repo/addons/addon-progress/test/playwright.config.ts",
@@ -10403,13 +10916,26 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-addons/src/progress.rs",
+      "crates/xterm-web/src/status_addons/progress.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/progress_upstream.rs",
+      "crates/xterm-addons/tests/status_live_terminal.rs",
+      "crates/xterm-web/tests/wasm_status_addons.rs"
+    ],
+    "evidence": [
+      "docs/status-addons.md",
+      "docs/browser-progress.md",
+      "results/status-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "node --experimental-transform-types scripts/status-addons-oracle.mjs; WASM_TEST=wasm_status_addons node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-progress",
+    "binding": "ProgressAddon exports a Rust WASM class and shared mutable JS event objects over native progress parsing. Native callers receive typed progress state and managed lifetime handles.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Historical30-case original browser pass does not certify every raw callback/disposal/reentry state or final integrated build. Full323 and cross-addon event/ownership closure remain open."
   },
   {
     "source": "source_repo/addons/addon-search/src/DecorationManager.test.ts",
@@ -10491,7 +11017,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 2,
         "executed": 2,
         "passed": 2,
@@ -10519,13 +11045,33 @@
       "docs/acceptance-search.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/search_addon/mod.rs",
+      "crates/xterm-web/src/search_addon/term.rs",
+      "crates/xterm-core/src/search/engine.rs",
+      "crates/xterm-core/src/search/matching.rs",
+      "crates/xterm-web/src/search_addon/host.rs",
+      "crates/xterm-core/src/search/cache.rs",
+      "crates/xterm-web/src/search_addon/timer.rs",
+      "crates/xterm-core/src/search/state.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/search_differential.rs",
+      "crates/xterm-core/tests/search_cache.rs",
+      "crates/xterm-web/tests/wasm_search_addon.rs"
+    ],
+    "evidence": [
+      "docs/search-browser-verification.md",
+      "docs/search-engine-guard.md",
+      "results/search-browser/reference-integrity.json",
+      "results/search-browser/wasm-search-final.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-core --test search_differential --test search_cache; WASM_TEST=wasm_search_addon node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-search",
+    "binding": "SearchAddon exports Rust-backed methods/options/events, actual Terminal selection/highlights and JS RegExp matching at the host boundary. Cache, scanning and state transitions execute in Rust.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 347/527/322 retain arbitrary raw terms/options, disposed cache listener/timer liveness and family closure.81 original browser passes plus focused raw fixes do not map every original unit assertion or prove all error phases."
   },
   {
     "source": "source_repo/addons/addon-search/src/SearchEngine.test.ts",
@@ -12485,7 +13031,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 58,
         "executed": 58,
         "passed": 58,
@@ -12513,13 +13059,33 @@
       "docs/acceptance-search.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/search_addon/mod.rs",
+      "crates/xterm-web/src/search_addon/term.rs",
+      "crates/xterm-core/src/search/engine.rs",
+      "crates/xterm-core/src/search/matching.rs",
+      "crates/xterm-web/src/search_addon/host.rs",
+      "crates/xterm-core/src/search/cache.rs",
+      "crates/xterm-web/src/search_addon/timer.rs",
+      "crates/xterm-core/src/search/state.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/search_differential.rs",
+      "crates/xterm-core/tests/search_cache.rs",
+      "crates/xterm-web/tests/wasm_search_addon.rs"
+    ],
+    "evidence": [
+      "docs/search-browser-verification.md",
+      "docs/search-engine-guard.md",
+      "results/search-browser/reference-integrity.json",
+      "results/search-browser/wasm-search-final.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-core --test search_differential --test search_cache; WASM_TEST=wasm_search_addon node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-search",
+    "binding": "SearchAddon exports Rust-backed methods/options/events, actual Terminal selection/highlights and JS RegExp matching at the host boundary. Cache, scanning and state transitions execute in Rust.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 347/527/322 retain arbitrary raw terms/options, disposed cache listener/timer liveness and family closure.81 original browser passes plus focused raw fixes do not map every original unit assertion or prove all error phases."
   },
   {
     "source": "source_repo/addons/addon-search/src/SearchLineCache.test.ts",
@@ -13469,7 +14035,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 28,
         "executed": 28,
         "passed": 28,
@@ -13497,13 +14063,33 @@
       "docs/acceptance-search.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/search_addon/mod.rs",
+      "crates/xterm-web/src/search_addon/term.rs",
+      "crates/xterm-core/src/search/engine.rs",
+      "crates/xterm-core/src/search/matching.rs",
+      "crates/xterm-web/src/search_addon/host.rs",
+      "crates/xterm-core/src/search/cache.rs",
+      "crates/xterm-web/src/search_addon/timer.rs",
+      "crates/xterm-core/src/search/state.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/search_differential.rs",
+      "crates/xterm-core/tests/search_cache.rs",
+      "crates/xterm-web/tests/wasm_search_addon.rs"
+    ],
+    "evidence": [
+      "docs/search-browser-verification.md",
+      "docs/search-engine-guard.md",
+      "results/search-browser/reference-integrity.json",
+      "results/search-browser/wasm-search-final.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-core --test search_differential --test search_cache; WASM_TEST=wasm_search_addon node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-search",
+    "binding": "SearchAddon exports Rust-backed methods/options/events, actual Terminal selection/highlights and JS RegExp matching at the host boundary. Cache, scanning and state transitions execute in Rust.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 347/527/322 retain arbitrary raw terms/options, disposed cache listener/timer liveness and family closure.81 original browser passes plus focused raw fixes do not map every original unit assertion or prove all error phases."
   },
   {
     "source": "source_repo/addons/addon-search/test/SearchAddon.test.ts",
@@ -14255,13 +14841,33 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/search_addon/mod.rs",
+      "crates/xterm-web/src/search_addon/term.rs",
+      "crates/xterm-core/src/search/engine.rs",
+      "crates/xterm-core/src/search/matching.rs",
+      "crates/xterm-web/src/search_addon/host.rs",
+      "crates/xterm-core/src/search/cache.rs",
+      "crates/xterm-web/src/search_addon/timer.rs",
+      "crates/xterm-core/src/search/state.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/search_differential.rs",
+      "crates/xterm-core/tests/search_cache.rs",
+      "crates/xterm-web/tests/wasm_search_addon.rs"
+    ],
+    "evidence": [
+      "docs/search-browser-verification.md",
+      "docs/search-engine-guard.md",
+      "results/search-browser/reference-integrity.json",
+      "results/search-browser/wasm-search-final.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-core --test search_differential --test search_cache; WASM_TEST=wasm_search_addon node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-search",
+    "binding": "SearchAddon exports Rust-backed methods/options/events, actual Terminal selection/highlights and JS RegExp matching at the host boundary. Cache, scanning and state transitions execute in Rust.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 347/527/322 retain arbitrary raw terms/options, disposed cache listener/timer liveness and family closure.81 original browser passes plus focused raw fixes do not map every original unit assertion or prove all error phases."
   },
   {
     "source": "source_repo/addons/addon-search/test/playwright.config.ts",
@@ -14295,13 +14901,33 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/search_addon/mod.rs",
+      "crates/xterm-web/src/search_addon/term.rs",
+      "crates/xterm-core/src/search/engine.rs",
+      "crates/xterm-core/src/search/matching.rs",
+      "crates/xterm-web/src/search_addon/host.rs",
+      "crates/xterm-core/src/search/cache.rs",
+      "crates/xterm-web/src/search_addon/timer.rs",
+      "crates/xterm-core/src/search/state.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/search_differential.rs",
+      "crates/xterm-core/tests/search_cache.rs",
+      "crates/xterm-web/tests/wasm_search_addon.rs"
+    ],
+    "evidence": [
+      "docs/search-browser-verification.md",
+      "docs/search-engine-guard.md",
+      "results/search-browser/reference-integrity.json",
+      "results/search-browser/wasm-search-final.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-core --test search_differential --test search_cache; WASM_TEST=wasm_search_addon node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-search",
+    "binding": "SearchAddon exports Rust-backed methods/options/events, actual Terminal selection/highlights and JS RegExp matching at the host boundary. Cache, scanning and state transitions execute in Rust.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 347/527/322 retain arbitrary raw terms/options, disposed cache listener/timer liveness and family closure.81 original browser passes plus focused raw fixes do not map every original unit assertion or prove all error phases."
   },
   {
     "source": "source_repo/addons/addon-serialize/benchmark/SerializeAddon.benchmark.ts",
@@ -14392,13 +15018,31 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/serialize/addon.rs",
+      "crates/xterm-core/src/serialize/ansi.rs",
+      "crates/xterm-core/src/serialize/html.rs",
+      "crates/xterm-web/src/serialize_addon/mod.rs",
+      "crates/xterm-web/src/serialize_addon/html.rs",
+      "browser/xterm.mjs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/serialize_live.rs",
+      "crates/xterm-core/tests/serialize_differential.rs",
+      "scripts/serialize-browser-check.mjs"
+    ],
+    "evidence": [
+      "docs/browser-serialize.md",
+      "docs/serialize-live.md",
+      "results/serialize-browser/verification.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md",
+      "docs/serialize-api-map.md"
+    ],
+    "command": "node scripts/serialize-browser-check.mjs --suite; node scripts/e2e-upstream.mjs --suite addon-serialize",
+    "binding": "SerializeAddon is exported by Rust WASM with a small JS subclass retaining its activation host. ANSI/HTML algorithms share portable Rust and live buffer/selection/theme services. Native returns UTF16 units and typed options.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 346/322 retain raw coordinate/accessor/method replacements, palette identity and lifecycle/GC closure.120 unchanged original cases passed historically, but raw-coordinate corpus gaps and source non-progressing loops remain explicit. No full all-API assertion claim."
   },
   {
     "source": "source_repo/addons/addon-serialize/src/SerializeAddon.test.ts",
@@ -15442,7 +16086,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 44,
         "executed": 44,
         "passed": 44,
@@ -15465,13 +16109,31 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/serialize/addon.rs",
+      "crates/xterm-core/src/serialize/ansi.rs",
+      "crates/xterm-core/src/serialize/html.rs",
+      "crates/xterm-web/src/serialize_addon/mod.rs",
+      "crates/xterm-web/src/serialize_addon/html.rs",
+      "browser/xterm.mjs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/serialize_live.rs",
+      "crates/xterm-core/tests/serialize_differential.rs",
+      "scripts/serialize-browser-check.mjs"
+    ],
+    "evidence": [
+      "docs/browser-serialize.md",
+      "docs/serialize-live.md",
+      "results/serialize-browser/verification.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md",
+      "docs/serialize-api-map.md"
+    ],
+    "command": "node scripts/serialize-browser-check.mjs --suite; node scripts/e2e-upstream.mjs --suite addon-serialize",
+    "binding": "SerializeAddon is exported by Rust WASM with a small JS subclass retaining its activation host. ANSI/HTML algorithms share portable Rust and live buffer/selection/theme services. Native returns UTF16 units and typed options.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 346/322 retain raw coordinate/accessor/method replacements, palette identity and lifecycle/GC closure.120 unchanged original cases passed historically, but raw-coordinate corpus gaps and source non-progressing loops remain explicit. No full all-API assertion claim."
   },
   {
     "source": "source_repo/addons/addon-serialize/test/SerializeAddon.test.ts",
@@ -16311,13 +16973,31 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/serialize/addon.rs",
+      "crates/xterm-core/src/serialize/ansi.rs",
+      "crates/xterm-core/src/serialize/html.rs",
+      "crates/xterm-web/src/serialize_addon/mod.rs",
+      "crates/xterm-web/src/serialize_addon/html.rs",
+      "browser/xterm.mjs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/serialize_live.rs",
+      "crates/xterm-core/tests/serialize_differential.rs",
+      "scripts/serialize-browser-check.mjs"
+    ],
+    "evidence": [
+      "docs/browser-serialize.md",
+      "docs/serialize-live.md",
+      "results/serialize-browser/verification.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md",
+      "docs/serialize-api-map.md"
+    ],
+    "command": "node scripts/serialize-browser-check.mjs --suite; node scripts/e2e-upstream.mjs --suite addon-serialize",
+    "binding": "SerializeAddon is exported by Rust WASM with a small JS subclass retaining its activation host. ANSI/HTML algorithms share portable Rust and live buffer/selection/theme services. Native returns UTF16 units and typed options.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 346/322 retain raw coordinate/accessor/method replacements, palette identity and lifecycle/GC closure.120 unchanged original cases passed historically, but raw-coordinate corpus gaps and source non-progressing loops remain explicit. No full all-API assertion claim."
   },
   {
     "source": "source_repo/addons/addon-serialize/test/playwright.config.ts",
@@ -16351,13 +17031,31 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/serialize/addon.rs",
+      "crates/xterm-core/src/serialize/ansi.rs",
+      "crates/xterm-core/src/serialize/html.rs",
+      "crates/xterm-web/src/serialize_addon/mod.rs",
+      "crates/xterm-web/src/serialize_addon/html.rs",
+      "browser/xterm.mjs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/serialize_live.rs",
+      "crates/xterm-core/tests/serialize_differential.rs",
+      "scripts/serialize-browser-check.mjs"
+    ],
+    "evidence": [
+      "docs/browser-serialize.md",
+      "docs/serialize-live.md",
+      "results/serialize-browser/verification.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md",
+      "docs/serialize-api-map.md"
+    ],
+    "command": "node scripts/serialize-browser-check.mjs --suite; node scripts/e2e-upstream.mjs --suite addon-serialize",
+    "binding": "SerializeAddon is exported by Rust WASM with a small JS subclass retaining its activation host. ANSI/HTML algorithms share portable Rust and live buffer/selection/theme services. Native returns UTF16 units and typed options.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 346/322 retain raw coordinate/accessor/method replacements, palette identity and lifecycle/GC closure.120 unchanged original cases passed historically, but raw-coordinate corpus gaps and source non-progressing loops remain explicit. No full all-API assertion claim."
   },
   {
     "source": "source_repo/addons/addon-unicode-graphemes/benchmark/UnicodeGraphemeAddon.benchmark.ts",
@@ -16487,13 +17185,30 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/unicode_addons.rs",
+      "crates/xterm-web/src/unicode_addons.rs",
+      "crates/xterm-core/src/unicode_graphemes.rs",
+      "crates/xterm-core/src/unicode_properties.rs",
+      "crates/xterm-core/src/unicode15_tables.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/unicode_addons.rs",
+      "crates/xterm-core/tests/unicode_addon_drop.rs",
+      "crates/xterm-web/tests/unicode_addon_bindings.rs",
+      "crates/xterm-web/tests/unicode_internal_service.rs"
+    ],
+    "evidence": [
+      "docs/unicode-addons.md",
+      "docs/unicode-browser-api.md",
+      "results/unicode-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-core --test unicode_addons --test unicode_addon_drop; node scripts/e2e-upstream.mjs --suite addon-unicode-graphemes",
+    "binding": "UnicodeGraphemesAddon exports Rust WASM activation/disposal; width and joining use native UnicodeService. Generated Rust Unicode15 tables replace source compressed trie data. Source tiny-inflate/trie loader modules are not mapped as direct Rust ports.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Complete Unicode malformed/raw provider/chunk/reentry/assertion mapping remains316/328. Three historical original browser cases and native corpus tests do not certify all generated table/property combinations or final OS/browser matrices."
   },
   {
     "source": "source_repo/addons/addon-unicode-graphemes/test/UnicodeGraphemesAddon.test.ts",
@@ -16576,13 +17291,30 @@
       "docs/acceptance/unicode-text.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/unicode_addons.rs",
+      "crates/xterm-web/src/unicode_addons.rs",
+      "crates/xterm-core/src/unicode_graphemes.rs",
+      "crates/xterm-core/src/unicode_properties.rs",
+      "crates/xterm-core/src/unicode15_tables.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/unicode_addons.rs",
+      "crates/xterm-core/tests/unicode_addon_drop.rs",
+      "crates/xterm-web/tests/unicode_addon_bindings.rs",
+      "crates/xterm-web/tests/unicode_internal_service.rs"
+    ],
+    "evidence": [
+      "docs/unicode-addons.md",
+      "docs/unicode-browser-api.md",
+      "results/unicode-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-core --test unicode_addons --test unicode_addon_drop; node scripts/e2e-upstream.mjs --suite addon-unicode-graphemes",
+    "binding": "UnicodeGraphemesAddon exports Rust WASM activation/disposal; width and joining use native UnicodeService. Generated Rust Unicode15 tables replace source compressed trie data. Source tiny-inflate/trie loader modules are not mapped as direct Rust ports.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Complete Unicode malformed/raw provider/chunk/reentry/assertion mapping remains316/328. Three historical original browser cases and native corpus tests do not certify all generated table/property combinations or final OS/browser matrices."
   },
   {
     "source": "source_repo/addons/addon-unicode-graphemes/test/playwright.config.ts",
@@ -16616,13 +17348,30 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/unicode_addons.rs",
+      "crates/xterm-web/src/unicode_addons.rs",
+      "crates/xterm-core/src/unicode_graphemes.rs",
+      "crates/xterm-core/src/unicode_properties.rs",
+      "crates/xterm-core/src/unicode15_tables.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/unicode_addons.rs",
+      "crates/xterm-core/tests/unicode_addon_drop.rs",
+      "crates/xterm-web/tests/unicode_addon_bindings.rs",
+      "crates/xterm-web/tests/unicode_internal_service.rs"
+    ],
+    "evidence": [
+      "docs/unicode-addons.md",
+      "docs/unicode-browser-api.md",
+      "results/unicode-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-core --test unicode_addons --test unicode_addon_drop; node scripts/e2e-upstream.mjs --suite addon-unicode-graphemes",
+    "binding": "UnicodeGraphemesAddon exports Rust WASM activation/disposal; width and joining use native UnicodeService. Generated Rust Unicode15 tables replace source compressed trie data. Source tiny-inflate/trie loader modules are not mapped as direct Rust ports.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Complete Unicode malformed/raw provider/chunk/reentry/assertion mapping remains316/328. Three historical original browser cases and native corpus tests do not certify all generated table/property combinations or final OS/browser matrices."
   },
   {
     "source": "source_repo/addons/addon-unicode11/test/Unicode11Addon.test.ts",
@@ -16711,13 +17460,29 @@
       "docs/acceptance/unicode-text.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/unicode_addons.rs",
+      "crates/xterm-web/src/unicode_addons.rs",
+      "crates/xterm-core/src/unicode11.rs",
+      "crates/xterm-core/src/unicode11_tables.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/unicode_addons.rs",
+      "crates/xterm-core/tests/unicode_addon_manager.rs",
+      "crates/xterm-web/tests/unicode_addon_bindings.rs",
+      "crates/xterm-web/tests/unicode_internal_service.rs"
+    ],
+    "evidence": [
+      "docs/unicode-addons.md",
+      "docs/unicode-browser-api.md",
+      "results/unicode-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-core --test unicode_addons --test unicode_addon_manager; node scripts/e2e-upstream.mjs --suite addon-unicode11",
+    "binding": "Unicode11Addon browser class delegates to native registration/selection. dispose preserves the source empty-dispose behavior, rather than restoring the prior Unicode version like the graphemes addon.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Complete Unicode boundary/provider/assertion closure remains316/328. Historical three-case original browser pass is not a final integrated matrix; demo restoration expectations must distinguish source empty disposal from grapheme restoration."
   },
   {
     "source": "source_repo/addons/addon-unicode11/test/playwright.config.ts",
@@ -16751,13 +17516,29 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/unicode_addons.rs",
+      "crates/xterm-web/src/unicode_addons.rs",
+      "crates/xterm-core/src/unicode11.rs",
+      "crates/xterm-core/src/unicode11_tables.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/unicode_addons.rs",
+      "crates/xterm-core/tests/unicode_addon_manager.rs",
+      "crates/xterm-web/tests/unicode_addon_bindings.rs",
+      "crates/xterm-web/tests/unicode_internal_service.rs"
+    ],
+    "evidence": [
+      "docs/unicode-addons.md",
+      "docs/unicode-browser-api.md",
+      "results/unicode-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-core --test unicode_addons --test unicode_addon_manager; node scripts/e2e-upstream.mjs --suite addon-unicode11",
+    "binding": "Unicode11Addon browser class delegates to native registration/selection. dispose preserves the source empty-dispose behavior, rather than restoring the prior Unicode version like the graphemes addon.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Complete Unicode boundary/provider/assertion closure remains316/328. Historical three-case original browser pass is not a final integrated matrix; demo restoration expectations must distinguish source empty disposal from grapheme restoration."
   },
   {
     "source": "source_repo/addons/addon-web-fonts/test/WebFontsAddon.test.ts",
@@ -16968,13 +17749,28 @@
       "docs/font-addon-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-font-addons/src/font_addons.rs",
+      "crates/xterm-font-addons/src/font_set.rs",
+      "crates/xterm-addons/src/web_fonts.rs"
+    ],
+    "tests": [
+      "crates/xterm-font-addons/tests/web_fonts_browser.rs",
+      "crates/xterm-font-addons/tests/web_fonts_async_browser.rs",
+      "crates/xterm-font-addons/tests/web_fonts_ready_browser.rs",
+      "crates/xterm-web/tests/wasm_font_terminal.rs"
+    ],
+    "evidence": [
+      "docs/font-terminal-integration.md",
+      "docs/font-addons.md",
+      "results/font-terminal/summary.json",
+      "results/font-terminal/playwright.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_PACKAGE=xterm-font-addons WASM_TEST=web_fonts_browser node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-web-fonts",
+    "binding": "WebFontsAddon and loadFonts are Rust WASM exports over browser FontFace/FontFaceSet promises. Native web_fonts supplies family/relayout decisions, not a native DOM/font-loader substitute.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Full promise settlement, raw FontFaceSet/terminal mutation, reactivation and GC/error-order closure remain342/328.15 unchanged original browser cases passed at the retained checkpoint, not a final all-platform/full-addon certification."
   },
   {
     "source": "source_repo/addons/addon-web-fonts/test/playwright.config.ts",
@@ -17008,13 +17804,28 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-font-addons/src/font_addons.rs",
+      "crates/xterm-font-addons/src/font_set.rs",
+      "crates/xterm-addons/src/web_fonts.rs"
+    ],
+    "tests": [
+      "crates/xterm-font-addons/tests/web_fonts_browser.rs",
+      "crates/xterm-font-addons/tests/web_fonts_async_browser.rs",
+      "crates/xterm-font-addons/tests/web_fonts_ready_browser.rs",
+      "crates/xterm-web/tests/wasm_font_terminal.rs"
+    ],
+    "evidence": [
+      "docs/font-terminal-integration.md",
+      "docs/font-addons.md",
+      "results/font-terminal/summary.json",
+      "results/font-terminal/playwright.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_PACKAGE=xterm-font-addons WASM_TEST=web_fonts_browser node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-web-fonts",
+    "binding": "WebFontsAddon and loadFonts are Rust WASM exports over browser FontFace/FontFaceSet promises. Native web_fonts supplies family/relayout decisions, not a native DOM/font-loader substitute.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. Full promise settlement, raw FontFaceSet/terminal mutation, reactivation and GC/error-order closure remain342/328.15 unchanged original browser cases passed at the retained checkpoint, not a final all-platform/full-addon certification."
   },
   {
     "source": "source_repo/addons/addon-web-links/test/WebLinksAddon.test.ts",
@@ -17309,13 +18120,30 @@
       "docs/utility-addons-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/utility_addons/link_bindings.rs",
+      "crates/xterm-addons/src/web_links.rs",
+      "crates/xterm-addons/src/web_link_provider.rs",
+      "crates/xterm-web/src/utility_addons/provider.rs",
+      "crates/xterm-web/src/utility_addons/matcher.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/utility_link_callbacks.rs",
+      "crates/xterm-web/tests/wasm_utility_links.rs",
+      "crates/xterm-web/tests/wasm_web_links_live_range.rs"
+    ],
+    "evidence": [
+      "docs/utility-addons.md",
+      "docs/web-links-live-ranges.md",
+      "docs/live-link-acceptance.md",
+      "results/utility-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_utility_links node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-web-links",
+    "binding": "WebLinksAddon installs a real Rust link provider; JS RegExp and window opening are host operations. Native link provider uses explicit UTF16 ranges and callback traits; live hover is a separate terminal links contract.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 1503 historical original regex/provider cases do not prove DOM hover/leave/underline, live range mutation or all raw receiver/callback contracts.321/323/330 retain these families and final integrated browser checks."
   },
   {
     "source": "source_repo/addons/addon-web-links/test/playwright.config.ts",
@@ -17349,13 +18177,30 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/utility_addons/link_bindings.rs",
+      "crates/xterm-addons/src/web_links.rs",
+      "crates/xterm-addons/src/web_link_provider.rs",
+      "crates/xterm-web/src/utility_addons/provider.rs",
+      "crates/xterm-web/src/utility_addons/matcher.rs"
+    ],
+    "tests": [
+      "crates/xterm-addons/tests/utility_link_callbacks.rs",
+      "crates/xterm-web/tests/wasm_utility_links.rs",
+      "crates/xterm-web/tests/wasm_web_links_live_range.rs"
+    ],
+    "evidence": [
+      "docs/utility-addons.md",
+      "docs/web-links-live-ranges.md",
+      "docs/live-link-acceptance.md",
+      "results/utility-addons/oracle.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_utility_links node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-web-links",
+    "binding": "WebLinksAddon installs a real Rust link provider; JS RegExp and window opening are host operations. Native link provider uses explicit UTF16 ranges and callback traits; live hover is a separate terminal links contract.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 1503 historical original regex/provider cases do not prove DOM hover/leave/underline, live range mutation or all raw receiver/callback contracts.321/323/330 retain these families and final integrated browser checks."
   },
   {
     "source": "source_repo/addons/addon-webgl/src/CharAtlasUtils.test.ts",
@@ -17507,7 +18352,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 4,
         "executed": 4,
         "passed": 4,
@@ -17534,13 +18379,46 @@
       "docs/webgl-port.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/webgl/typed_array.rs",
+      "crates/xterm-web/src/webgl/model.rs",
+      "crates/xterm-web/src/webgl/cache.rs",
+      "crates/xterm-web/src/webgl/browser_cache.rs",
+      "crates/xterm-web/src/webgl/config.rs",
+      "crates/xterm-web/src/webgl/cell_colors.rs",
+      "crates/xterm-web/src/webgl/glyphs.rs",
+      "crates/xterm-web/src/webgl/glyph_gpu.rs",
+      "crates/xterm-web/src/webgl/rectangles.rs",
+      "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+      "crates/xterm-web/src/webgl/texture_atlas.rs",
+      "crates/xterm-web/src/webgl/atlas_rasterizer.rs",
+      "crates/xterm-web/src/webgl/cursor_blink.rs",
+      "crates/xterm-web/src/webgl/device_pixel_observer.rs",
+      "crates/xterm-web/src/webgl/math.rs",
+      "crates/xterm-web/src/webgl/gpu_resources.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/definitions.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/browser.rs",
+      "crates/xterm-web/src/webgl/canvas_layer.rs",
+      "crates/xterm-web/src/webgl/link_layer.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/webgl.rs",
+      "crates/xterm-web/tests/webgl_renderer.rs",
+      "crates/xterm-web/tests/wasm_webgl_texture_atlas.rs",
+      "crates/xterm-web/tests/wasm_webgl_rectangles.rs"
+    ],
+    "evidence": [
+      "docs/webgl-port.md",
+      "docs/webgl-renderer-update.md",
+      "docs/webgl-browser-cache.md",
+      "results/webgl-renderer/checkpoint.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-web --test webgl --test webgl_renderer; WASM_TEST=wasm_webgl_texture_atlas node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-webgl",
+    "binding": "Rust portable caches/models and WASM GPU/atlas/layer components are mapped individually. On inspected main224d1b33 there is no callable WebglAddon export or complete live WebglRenderer binding. The typings and those two modules deliberately remain missing.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 306/558 retain actual addon activation/live renderer composition, context/GC resource closure and full GPU matrix. Historical96 reported original passes may be DOM fallback after the source suite catches missing WebGL construction, not96 GPU proofs."
   },
   {
     "source": "source_repo/addons/addon-webgl/src/TypedArray.test.ts",
@@ -17893,7 +18771,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 11,
         "executed": 11,
         "passed": 11,
@@ -17920,13 +18798,46 @@
       "docs/webgl-port.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/webgl/typed_array.rs",
+      "crates/xterm-web/src/webgl/model.rs",
+      "crates/xterm-web/src/webgl/cache.rs",
+      "crates/xterm-web/src/webgl/browser_cache.rs",
+      "crates/xterm-web/src/webgl/config.rs",
+      "crates/xterm-web/src/webgl/cell_colors.rs",
+      "crates/xterm-web/src/webgl/glyphs.rs",
+      "crates/xterm-web/src/webgl/glyph_gpu.rs",
+      "crates/xterm-web/src/webgl/rectangles.rs",
+      "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+      "crates/xterm-web/src/webgl/texture_atlas.rs",
+      "crates/xterm-web/src/webgl/atlas_rasterizer.rs",
+      "crates/xterm-web/src/webgl/cursor_blink.rs",
+      "crates/xterm-web/src/webgl/device_pixel_observer.rs",
+      "crates/xterm-web/src/webgl/math.rs",
+      "crates/xterm-web/src/webgl/gpu_resources.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/definitions.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/browser.rs",
+      "crates/xterm-web/src/webgl/canvas_layer.rs",
+      "crates/xterm-web/src/webgl/link_layer.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/webgl.rs",
+      "crates/xterm-web/tests/webgl_renderer.rs",
+      "crates/xterm-web/tests/wasm_webgl_texture_atlas.rs",
+      "crates/xterm-web/tests/wasm_webgl_rectangles.rs"
+    ],
+    "evidence": [
+      "docs/webgl-port.md",
+      "docs/webgl-renderer-update.md",
+      "docs/webgl-browser-cache.md",
+      "results/webgl-renderer/checkpoint.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-web --test webgl --test webgl_renderer; WASM_TEST=wasm_webgl_texture_atlas node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-webgl",
+    "binding": "Rust portable caches/models and WASM GPU/atlas/layer components are mapped individually. On inspected main224d1b33 there is no callable WebglAddon export or complete live WebglRenderer binding. The typings and those two modules deliberately remain missing.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 306/558 retain actual addon activation/live renderer composition, context/GC resource closure and full GPU matrix. Historical96 reported original passes may be DOM fallback after the source suite catches missing WebGL construction, not96 GPU proofs."
   },
   {
     "source": "source_repo/addons/addon-webgl/src/customGlyphs/CustomGlyphRasterizer.test.ts",
@@ -18030,7 +18941,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 2,
         "executed": 2,
         "passed": 2,
@@ -18057,13 +18968,46 @@
       "docs/webgl-port.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/webgl/typed_array.rs",
+      "crates/xterm-web/src/webgl/model.rs",
+      "crates/xterm-web/src/webgl/cache.rs",
+      "crates/xterm-web/src/webgl/browser_cache.rs",
+      "crates/xterm-web/src/webgl/config.rs",
+      "crates/xterm-web/src/webgl/cell_colors.rs",
+      "crates/xterm-web/src/webgl/glyphs.rs",
+      "crates/xterm-web/src/webgl/glyph_gpu.rs",
+      "crates/xterm-web/src/webgl/rectangles.rs",
+      "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+      "crates/xterm-web/src/webgl/texture_atlas.rs",
+      "crates/xterm-web/src/webgl/atlas_rasterizer.rs",
+      "crates/xterm-web/src/webgl/cursor_blink.rs",
+      "crates/xterm-web/src/webgl/device_pixel_observer.rs",
+      "crates/xterm-web/src/webgl/math.rs",
+      "crates/xterm-web/src/webgl/gpu_resources.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/definitions.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/browser.rs",
+      "crates/xterm-web/src/webgl/canvas_layer.rs",
+      "crates/xterm-web/src/webgl/link_layer.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/webgl.rs",
+      "crates/xterm-web/tests/webgl_renderer.rs",
+      "crates/xterm-web/tests/wasm_webgl_texture_atlas.rs",
+      "crates/xterm-web/tests/wasm_webgl_rectangles.rs"
+    ],
+    "evidence": [
+      "docs/webgl-port.md",
+      "docs/webgl-renderer-update.md",
+      "docs/webgl-browser-cache.md",
+      "results/webgl-renderer/checkpoint.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-web --test webgl --test webgl_renderer; WASM_TEST=wasm_webgl_texture_atlas node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-webgl",
+    "binding": "Rust portable caches/models and WASM GPU/atlas/layer components are mapped individually. On inspected main224d1b33 there is no callable WebglAddon export or complete live WebglRenderer binding. The typings and those two modules deliberately remain missing.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 306/558 retain actual addon activation/live renderer composition, context/GC resource closure and full GPU matrix. Historical96 reported original passes may be DOM fallback after the source suite catches missing WebGL construction, not96 GPU proofs."
   },
   {
     "source": "source_repo/addons/addon-webgl/test/WebglAtlasOverflow.test.ts",
@@ -18173,13 +19117,46 @@
       "docs/webgl-port.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/webgl/typed_array.rs",
+      "crates/xterm-web/src/webgl/model.rs",
+      "crates/xterm-web/src/webgl/cache.rs",
+      "crates/xterm-web/src/webgl/browser_cache.rs",
+      "crates/xterm-web/src/webgl/config.rs",
+      "crates/xterm-web/src/webgl/cell_colors.rs",
+      "crates/xterm-web/src/webgl/glyphs.rs",
+      "crates/xterm-web/src/webgl/glyph_gpu.rs",
+      "crates/xterm-web/src/webgl/rectangles.rs",
+      "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+      "crates/xterm-web/src/webgl/texture_atlas.rs",
+      "crates/xterm-web/src/webgl/atlas_rasterizer.rs",
+      "crates/xterm-web/src/webgl/cursor_blink.rs",
+      "crates/xterm-web/src/webgl/device_pixel_observer.rs",
+      "crates/xterm-web/src/webgl/math.rs",
+      "crates/xterm-web/src/webgl/gpu_resources.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/definitions.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/browser.rs",
+      "crates/xterm-web/src/webgl/canvas_layer.rs",
+      "crates/xterm-web/src/webgl/link_layer.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/webgl.rs",
+      "crates/xterm-web/tests/webgl_renderer.rs",
+      "crates/xterm-web/tests/wasm_webgl_texture_atlas.rs",
+      "crates/xterm-web/tests/wasm_webgl_rectangles.rs"
+    ],
+    "evidence": [
+      "docs/webgl-port.md",
+      "docs/webgl-renderer-update.md",
+      "docs/webgl-browser-cache.md",
+      "results/webgl-renderer/checkpoint.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-web --test webgl --test webgl_renderer; WASM_TEST=wasm_webgl_texture_atlas node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-webgl",
+    "binding": "Rust portable caches/models and WASM GPU/atlas/layer components are mapped individually. On inspected main224d1b33 there is no callable WebglAddon export or complete live WebglRenderer binding. The typings and those two modules deliberately remain missing.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 306/558 retain actual addon activation/live renderer composition, context/GC resource closure and full GPU matrix. Historical96 reported original passes may be DOM fallback after the source suite catches missing WebGL construction, not96 GPU proofs."
   },
   {
     "source": "source_repo/addons/addon-webgl/test/WebglAtlasStress.test.ts",
@@ -18262,13 +19239,46 @@
       "docs/webgl-port.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/webgl/typed_array.rs",
+      "crates/xterm-web/src/webgl/model.rs",
+      "crates/xterm-web/src/webgl/cache.rs",
+      "crates/xterm-web/src/webgl/browser_cache.rs",
+      "crates/xterm-web/src/webgl/config.rs",
+      "crates/xterm-web/src/webgl/cell_colors.rs",
+      "crates/xterm-web/src/webgl/glyphs.rs",
+      "crates/xterm-web/src/webgl/glyph_gpu.rs",
+      "crates/xterm-web/src/webgl/rectangles.rs",
+      "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+      "crates/xterm-web/src/webgl/texture_atlas.rs",
+      "crates/xterm-web/src/webgl/atlas_rasterizer.rs",
+      "crates/xterm-web/src/webgl/cursor_blink.rs",
+      "crates/xterm-web/src/webgl/device_pixel_observer.rs",
+      "crates/xterm-web/src/webgl/math.rs",
+      "crates/xterm-web/src/webgl/gpu_resources.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/definitions.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/browser.rs",
+      "crates/xterm-web/src/webgl/canvas_layer.rs",
+      "crates/xterm-web/src/webgl/link_layer.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/webgl.rs",
+      "crates/xterm-web/tests/webgl_renderer.rs",
+      "crates/xterm-web/tests/wasm_webgl_texture_atlas.rs",
+      "crates/xterm-web/tests/wasm_webgl_rectangles.rs"
+    ],
+    "evidence": [
+      "docs/webgl-port.md",
+      "docs/webgl-renderer-update.md",
+      "docs/webgl-browser-cache.md",
+      "results/webgl-renderer/checkpoint.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-web --test webgl --test webgl_renderer; WASM_TEST=wasm_webgl_texture_atlas node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-webgl",
+    "binding": "Rust portable caches/models and WASM GPU/atlas/layer components are mapped individually. On inspected main224d1b33 there is no callable WebglAddon export or complete live WebglRenderer binding. The typings and those two modules deliberately remain missing.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 306/558 retain actual addon activation/live renderer composition, context/GC resource closure and full GPU matrix. Historical96 reported original passes may be DOM fallback after the source suite catches missing WebGL construction, not96 GPU proofs."
   },
   {
     "source": "source_repo/addons/addon-webgl/test/WebglCustomGlyphs.test.ts",
@@ -18351,13 +19361,46 @@
       "docs/webgl-port.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/webgl/typed_array.rs",
+      "crates/xterm-web/src/webgl/model.rs",
+      "crates/xterm-web/src/webgl/cache.rs",
+      "crates/xterm-web/src/webgl/browser_cache.rs",
+      "crates/xterm-web/src/webgl/config.rs",
+      "crates/xterm-web/src/webgl/cell_colors.rs",
+      "crates/xterm-web/src/webgl/glyphs.rs",
+      "crates/xterm-web/src/webgl/glyph_gpu.rs",
+      "crates/xterm-web/src/webgl/rectangles.rs",
+      "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+      "crates/xterm-web/src/webgl/texture_atlas.rs",
+      "crates/xterm-web/src/webgl/atlas_rasterizer.rs",
+      "crates/xterm-web/src/webgl/cursor_blink.rs",
+      "crates/xterm-web/src/webgl/device_pixel_observer.rs",
+      "crates/xterm-web/src/webgl/math.rs",
+      "crates/xterm-web/src/webgl/gpu_resources.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/definitions.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/browser.rs",
+      "crates/xterm-web/src/webgl/canvas_layer.rs",
+      "crates/xterm-web/src/webgl/link_layer.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/webgl.rs",
+      "crates/xterm-web/tests/webgl_renderer.rs",
+      "crates/xterm-web/tests/wasm_webgl_texture_atlas.rs",
+      "crates/xterm-web/tests/wasm_webgl_rectangles.rs"
+    ],
+    "evidence": [
+      "docs/webgl-port.md",
+      "docs/webgl-renderer-update.md",
+      "docs/webgl-browser-cache.md",
+      "results/webgl-renderer/checkpoint.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-web --test webgl --test webgl_renderer; WASM_TEST=wasm_webgl_texture_atlas node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-webgl",
+    "binding": "Rust portable caches/models and WASM GPU/atlas/layer components are mapped individually. On inspected main224d1b33 there is no callable WebglAddon export or complete live WebglRenderer binding. The typings and those two modules deliberately remain missing.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 306/558 retain actual addon activation/live renderer composition, context/GC resource closure and full GPU matrix. Historical96 reported original passes may be DOM fallback after the source suite catches missing WebGL construction, not96 GPU proofs."
   },
   {
     "source": "source_repo/addons/addon-webgl/test/WebglRenderer.test.ts",
@@ -18419,13 +19462,46 @@
       "results/acceptance/criteria-index.json"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/webgl/typed_array.rs",
+      "crates/xterm-web/src/webgl/model.rs",
+      "crates/xterm-web/src/webgl/cache.rs",
+      "crates/xterm-web/src/webgl/browser_cache.rs",
+      "crates/xterm-web/src/webgl/config.rs",
+      "crates/xterm-web/src/webgl/cell_colors.rs",
+      "crates/xterm-web/src/webgl/glyphs.rs",
+      "crates/xterm-web/src/webgl/glyph_gpu.rs",
+      "crates/xterm-web/src/webgl/rectangles.rs",
+      "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+      "crates/xterm-web/src/webgl/texture_atlas.rs",
+      "crates/xterm-web/src/webgl/atlas_rasterizer.rs",
+      "crates/xterm-web/src/webgl/cursor_blink.rs",
+      "crates/xterm-web/src/webgl/device_pixel_observer.rs",
+      "crates/xterm-web/src/webgl/math.rs",
+      "crates/xterm-web/src/webgl/gpu_resources.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/definitions.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/browser.rs",
+      "crates/xterm-web/src/webgl/canvas_layer.rs",
+      "crates/xterm-web/src/webgl/link_layer.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/webgl.rs",
+      "crates/xterm-web/tests/webgl_renderer.rs",
+      "crates/xterm-web/tests/wasm_webgl_texture_atlas.rs",
+      "crates/xterm-web/tests/wasm_webgl_rectangles.rs"
+    ],
+    "evidence": [
+      "docs/webgl-port.md",
+      "docs/webgl-renderer-update.md",
+      "docs/webgl-browser-cache.md",
+      "results/webgl-renderer/checkpoint.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-web --test webgl --test webgl_renderer; WASM_TEST=wasm_webgl_texture_atlas node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-webgl",
+    "binding": "Rust portable caches/models and WASM GPU/atlas/layer components are mapped individually. On inspected main224d1b33 there is no callable WebglAddon export or complete live WebglRenderer binding. The typings and those two modules deliberately remain missing.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 306/558 retain actual addon activation/live renderer composition, context/GC resource closure and full GPU matrix. Historical96 reported original passes may be DOM fallback after the source suite catches missing WebGL construction, not96 GPU proofs."
   },
   {
     "source": "source_repo/addons/addon-webgl/test/WebglSharedAtlasGarble.test.ts",
@@ -18535,13 +19611,46 @@
       "docs/webgl-port.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/webgl/typed_array.rs",
+      "crates/xterm-web/src/webgl/model.rs",
+      "crates/xterm-web/src/webgl/cache.rs",
+      "crates/xterm-web/src/webgl/browser_cache.rs",
+      "crates/xterm-web/src/webgl/config.rs",
+      "crates/xterm-web/src/webgl/cell_colors.rs",
+      "crates/xterm-web/src/webgl/glyphs.rs",
+      "crates/xterm-web/src/webgl/glyph_gpu.rs",
+      "crates/xterm-web/src/webgl/rectangles.rs",
+      "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+      "crates/xterm-web/src/webgl/texture_atlas.rs",
+      "crates/xterm-web/src/webgl/atlas_rasterizer.rs",
+      "crates/xterm-web/src/webgl/cursor_blink.rs",
+      "crates/xterm-web/src/webgl/device_pixel_observer.rs",
+      "crates/xterm-web/src/webgl/math.rs",
+      "crates/xterm-web/src/webgl/gpu_resources.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/definitions.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/browser.rs",
+      "crates/xterm-web/src/webgl/canvas_layer.rs",
+      "crates/xterm-web/src/webgl/link_layer.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/webgl.rs",
+      "crates/xterm-web/tests/webgl_renderer.rs",
+      "crates/xterm-web/tests/wasm_webgl_texture_atlas.rs",
+      "crates/xterm-web/tests/wasm_webgl_rectangles.rs"
+    ],
+    "evidence": [
+      "docs/webgl-port.md",
+      "docs/webgl-renderer-update.md",
+      "docs/webgl-browser-cache.md",
+      "results/webgl-renderer/checkpoint.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-web --test webgl --test webgl_renderer; WASM_TEST=wasm_webgl_texture_atlas node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-webgl",
+    "binding": "Rust portable caches/models and WASM GPU/atlas/layer components are mapped individually. On inspected main224d1b33 there is no callable WebglAddon export or complete live WebglRenderer binding. The typings and those two modules deliberately remain missing.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 306/558 retain actual addon activation/live renderer composition, context/GC resource closure and full GPU matrix. Historical96 reported original passes may be DOM fallback after the source suite catches missing WebGL construction, not96 GPU proofs."
   },
   {
     "source": "source_repo/addons/addon-webgl/test/playwright.config.ts",
@@ -18575,13 +19684,46 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/webgl/typed_array.rs",
+      "crates/xterm-web/src/webgl/model.rs",
+      "crates/xterm-web/src/webgl/cache.rs",
+      "crates/xterm-web/src/webgl/browser_cache.rs",
+      "crates/xterm-web/src/webgl/config.rs",
+      "crates/xterm-web/src/webgl/cell_colors.rs",
+      "crates/xterm-web/src/webgl/glyphs.rs",
+      "crates/xterm-web/src/webgl/glyph_gpu.rs",
+      "crates/xterm-web/src/webgl/rectangles.rs",
+      "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+      "crates/xterm-web/src/webgl/texture_atlas.rs",
+      "crates/xterm-web/src/webgl/atlas_rasterizer.rs",
+      "crates/xterm-web/src/webgl/cursor_blink.rs",
+      "crates/xterm-web/src/webgl/device_pixel_observer.rs",
+      "crates/xterm-web/src/webgl/math.rs",
+      "crates/xterm-web/src/webgl/gpu_resources.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/definitions.rs",
+      "crates/xterm-web/src/webgl/custom_glyphs/browser.rs",
+      "crates/xterm-web/src/webgl/canvas_layer.rs",
+      "crates/xterm-web/src/webgl/link_layer.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/webgl.rs",
+      "crates/xterm-web/tests/webgl_renderer.rs",
+      "crates/xterm-web/tests/wasm_webgl_texture_atlas.rs",
+      "crates/xterm-web/tests/wasm_webgl_rectangles.rs"
+    ],
+    "evidence": [
+      "docs/webgl-port.md",
+      "docs/webgl-renderer-update.md",
+      "docs/webgl-browser-cache.md",
+      "results/webgl-renderer/checkpoint.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/addon-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-web --test webgl --test webgl_renderer; WASM_TEST=wasm_webgl_texture_atlas node scripts/browser-host-check.mjs; node scripts/e2e-upstream.mjs --suite addon-webgl",
+    "binding": "Rust portable caches/models and WASM GPU/atlas/layer components are mapped individually. On inspected main224d1b33 there is no callable WebglAddon export or complete live WebglRenderer binding. The typings and those two modules deliberately remain missing.",
+    "gap": "Suite-to-component guide only; individual assertion migration and complete Rust execution are not certified. 306/558 retain actual addon activation/live renderer composition, context/GC resource closure and full GPU matrix. Historical96 reported original passes may be DOM fallback after the source suite catches missing WebGL construction, not96 GPU proofs."
   },
   {
     "source": "source_repo/src/browser/Clipboard.test.ts",
@@ -18683,7 +19825,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 3,
         "executed": 3,
         "passed": 3,
@@ -18802,7 +19944,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 3,
         "executed": 3,
         "passed": 3,
@@ -18956,7 +20098,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 4,
         "executed": 4,
         "passed": 4,
@@ -19091,7 +20233,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 3,
         "executed": 3,
         "passed": 3,
@@ -21235,7 +22377,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 152,
         "executed": 152,
         "passed": 152,
@@ -21313,7 +22455,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 71,
         "executed": 0,
         "passed": 0,
@@ -21353,7 +22495,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 0,
         "executed": 0,
         "passed": 0,
@@ -21468,7 +22610,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 3,
         "executed": 3,
         "passed": 3,
@@ -21745,7 +22887,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 8,
         "executed": 8,
         "passed": 8,
@@ -21857,7 +22999,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 2,
         "executed": 2,
         "passed": 2,
@@ -22072,7 +23214,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 4,
         "executed": 4,
         "passed": 4,
@@ -23020,7 +24162,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 38,
         "executed": 38,
         "passed": 38,
@@ -23316,7 +24458,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 10,
         "executed": 10,
         "passed": 10,
@@ -23393,7 +24535,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 1,
         "executed": 1,
         "passed": 1,
@@ -23527,7 +24669,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 4,
         "executed": 4,
         "passed": 4,
@@ -24136,7 +25278,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 18,
         "executed": 18,
         "passed": 18,
@@ -24681,7 +25823,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 24,
         "executed": 24,
         "passed": 24,
@@ -25110,7 +26252,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 13,
         "executed": 13,
         "passed": 13,
@@ -26013,7 +27155,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 26,
         "executed": 26,
         "passed": 26,
@@ -26273,7 +27415,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 8,
         "executed": 8,
         "passed": 8,
@@ -27085,7 +28227,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 19,
         "executed": 19,
         "passed": 19,
@@ -28117,7 +29259,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 28,
         "executed": 28,
         "passed": 28,
@@ -28382,7 +29524,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 7,
         "executed": 7,
         "passed": 7,
@@ -37897,7 +39039,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 194,
         "executed": 194,
         "passed": 194,
@@ -38098,7 +39240,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 4,
         "executed": 4,
         "passed": 4,
@@ -38412,7 +39554,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 7,
         "executed": 7,
         "passed": 7,
@@ -39071,7 +40213,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 17,
         "executed": 17,
         "passed": 17,
@@ -39132,7 +40274,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 0,
         "executed": 0,
         "passed": 0,
@@ -39289,7 +40431,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 3,
         "executed": 3,
         "passed": 3,
@@ -41982,7 +43124,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 61,
         "executed": 61,
         "passed": 61,
@@ -43710,7 +44852,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 51,
         "executed": 51,
         "passed": 51,
@@ -43899,7 +45041,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 4,
         "executed": 4,
         "passed": 4,
@@ -44139,7 +45281,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 7,
         "executed": 7,
         "passed": 7,
@@ -44412,7 +45554,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 6,
         "executed": 6,
         "passed": 6,
@@ -44645,7 +45787,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 5,
         "executed": 5,
         "passed": 5,
@@ -46560,7 +47702,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 61,
         "executed": 61,
         "passed": 61,
@@ -52040,7 +53182,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 165,
         "executed": 165,
         "passed": 165,
@@ -52804,7 +53946,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 288,
         "executed": 288,
         "passed": 288,
@@ -52880,7 +54022,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 1,
         "executed": 1,
         "passed": 1,
@@ -54365,7 +55507,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 64,
         "executed": 64,
         "passed": 64,
@@ -54827,7 +55969,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 19,
         "executed": 19,
         "passed": 19,
@@ -55113,7 +56255,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 7,
         "executed": 7,
         "passed": 7,
@@ -56005,7 +57147,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 20,
         "executed": 20,
         "passed": 20,
@@ -56874,7 +58016,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 20,
         "executed": 20,
         "passed": 20,
@@ -62657,7 +63799,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 161,
         "executed": 161,
         "passed": 161,
@@ -63664,7 +64806,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 23,
         "executed": 23,
         "passed": 23,
@@ -64357,7 +65499,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 20,
         "executed": 20,
         "passed": 20,
@@ -64544,7 +65686,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 2,
         "executed": 2,
         "passed": 2,
@@ -64787,7 +65929,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 7,
         "executed": 7,
         "passed": 7,
@@ -64966,7 +66108,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 4,
         "executed": 4,
         "passed": 4,
@@ -65163,7 +66305,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 3,
         "executed": 3,
         "passed": 3,
@@ -65500,7 +66642,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 10,
         "executed": 10,
         "passed": 10,
@@ -65710,7 +66852,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 8,
         "executed": 8,
         "passed": 8,
@@ -66150,7 +67292,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 10,
         "executed": 10,
         "passed": 10,
@@ -66311,7 +67453,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 3,
         "executed": 3,
         "passed": 3,
@@ -66510,7 +67652,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 5,
         "executed": 5,
         "passed": 5,
@@ -67790,7 +68932,7 @@
     "execution": {
       "original": {
         "status": "recorded baseline",
-        "evidence": "results/upstream-baseline/runs/2026-10-28T07-29-05-991Z-1f9243d0-4cdb-4fef-862f-77f94b5dc13d/summary.json",
+        "evidence": "results/upstream-baseline/runs/2026-10-27T23-56-32-662Z-7afbb60b-2296-4d22-ba19-e56234decf68/summary.json",
         "discovered": 45,
         "executed": 45,
         "passed": 45,

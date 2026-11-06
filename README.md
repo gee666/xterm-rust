@@ -118,6 +118,10 @@ The full speed/artifact-size comparison runner is not yet delivered. [Comparison
 - `crates/xterm-core` owns portable state, parsing, buffers, services and native APIs.
 - `crates/xterm-web` owns WASM/browser bindings, DOM/input/rendering adapters and browser addon integration.
 - `crates/xterm-addons` contains portable addon logic.
+- `crates/xterm-font-addons` owns browser font discovery, FontFace promises and ligature addon bindings over portable font parsing/shaping.
+- `crates/xterm-wasm-support` shares browser ABI/error/UTF-16/public-view helpers without making the terminal core depend on a browser.
 - `source_repo` is the read-only behavioral reference. Never weaken its assertions to obtain green results.
+
+The [fourteen-addon coverage audit](docs/addon-coverage-audit.md) links inspected Rust components and callable browser bindings to retained source/native/browser evidence, while keeping missing contracts and uncertified assertion counts explicit. It is not a fresh full-suite or completion result.
 
 Public API representation changes, UTF-16 contracts, original assertion mappings and gaps are documented by subsystem. Preserve upstream notices and the [MIT license](LICENSE), plus data/dependency notices under `licenses/`. Actual independent reviews and missing checks are part of the verification deliverable, not optional follow-up.

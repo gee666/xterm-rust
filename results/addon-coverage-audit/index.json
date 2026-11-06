@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "task": 561,
+  "base": "224d1b339a43eddf899c2944d9dad734d8c44234",
+  "equivalence": "NOT PROVEN",
+  "scope": "All14 addon mapping refresh only; final task328 and implementation families remain open.",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "arch": "x64",
+    "typescript": "5.9.3"
+  },
+  "commands": [
+    {
+      "argv": "node scripts/compatibility-inventory.mjs",
+      "status": "passed"
+    },
+    {
+      "argv": "node scripts/compatibility-inventory.mjs --check",
+      "status": "passed"
+    },
+    {
+      "argv": "node --test scripts/compatibility-inventory.test.mjs scripts/compatibility-baseline-links.test.mjs scripts/compatibility-addon-mappings.test.mjs",
+      "status": "passed",
+      "discovered": 11,
+      "executed": 11,
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "argv": "node --check scripts/compatibility-inventory.mjs; node --check scripts/compatibility-addon-mappings.test.mjs",
+      "status": "passed"
+    },
+    {
+      "argv": "git diff --check",
+      "status": "passed",
+      "warning": "Git reports future LF-to-CRLF conversion for rewritten serialize-api-map.md, not whitespace errors."
+    }
+  ],
+  "referenceChecks": [
+    {
+      "root": "source_repo",
+      "phase": "after audit tests",
+      "files": 776,
+      "mismatches": []
+    },
+    {
+      "root": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo",
+      "phase": "after audit tests",
+      "files": 776,
+      "mismatches": []
+    }
+  ],
+  "counts": {
+    "referenceFiles": 776,
+    "productionModules": 209,
+    "declarationFiles": 16,
+    "apis": 770,
+    "apiCategories": {
+      "declaration": 109,
+      "event": 38,
+      "member": 440,
+      "option": 183
+    },
+    "apiStatuses": {
+      "missing": 602,
+      "partial": 168
+    },
+    "moduleStatuses": {
+      "missing": 114,
+      "partial": 95
+    },
+    "testFiles": 120,
+    "suiteKinds": {
+      "benchmark": 6,
+      "browser-integration": 25,
+      "test-support": 16,
+      "unit": 73
+    },
+    "staticTestDefinitions": 2426,
+    "fixtures": 162,
+    "addons": 14,
+    "modulesWithoutFocusedCriteria": 4,
+    "apisWithoutFocusedCriteria": 261,
+    "casesWithoutFocusedCriteria": 690,
+    "staticBenchmarkDefinitions": 32
+  },
+  "inputs": [
+    {
+      "path": "README.md",
+      "bytes": 9066,
+      "sha256": "ea191d4e59b6db5c03658e1c23f4b88e0686891e3f818d654f4c44b439104e1c"
+    },
+    {
+      "path": "docs/compatibility.md",
+      "bytes": 15197,
+      "sha256": "1915cc1b5f40393660dad608b2ec57c490452f0664a8fed96710ad7442fa0de7"
+    },
+    {
+      "path": "docs/verification.md",
+      "bytes": 23433,
+      "sha256": "e15d2a1d1f7b7273d914c36714fb7cce953b3ab5d44ee0ddfe3f97e787f74d14"
+    },
+    {
+      "path": "docs/serialize-api-map.md",
+      "bytes": 5638,
+      "sha256": "480ccbf1e5e8863877059175d0b5c291ab3c3ea7ed7e0e3848ad230999599e73"
+    },
+    {
+      "path": "docs/addon-coverage-audit.md",
+      "bytes": 10113,
+      "sha256": "e835b647fd07430961b2691bababdaaf974c5486602e7d7e23aec2498b37c3c9"
+    },
+    {
+      "path": "scripts/compatibility-inventory.mjs",
+      "bytes": 22191,
+      "sha256": "ea0ae533018f09651bbdcf144264a4ccaa0d026977baa2d11e9cd5f5b19ff59f"
+    },
+    {
+      "path": "scripts/compatibility-addon-mappings.test.mjs",
+      "bytes": 5085,
+      "sha256": "5746ee01505061896835a198850b16416ee77eede224e4485d240297355d56e3"
+    },
+    {
+      "path": "tools/compatibility/addon-mappings.json",
+      "bytes": 261306,
+      "sha256": "6ee9487894ae968fb209014a4a53ac912d843510e40f9235c6599cdfed294a7f"
+    },
+    {
+      "path": "results/compatibility/addons.json",
+      "bytes": 14948,
+      "sha256": "89de5e7852ff85c64701e75aa402420d0e6fe6440f9e4ddc54e11ebea6b43de9"
+    },
+    {
+      "path": "results/compatibility/apis.json",
+      "bytes": 1338053,
+      "sha256": "43a4b5116bcba114307a7e6149f4ba8dc64b4046df55a998786a80ca80958b7d"
+    },
+    {
+      "path": "results/compatibility/evidence-manifest.json",
+      "bytes": 46822,
+      "sha256": "cb544c95a43dc5c487895c7aebc1f2c2aafaa6331a83377fa722d9fc465dedbb"
+    },
+    {
+      "path": "results/compatibility/modules.json",
+      "bytes": 208491,
+      "sha256": "f9db3214b874d61703774eda2b9f09fa9a0fe70e133ed1265b85d97f9554f66f"
+    },
+    {
+      "path": "results/compatibility/suites.json",
+      "bytes": 2333773,
+      "sha256": "fd602ad237004d2bca93796d37ed09ce4c1b66345690c24f5ae85ecd8b2a8c0f"
+    },
+    {
+      "path": "results/compatibility/summary.json",
+      "bytes": 4833,
+      "sha256": "ab629966e5db2927d940ef8596b8e2c633b8274c8a8c81ff301361f0df28fe31"
+    },
+    {
+      "path": "results/addon-coverage-audit/node-tests.log",
+      "bytes": 1208,
+      "sha256": "41b67aa77932499fc7285d98fa634d8d0529824aba6404d2cc6ad6bedf003755"
+    },
+    {
+      "path": "results/addon-coverage-audit/check.log",
+      "bytes": 4874,
+      "sha256": "9962f2ac668bb57f0207ab8585e5a8bcdb1c087dd7db1f51936ca7649b722562"
+    },
+    {
+      "path": "results/addon-coverage-audit/generate.log",
+      "bytes": 4877,
+      "sha256": "45aca38e3556d57eeb2e3702bf6e5cd0ef784bf412aa59fedea49313a4604f45"
+    }
+  ],
+  "notRun": [
+    "Rust terminal behavior or Rust compilation",
+    "full source/API/assertion reconciliation",
+    "final native Windows/Linux/macOS or Miri/unsafe review",
+    "final workspace fmt/Clippy/test/release gates",
+    "browser/component/original suites or demos",
+    "performance/size/LoC measurement"
+  ],
+  "temporary": {
+    "ownedRoot": "O:/xterm-rust-swarm-16/tmp/worktrees/ElijahAudit328",
+    "jobs": 0,
+    "cleanup": "Pending review; only owned root and regular private target/tmp/tool dependency install. No cleanup yet claimed."
+  }
+}

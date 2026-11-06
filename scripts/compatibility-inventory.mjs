@@ -38,6 +38,12 @@ const modifiers = node => (node.modifiers ?? []).map(m => m.getText());
 const nameOf = (sf, node) => node.name?.getText(sf) ?? (ts.isConstructorDeclaration(node) ? 'constructor' : ts.isCallSignatureDeclaration(node) ? '<call>' : ts.isConstructSignatureDeclaration(node) ? '<new>' : '<index>');
 const referenceFiles = await listReferenceFiles(root);
 const entries = JSON.parse(await read(mappingsPath));
+const addonMappingsPath = 'tools/compatibility/addon-mappings.json';
+if (mappingsPath === 'tools/compatibility/mappings.json') {
+  const addonEntries = JSON.parse(await read(addonMappingsPath));
+  assert.equal(addonEntries.schemaVersion, 1, 'Unsupported addon mapping schema');
+  for (const key of ['modules', 'apiOwners', 'suites']) entries[key] = [...(entries[key] ?? []), ...(addonEntries[key] ?? [])];
+}
 const behaviorRules = JSON.parse(await read('tools/compatibility/behavior-criteria.json'));
 const criteriaIndexPath = 'results/acceptance/criteria-index.json';
 const criteriaIndex = JSON.parse(await read(criteriaIndexPath));
@@ -73,8 +79,12 @@ const acceptanceFor = (source, title = '') => {
 };
 assert.equal(new Set(entries.modules.map(m => m.source)).size, entries.modules.length, 'Duplicate module mapping');
 const moduleMappings = new Map(entries.modules.map(m => [m.source, m]));
-const evidencePaths = new Set([criteriaIndexPath, ...mappingDocuments]);
-for (const entry of [...entries.modules, ...entries.apiOwners]) {
+const suiteMappings = new Map((entries.suites ?? []).map(m => [m.source, m]));
+assert.equal(suiteMappings.size, (entries.suites ?? []).length, 'Duplicate suite mapping');
+assert.equal(new Set(entries.apiOwners.map(m => `${m.source ?? '*'}:${m.owner}`)).size, entries.apiOwners.length, 'Duplicate API owner mapping');
+const evidencePaths = new Set([criteriaIndexPath, ...mappingDocuments, mappingsPath, 'tools/compatibility/behavior-criteria.json']);
+if (mappingsPath === 'tools/compatibility/mappings.json') evidencePaths.add(addonMappingsPath);
+for (const entry of [...entries.modules, ...entries.apiOwners, ...(entries.suites ?? [])]) {
   for (const p of [...entry.implementation, ...entry.tests, ...entry.evidence]) { await validateMappedFile(p); evidencePaths.add(p); }
   assert(entry.binding && entry.gap && entry.command, 'Mappings need binding, gap, and executable command');
 }
@@ -128,7 +138,9 @@ for (const p of declarations) {
     const owner = scope.slice(1).join('.');
     const declaration = scope.length === 1;
     const docs = `${inheritedDocs}\n${docOf(node)}`.trim();
-    const match = entries.apiOwners.find(e => e.owner === (declaration ? name : scope[1]));
+    const ownerName = declaration ? name : scope[1];
+    const match = entries.apiOwners.find(e => e.owner === ownerName && e.source === p)
+      ?? entries.apiOwners.find(e => e.owner === ownerName && !e.source);
     const kind = ts.SyntaxKind[node.kind];
     const category = declaration ? 'declaration' : /^on[A-Z]/.test(name) || /\bIEvent\s*</.test(node.type?.getText(sf) ?? '') ? 'event'
       : /Options$/.test(scope[1]) ? 'option' : 'member';
@@ -155,7 +167,9 @@ for (const module of modules.filter(m => m.source.endsWith('.d.ts') && m.accepta
     module.acceptanceGap = null;
   }
 }
+for (const entry of entries.apiOwners) assert(apis.some(a => (!entry.source || a.source === entry.source) && (a.owner.split('.')[0] || a.name) === entry.owner), `Unknown API owner mapping: ${entry.source ?? '*'}:${entry.owner}`);
 const testFiles = referenceFiles.filter(p => p.endsWith('.ts') && (/\.(test|benchmark)\.ts$/.test(p) || p.includes('/test/')));
+for (const source of suiteMappings.keys()) assert(testFiles.includes(source), `Unknown suite mapping: ${source}`);
 for (const source of originalBySource.keys()) assert(testFiles.includes(source), `Baseline suite omitted by inventory: ${source}`);
 const suites = [];
 function calleeNames(node, sf) {
@@ -204,7 +218,7 @@ for (const p of testFiles) {
   }
   visit(sf);
   const productionPath = p.replace(/\.(test|benchmark)\.ts$/, '.ts');
-  const mapping = moduleMappings.get(productionPath);
+  const mapping = suiteMappings.get(p) ?? moduleMappings.get(productionPath);
   suites.push({ source: p, family: family(p), kind: p.endsWith('.benchmark.ts') ? 'benchmark' : !p.endsWith('.test.ts') ? 'test-support' : p.includes('/playwright/') || /addons\/[^/]+\/test\//.test(p) ? 'browser-integration' : 'unit',
     definitions, staticTestDefinitions: definitions.filter(d => d.kind === 'test').length,
     execution: { original: originalBySource.has(p) ? { status: 'recorded baseline', evidence: originalBaselinePath,
@@ -218,7 +232,9 @@ const fixtures = manifest.filter(m => m.path.startsWith('source_repo/test/fixtur
 const addons = (await readdir(path.join(root, 'source_repo/addons'), { withFileTypes: true })).filter(e => e.isDirectory()).map(e => {
   const prefix = `source_repo/addons/${e.name}/`;
   return { name: e.name, declarations: declarations.filter(p => p.startsWith(prefix)), modules: modules.filter(m => m.source.startsWith(prefix)).map(m => m.source),
-    suites: suites.filter(s => s.source.startsWith(prefix)).map(s => s.source), status: 'missing', gap: 'No Rust addon or Rust-backed browser integration mapped.' };
+    suites: suites.filter(s => s.source.startsWith(prefix)).map(s => s.source),
+    status: modules.some(m => m.source.startsWith(prefix) && m.status === 'partial') ? 'partial' : 'missing',
+    gap: 'Per-module partial mappings do not certify the complete addon, all declared APIs or its original suites. Inspect each row and its retained gaps.' };
 });
 const countBy = (rows, key) => Object.fromEntries([...new Set(rows.map(r => r[key]))].sort().map(k => [k, rows.filter(r => r[key] === k).length]));
 const summary = { schemaVersion: 1, equivalence: 'NOT PROVEN', parser: `typescript ${ts.version}`,
@@ -232,7 +248,7 @@ const summary = { schemaVersion: 1, equivalence: 'NOT PROVEN', parser: `typescri
   families: Object.keys(countBy(modules, 'family')).map(f => ({ family: f, modules: modules.filter(m => m.family === f).length, partial: modules.filter(m => m.family === f && m.status === 'partial').length,
     missing: modules.filter(m => m.family === f && m.status === 'missing').length, suites: suites.filter(s => s.family === f).length })),
   limitations: ['Static test-definition counts are not runtime case/assertion counts; loops and helpers may generate cases.', 'Source hashes establish this local reference, not a claimed public revision.',
-    'Original counts are copied from explicit per-source upstream-baseline results; Rust counts remain unassessed, not inferred from file presence.', 'Partial API mappings describe internal Rust equivalents only; no compatible public Terminal/browser binding is implemented.',
+    'Original counts are copied from explicit per-source upstream-baseline results; Rust counts remain unassessed, not inferred from file presence.', 'Partial mappings link inspected native components or browser bindings; neither file presence nor historical scoped evidence certifies full equivalence.',
     'proposedDocumentation is a lexical documentation flag, not proof of runtime API gating.', 'Type signatures are retained verbatim, including nested callback and object contracts.', 'Test-support files include shared registrations and runner configurations; conditional test callees retain both alternatives.'] };
 const output = { 'manifest.json': manifest, 'evidence-manifest.json': evidenceManifest, 'modules.json': modules, 'apis.json': apis, 'suites.json': suites, 'fixtures.json': fixtures, 'addons.json': addons, 'runtime-contracts.json': runtimeContracts, 'summary.json': summary };
 await mkdir(path.join(root, outputDir), { recursive: true });

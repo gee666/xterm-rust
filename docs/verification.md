@@ -2,6 +2,10 @@
 
 Overall equivalence is **NOT PROVEN**. This is an in-progress evidence report, not a completion certificate. It retains initial failed gates alongside later source-bound checkpoints. Complete terminal/API/addon coverage, the final release-revision quality matrix and full Rust-backed browser end-to-end proof remain unfinished.
 
+## Current addon mapping audit
+
+Task561 reconciles all fourteen addons against integrated main `224d1b33`. See [addon-coverage-audit.md](addon-coverage-audit.md) for inspected native/browser bindings, exact mapping inputs, historical receipt scope and remaining families. The index now has 95 partial and 114 unmapped modules, plus 168 partial and 602 unmapped API records. All 50 addon suite/support files have scoped component/evidence guides, but Rust full-suite runtime counters remain null. This audit ran inventory checks only, not terminal, native OS, quality, browser, demo or performance gates. The execution observations below remain source-bound checkpoints, not current execution claims. Full final reconciliation is task328; equivalence remains NOT PROVEN.
+
 ## Current 16-agent native checkpoints
 
 The controlling continuation uses exactly16 agents and actual integration branch `main`. The original45-worker resource history below is preserved history, not the current temporary-work or concurrency policy. Current owned temporary work belongs on O:, with bounded jobs and safe per-owner cleanup.
@@ -131,7 +135,7 @@ The review list changes as fixes land. Module acceptance never establishes brows
 
 The current reviewed compatibility schema inventories 209 production modules, 770 declared API contracts, 14 addons and 120 test-related files: 73 unit, 25 browser-integration, six benchmark and 16 support files. The corrected snapshot records 2,426 static test definitions and 32 benchmark definitions. Its earlier count of 2,449 incorrectly included 23 local parser helper calls; those were removed with a regression while retaining 333 default-imported Playwright registrations. Original runtime case counts did not change. Static definitions are not runtime assertions or executed cases.
 
-At the inspected snapshot, mappings marked 188 modules missing and 21 partial, and 766 APIs missing and four partial. It exposed 46 modules, 291 API records and 777 static cases without focused acceptance mappings. These are incomplete mapping counts, not a measured implementation percentage or a claim that later source files do not exist. Task #142 owns the final post-integration compatibility refresh. Regenerate after reviewing changes; concurrent evidence edits correctly make its stale checker fail.
+The older inspected snapshot marked 188 modules missing and 21 partial, and 766 APIs missing and four partial. Those counts are superseded by the task561 addon audit above. Current focused acceptance mapping still has four modules, 261 API records and 690 static cases without a focused criterion. These are incomplete mapping counts, not a measured implementation percentage or a claim that later source files do not exist. Task328 owns the final post-integration compatibility and assertion reconciliation. Regenerate after reviewing changes; concurrent evidence edits correctly make its stale checker fail.
 
 Per-suite execution counts remain unknown unless a result actually measures them. Missing original/Rust/browser execution cannot be entered as zero failures. The suite inventory contains explicit `not assessed` and null counts where no run was observed. Reconcile future original baseline and Rust receipts with that inventory before publishing aggregate totals.
 
