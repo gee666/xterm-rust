@@ -36,7 +36,7 @@ impl AttachSocket for Socket {
         &self,
         event: SocketEvent,
         callback: SocketCallback,
-    ) -> Result<DisposableHandle, AttachError> {
+    ) -> Result<AttachListener, AttachError> {
         let index = self.entries.borrow().len();
         self.entries.borrow_mut().push(Some((event, callback)));
         let entries = self.entries.clone();
@@ -47,7 +47,8 @@ impl AttachSocket for Socket {
             if let Some(hook) = hook {
                 hook(event);
             }
-        }))
+        })
+        .into())
     }
     fn warn_closing(&self) -> Result<(), AttachError> {
         panic!("open socket must not warn")

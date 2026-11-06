@@ -6,7 +6,6 @@ use crate::terminal::Terminal;
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::prelude::*;
 use xterm_addons::{attach, native_utility::NativeUtilityTerminal};
-use xterm_core::lifecycle::Disposable;
 
 #[wasm_bindgen(js_name=AttachAddon)]
 pub struct AttachAddon {
@@ -44,8 +43,10 @@ impl AttachAddon {
             .activate(host)
             .map_err(|error| crate::js_error::to_js_error(&error))
     }
-    pub fn dispose(&self) {
-        self.addon.dispose();
+    pub fn dispose(&self) -> Result<(), JsValue> {
+        self.addon
+            .try_dispose()
+            .map_err(|error| crate::js_error::to_js_error(&error))
     }
 }
 #[wasm_bindgen(js_name=Base64)]

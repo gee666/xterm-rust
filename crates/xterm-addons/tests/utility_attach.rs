@@ -37,13 +37,14 @@ impl AttachSocket for Socket {
         &self,
         event: SocketEvent,
         callback: SocketCallback,
-    ) -> Result<DisposableHandle, AttachError> {
+    ) -> Result<AttachListener, AttachError> {
         let index = self.listeners.borrow().len();
         self.listeners.borrow_mut().push(Some((event, callback)));
         let listeners = self.listeners.clone();
         Ok(to_disposable(move || {
             listeners.borrow_mut()[index] = None;
-        }))
+        })
+        .into())
     }
     fn warn_closing(&self) -> Result<(), AttachError> {
         self.warnings.set(self.warnings.get() + 1);

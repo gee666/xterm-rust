@@ -1,0 +1,19 @@
+# Attach socket removal
+
+Task536 repairs repeatable fallible Attach socket listener removal and callback lifetime. It builds on accepted535 live disposal iteration. Full utility/status323 and full-port equivalence remain NOT PROVEN.
+
+## Contract and representation
+
+Source `addSocketListener` retains `handler` and never clears it. Each disposal resolves the current `socket.removeEventListener`, calls with the socket receiver and exactly two arguments, and propagates the original thrown value. The first failure stops the live disposal loop. A later disposal starts from the first handle again. Socket close/error callbacks use that same fallible loop.
+
+Portable `AttachSocket::listen` now returns `AttachListener` rather than an infallible `DisposableHandle`. It wraps a repeatable `Fn() -> Result<(), AttachError>` removal capability. Infallible native adapters use `DisposableHandle::into()`. Terminal subscriptions still return the existing infallible core handles. `AttachAddon::try_dispose` propagates the first error. Existing `Disposable` and automatic native Drop cleanup remain compatible. Infallible trait callers can retrieve the original failure through `take_dispose_error`, as with OptionsService. Callers needing immediate host errors must use `try_dispose`. Drop cannot return a failure, but never panics on a host removal exception. Browser `AttachAddon.dispose` calls `try_dispose` and throws the exact original JavaScript value.
+
+The browser adapter transfers the callback to JS GC ownership with `Closure::into_js_value` before registration. A user override can retain it and then throw while adding, throw while removing, or return without removal. None may leave a JS function pointing at a dropped Rust closure. There is no `forget`, unsafe code or new dependency. Repeated removals retain the same callback identity. Collection occurs when JS releases the function, not merely when a Rust removal handle is dropped. This requires browser WeakRef support used by wasm-bindgen0.2.100, supported by the tested engines.
+
+## Tests
+
+The shared fixture has36 removal traces over explicit/close/error disposal, message/close/error failure location, getter/call failure phase and both bidirectional settings. It checks immediate error identity, active subscriptions after failure, subsequent successful disposal, replaced-method repeat calls, exact receiver/argument/callback identity and invoking retained message callbacks after/during removal.42 further cases cover thrown undefined/null/false/number/string/Symbol/object through getters/calls and all three entry points. One case registers a callback then throws and invokes the retained callback. One further scenario replaces Array's iterator inside the removal getter and verifies the source's literal two-argument call, without introducing spread iteration. Total80 expanded source/browser scenarios, not80 Rust functions.
+
+The portable test replays36 complete traces against source-produced expected JSON and checks infallible compatibility error retention. A direct browser adapter test also drops failed-removal handles or receives a failed registration, then invokes JS-retained callbacks twice. Existing535 live reactivation and404 real WebSocket reentry tests remain unchanged apart from Rust adapter return-type migration, with all assertions preserved.
+
+Reproduce with `.pi/swarm/skills/attach-removal-check/SKILL.md`. The JSON fixture is intentionally a cohesive source-generated table over350 lines. Do not edit it to fit Rust output. Raw source checks and later runtime evidence are under `results/attach-removal`. Native/browser/quality results are pending until their actual commands run. No complete upstream-suite or native Linux/macOS claim is made.

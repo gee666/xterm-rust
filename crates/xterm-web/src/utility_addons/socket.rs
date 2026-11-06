@@ -5,12 +5,25 @@ use crate::{
     utility_addons::js_property,
 };
 use js_sys::{Array, JsString, Uint8Array};
-use std::cell::RefCell;
-use wasm_bindgen::{closure::Closure, JsCast, JsValue};
+use wasm_bindgen::{closure::Closure, prelude::wasm_bindgen, JsCast, JsValue};
 use web_sys::{Event, WebSocket};
 use xterm_addons::attach::*;
-use xterm_core::lifecycle::{to_disposable, DisposableHandle};
 pub struct BrowserSocket(pub WebSocket);
+
+// Literal argument lists match source even if Array's iterator is replaced.
+#[wasm_bindgen(
+    inline_js = "export function attachSocketListener(socket, key, type, handler) { socket[key](type, handler); }"
+)]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = attachSocketListener)]
+    fn listener_call(
+        socket: &JsValue,
+        key: &str,
+        kind: &str,
+        handler: &JsValue,
+    ) -> Result<(), JsValue>;
+}
+
 fn error(value: JsValue) -> AttachError {
     AttachError::host(crate::js_error::JsCallbackError(value))
 }
@@ -66,7 +79,7 @@ impl AttachSocket for BrowserSocket {
         &self,
         event: SocketEvent,
         callback: SocketCallback,
-    ) -> Result<DisposableHandle, AttachError> {
+    ) -> Result<AttachListener, AttachError> {
         let kind = match event {
             SocketEvent::Message => "message",
             SocketEvent::Close => "close",
@@ -91,18 +104,17 @@ impl AttachSocket for BrowserSocket {
             };
             callback(payload).map_err(js_error)
         }) as Box<dyn Fn(Event) -> Result<(), JsValue>>);
-        self.0
-            .add_event_listener_with_callback(kind, listener.as_ref().unchecked_ref())
-            .map_err(error)?;
-        let listener = RefCell::new(Some(listener));
+        // JS owns the callback before registration: an override may retain it
+        // and then throw, or removal may throw or deliberately do nothing.
+        // into_js_value uses JS GC to keep the Rust closure alive for every
+        // retained function reference, including an in-flight callback.
+        let listener = listener.into_js_value();
+        listener_call(self.0.as_ref(), "addEventListener", kind, &listener).map_err(error)?;
         let socket = self.0.clone();
-        Ok(to_disposable(move || {
-            if let Some(callback) = listener.borrow_mut().take() {
-                // Built-in removal is non-throwing for this unchanged tuple.
-                socket
-                    .remove_event_listener_with_callback(kind, callback.as_ref().unchecked_ref())
-                    .expect("valid built-in WebSocket listener removal");
-            }
+        Ok(AttachListener::new(move || {
+            // Resolve the current method on each call with the source receiver
+            // and exact two arguments. Never consume a handle on failure.
+            listener_call(socket.as_ref(), "removeEventListener", kind, &listener).map_err(error)
         }))
     }
     fn warn_closing(&self) -> Result<(), AttachError> {

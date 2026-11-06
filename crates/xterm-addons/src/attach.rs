@@ -111,6 +111,29 @@ impl std::error::Error for AttachError {
 pub type SocketCallback = Rc<dyn Fn(Option<SocketMessage>) -> Result<(), AttachError>>;
 pub type DataCallback = Rc<dyn Fn(&[u16]) -> Result<(), AttachError>>;
 
+/// Repeatable removal capability. A failed removal leaves the handle usable.
+#[derive(Clone)]
+pub struct AttachListener(Rc<dyn Fn() -> Result<(), AttachError>>);
+
+impl AttachListener {
+    pub fn new(remove: impl Fn() -> Result<(), AttachError> + 'static) -> Self {
+        Self(Rc::new(remove))
+    }
+
+    pub fn remove(&self) -> Result<(), AttachError> {
+        (self.0)()
+    }
+}
+
+impl From<DisposableHandle> for AttachListener {
+    fn from(handle: DisposableHandle) -> Self {
+        Self::new(move || {
+            handle.dispose();
+            Ok(())
+        })
+    }
+}
+
 /// Browser implementations must use ArrayBuffer, not Blob, for binary messages.
 pub trait AttachSocket {
     fn use_array_buffer(&self) -> Result<(), AttachError>;
@@ -120,7 +143,7 @@ pub trait AttachSocket {
         &self,
         event: SocketEvent,
         callback: SocketCallback,
-    ) -> Result<DisposableHandle, AttachError>;
+    ) -> Result<AttachListener, AttachError>;
     fn warn_closing(&self) -> Result<(), AttachError>;
 }
 
@@ -133,7 +156,8 @@ pub trait AttachTerminal {
 pub struct AttachAddon {
     socket: Rc<dyn AttachSocket>,
     bidirectional: bool,
-    disposables: Rc<RefCell<Vec<DisposableHandle>>>,
+    disposables: Rc<RefCell<Vec<AttachListener>>>,
+    dispose_error: RefCell<Option<AttachError>>,
 }
 
 impl AttachAddon {
@@ -155,6 +179,7 @@ impl AttachAddon {
             socket,
             bidirectional,
             disposables: Rc::default(),
+            dispose_error: RefCell::default(),
         })
     }
 
@@ -179,7 +204,7 @@ impl AttachAddon {
                     .ok_or_else(|| AttachError::Adapter("attached socket was dropped".into()))?;
                 send(&*socket, || SocketMessage::Text(data.to_vec()))
             }));
-            self.disposables.borrow_mut().push(data);
+            self.disposables.borrow_mut().push(data.into());
             let socket = Rc::downgrade(&self.socket);
             let binary = terminal.on_binary(Rc::new(move |data| {
                 let socket = socket
@@ -190,7 +215,7 @@ impl AttachAddon {
                     SocketMessage::Binary(data.iter().map(|unit| (unit & 255) as u8).collect())
                 })
             }));
-            self.disposables.borrow_mut().push(binary);
+            self.disposables.borrow_mut().push(binary.into());
         }
         for event in [SocketEvent::Close, SocketEvent::Error] {
             // Weak ownership prevents socket -> callback -> socket cycles.
@@ -199,7 +224,7 @@ impl AttachAddon {
                 event,
                 Rc::new(move |_| {
                     if let Some(disposables) = disposables.upgrade() {
-                        dispose_all(&disposables);
+                        dispose_all(&disposables)?;
                     }
                     Ok(())
                 }),
@@ -208,11 +233,24 @@ impl AttachAddon {
         }
         Ok(())
     }
+
+    /// Stop at the first removal error, as the source for-of loop does.
+    /// A subsequent call starts at the first handle again.
+    pub fn try_dispose(&self) -> Result<(), AttachError> {
+        dispose_all(&self.disposables)
+    }
+
+    /// Retrieve failures from the infallible Disposable compatibility API.
+    /// Browser bindings and callers needing immediate errors use try_dispose.
+    pub fn take_dispose_error(&self) -> Option<AttachError> {
+        self.dispose_error.borrow_mut().take()
+    }
 }
 
 impl Disposable for AttachAddon {
     fn dispose(&self) {
-        dispose_all(&self.disposables);
+        let error = self.try_dispose().err();
+        *self.dispose_error.borrow_mut() = error;
     }
 }
 
@@ -222,7 +260,7 @@ impl Drop for AttachAddon {
     }
 }
 
-fn dispose_all(disposables: &RefCell<Vec<DisposableHandle>>) {
+fn dispose_all(disposables: &RefCell<Vec<AttachListener>>) -> Result<(), AttachError> {
     // Source iterates the live array, including handles appended by activate
     // during removal. Release the vector borrow before foreign disposal code.
     let mut index = 0;
@@ -232,8 +270,9 @@ fn dispose_all(disposables: &RefCell<Vec<DisposableHandle>>) {
             break;
         };
         index += 1;
-        disposable.dispose();
+        disposable.remove()?;
     }
+    Ok(())
 }
 
 fn send(
