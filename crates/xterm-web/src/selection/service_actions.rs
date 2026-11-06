@@ -64,12 +64,15 @@ impl SelectionService {
         start: Position,
         length: i64,
     ) -> Result<(), SelectionError> {
-        *self.model.borrow_mut() = SelectionModel {
-            selection_start: Some(start),
-            selection_start_length: length,
-            ..SelectionModel::default()
-        };
+        self.model.borrow_mut().clear_selection();
         self.drag_stop.fire(&())?;
+        // Teardown can call user code. Assign only these fields afterwards so
+        // reentrant changes to selection_end/select-all survive as in source.
+        {
+            let mut model = self.model.borrow_mut();
+            model.selection_start = Some(start);
+            model.selection_start_length = length;
+        }
         self.refresh(buffer, dimensions, false)?;
         self.fire_if_changed(dimensions)
     }
