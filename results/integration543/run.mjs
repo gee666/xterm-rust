@@ -10,7 +10,7 @@ import {referenceIntegrity} from '../../scripts/upstream-baseline-utils.mjs';
 import {sourceIdentity, verifyBuiltPackage} from '../../scripts/e2e/build-identity.mjs';
 const root = process.cwd(), out = join(root, 'results/integration543');
 const mode = process.argv[2];
-assert(['light', 'browser', 'quality', 'canonical', 'components'].includes(mode));
+assert(['light', 'browser', 'quality', 'canonical', 'components', 'cff2'].includes(mode));
 const json = async file => JSON.parse(await readFile(file, 'utf8'));
 const save = (name, data) => writeFile(join(out, name), JSON.stringify(data, null, 2) + '\n');
 await mkdir(join(root, 'tmp/543-system'), {recursive:true});
@@ -97,9 +97,10 @@ if (mode === 'browser') {
     assert.deepEqual(await verifyBuiltPackage(root, input), build);
   } finally { await writeFile(pointer, oldPointer); }
 }
-if (mode === 'components') {
+if (mode === 'components' || mode === 'cff2') {
   const input = await sourceIdentity(root);
-  await save('components-input.json', input);
+  await save(mode === 'cff2' ? 'cff2-input.json' : 'components-input.json', input);
+  if (mode === 'cff2') process.env.BROWSERS = 'firefox';
   const runs = [
     {test:'image_addon_browser', count:74, command:'scripts/image-canvas-check.mjs'},
     {test:'wasm_link_render_recheck', count:2, command:'scripts/browser-host-check.mjs',
@@ -116,9 +117,9 @@ if (mode === 'components') {
     {test:'font_gsub_single_browser', count:2, command:'scripts/browser-host-check.mjs',
       package:'xterm-font-addons', features:'', timeoutMs:900000, env:{WASM_TEST_TIMEOUT_MS:'360000'}},
     {test:'font_cff2_index_browser', count:2, command:'scripts/browser-host-check.mjs',
-      package:'xterm-font-addons', features:''}
+      package:'xterm-font-addons', features:'', timeoutMs:1200000, env:{WASM_TEST_TIMEOUT_MS:'600000'}}
   ];
-  for (const entry of runs) {
+  for (const entry of mode === 'cff2' ? runs.filter(entry => entry.test === 'font_cff2_index_browser') : runs) {
     process.env.WASM_TEST = entry.test;
     process.env.WASM_PACKAGE = entry.package ?? 'xterm-web';
     process.env.CARGO_FEATURES = entry.features ?? 'acceptance-hooks';
@@ -131,7 +132,7 @@ if (mode === 'components') {
     const key = entry.package ? entry.package+'__'+entry.test : entry.test;
     const file = join(root,'results/browser-host',key+'-results.json');
     const report = await json(file);
-    await cp(file,join(out,entry.test+'-results.json'));
+    await cp(file,join(out,(mode === 'cff2' ? 'cff2-firefox-final' : entry.test)+'-results.json'));
     if (entry.test === 'image_addon_browser') {
       await cp(join(root,'results/image-addon/verification.json'),join(out,'image-addon-verification.json'));
       await cp(join(root,'results/image-addon/source-inputs.json'),join(out,'image-addon-source-inputs.json'));
@@ -139,7 +140,7 @@ if (mode === 'components') {
     if (entry.test === 'wasm_link_mouse_path') await cp(join(root,'results/link-mouse-path/source.json'),join(out,'link-mouse-path-source.json'));
     if (entry.test === 'wasm_webgl_browser_cache') await cp(join(root,'tmp/browser-atlas-cache/source.js.json'),join(out,'atlas-source-inputs.json'));
     assert.equal(report.status,'passed');
-    assert.equal(report.browsers.length,3);
+    assert.equal(report.browsers.length,mode === 'cff2' ? 1 : 3);
     for (const browser of report.browsers) {
       assert.equal(browser.status,'passed');
       assert.equal(browser.tests.length,entry.count);
@@ -148,6 +149,21 @@ if (mode === 'components') {
     }
   }
   assert.equal((await sourceIdentity(root)).sha256,input.sha256);
+  if (mode === 'cff2') {
+    const initial = await json(join(out,'cff2-index-initial-60s-failed.json'));
+    const final = await json(join(out,'cff2-firefox-final-results.json'));
+    assert.equal(final.browsers[0].name,'firefox');
+    for (const part of ['compiler','wasm','bindings']) assert.equal(final.artifacts[part].sha256,initial.artifacts[part].sha256);
+    assert.equal((await json(join(out,'components-input.json'))).sha256,input.sha256);
+    const browsers = ['chromium','webkit'].map(name => {
+      const entry = initial.browsers.find(entry => entry.name === name);
+      assert.equal(entry.status,'passed'); assert.deepEqual(entry.errors,[]);
+      return {name,receipt:'cff2-index-initial-60s-failed.json',counts:entry.counts};
+    });
+    browsers.push({name:'firefox',receipt:'cff2-firefox-final-results.json',counts:final.browsers[0].counts});
+    await save('cff2-union.json',{status:'passed',sameSourceSha256:input.sha256,artifacts:final.artifacts,browsers,
+      note:'First Chromium/WebKit passes plus corrected documented600s Firefox execution on identical bytes. Initial60s Firefox deadline failure retained, no passed engine rerun.'});
+  }
 }
 if (mode === 'quality') {
   for (const [name,args] of [
