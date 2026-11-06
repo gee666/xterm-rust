@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module';
-import { readFile } from 'node:fs/promises';
+import { stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { bootstrapSource } from './test-page.mjs';
 
@@ -8,8 +8,9 @@ import { bootstrapSource } from './test-page.mjs';
 // until bindings are installed, without changing source constructor calls.
 export async function buildBootstrap({ root, referenceRoot, outputFile }) {
   const { build } = createRequire(join(referenceRoot, 'package.json'))('esbuild');
-  const wasm = await readFile(join(root, 'browser/pkg/xterm_web_bg.wasm'));
-  await build({ stdin: { contents: bootstrapSource(wasm.toString('base64')), resolveDir: root,
+  const wasm = await stat(join(root, 'browser/pkg/xterm_web_bg.wasm'));
+  if (!wasm.isFile()) throw new Error('E2E WASM package must be a regular file');
+  await build({ stdin: { contents: bootstrapSource(), resolveDir: root,
     sourcefile: 'rust-upstream-bootstrap.mjs' }, outfile: outputFile,
     bundle: true, format: 'iife', platform: 'browser', target: 'es2022', logLevel: 'silent' });
 }
