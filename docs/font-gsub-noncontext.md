@@ -20,7 +20,7 @@ Source `opentype.js` SHA-256 is `737212d8aae53d1996ef10b315e4369a1542ebb9b94c13c
 
 ## Reproduction
 
-Use the unchanged supplied `source_repo` dependencies, and set `SOURCE_PACKAGE_JSON` to its absolute `package.json` if the private worktree has only a physical source copy. New scratch, `TEMP`, `TMP` and Cargo targets must be inside an owned O: worktree. Obtain a current allocation before compiler/browser work.
+Use the unchanged supplied `source_repo` dependencies, and set `SOURCE_PACKAGE_JSON` to its absolute `package.json` if the private worktree has only a physical source copy. New scratch, `TEMP`, `TMP` and Cargo targets must be inside an owned O: worktree. Assign `TEMP` and `TMP` explicitly to the same owned O: path, or assign `TMP` in a subsequent shell command. Obtain a current allocation before compiler/browser work.
 
 ```sh
 GSUB_CORPUS=noncontext node scripts/font-gsub-lookup-oracle.mjs
@@ -40,5 +40,7 @@ Use `--generate` on the first command only when deliberately regenerating the so
 The actual pre-fix native run fails with 72 detailed mismatches in `results/font-gsub-noncontext/native-before.log`: 24 direct noncontext-reference acceptance failures and 48 type-7-reference error-family failures. `proof-counts.json` retains these counts. Both the original reference and private physical copy match all 776 original manifest entries in `reference-integrity.json`. The fixed native all-target/all-feature addon run passes 211 tests across 51 result summaries, without failures, ignored, measured or filtered tests. Strict native addon Clippy, strict new WASM-test Clippy and dependent font/web WASM library checks pass. Initial formatting and unused-test-helper findings were fixed without suppression.
 
 The exact aggregate `cargo fmt --all -- --check` hits Windows OS error 206 on this long physical worktree path. All five whole-package formatting checks pass individually. This is not an aggregate-format waiver or a full workspace-quality pass. Final integrated native OS/MSRV/release/docs/feature matrices remain task 304.
+
+The initial compiler commands assigned `TEMP` to the owned O: path but used `TMP="$TEMP"` in the same export command. A shell probe confirmed that this retained the inherited `/tmp` value for `TMP`. Persistent build/scratch outputs are owned O: paths, but transient compiler TMP routing from those earlier commands is not verified. No unknown system temporary paths were deleted. Final runs must use explicit O: values for both variables.
 
 Browser/source results and final review will be recorded before this task is accepted. Component-host addon loading/fallback/cache/refresh is not complete Terminal rendering, original-suite parity or cross-platform proof. The addon boundary constructs TypeError with the native diagnostic string. That retains Chromium wording rather than Firefox/WebKit native property-access prose; this task proves the source error family/property and addon rejection lifecycle, not engine-exact browser error messages. Existing error-format representations and broader metadata/shaping gaps remain open in task 342.
