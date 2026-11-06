@@ -55,6 +55,51 @@ test('reference mutation fails instead of yielding a size comparison', () => fix
   assert.match(JSON.parse(readFileSync(join(output, 'original-build.json'))).error, /inventory changed/);
   assert.equal(existsSync(join(output, 'original-sizes.json')), false);
 }));
+test('all addon production bundles include dependency licenses and unchanged core-only totals', () => fixture(({ source, deps, output, staging, invoke, args, script }) => {
+  for (const name of ['alpha', 'beta']) mkdirSync(join(source, 'addons', `addon-${name}`), { recursive: true });
+  mkdirSync(join(deps, 'bundled/dist'), { recursive: true });
+  writeFileSync(join(deps, 'bundled/package.json'), '{"name":"bundled","version":"1.2.3","license":"MIT"}');
+  writeFileSync(join(deps, 'bundled/dist/package.json'), '{"type":"module"}');
+  writeFileSync(join(deps, 'bundled/dist/index.js'), 'export const value=1;');
+  writeFileSync(join(deps, 'bundled/LICENSE'), 'Bundled dependency license');
+  writeFileSync(join(source, 'bin/esbuild.mjs'), script + `
+    const addon=process.argv.find(arg=>arg.startsWith('--addon='))?.split('=')[1];
+    if(addon){const base='addons/addon-'+addon+'/lib/addon-'+addon+'.mjs';
+    fs.mkdirSync('addons/addon-'+addon+'/lib',{recursive:true});
+    fs.writeFileSync(base,'export const addon=true;');
+    fs.writeFileSync(base+'.map',JSON.stringify({sources:['../../../node_modules/bundled/dist/index.js']}));}`);
+  const result = invoke([...args, '--addons', 'all']);
+  assert.equal(result.status, 0, result.stderr + result.stdout);
+  const report = JSON.parse(readFileSync(join(output, 'original-build.json')));
+  assert.deepEqual(report.addons, ['alpha', 'beta']);
+  assert.equal(report.commands.length, 4);
+  assert.deepEqual(report.bundledDependencies, [{ name: 'bundled', version: '1.2.3', license: 'MIT' }]);
+  const sizes = JSON.parse(readFileSync(join(output, 'original-sizes.json')));
+  const combined = sizes.distributions.find(row => row.id === 'original-web-all-addons-esm');
+  assert.deepEqual(combined.addons, ['alpha', 'beta']);
+  assert.equal(combined.files.filter(row => row.role === 'production addon ESM bundle').length, 2);
+  assert.ok(combined.files.some(row => row.path === 'licenses/dependencies/bundled/LICENSE'));
+  assert.equal(existsSync(staging), false);
+  assert.equal(existsSync(join(source, 'node_modules')), false);
+}));
+test('missing bundled dependency license fails and removes prior sizes and owned scratch', () => fixture(({ source, deps, output, staging, invoke, args, script }) => {
+  mkdirSync(join(source, 'addons/addon-alpha'), { recursive: true });
+  mkdirSync(join(deps, 'bundled'));
+  writeFileSync(join(deps, 'bundled/package.json'), '{"name":"bundled","version":"1.0.0"}');
+  writeFileSync(join(deps, 'bundled/index.js'), 'export const value=1;');
+  writeFileSync(join(source, 'bin/esbuild.mjs'), script + `
+    if(process.argv.some(arg=>arg.startsWith('--addon='))){const base='addons/addon-alpha/lib/addon-alpha.mjs';
+    fs.mkdirSync('addons/addon-alpha/lib',{recursive:true});fs.writeFileSync(base,'export const addon=true;');
+    fs.writeFileSync(base+'.map',JSON.stringify({sources:['../../../node_modules/bundled/index.js']}));}`);
+  assert.equal(invoke().status, 0);
+  assert.equal(invoke([...args, '--addons', 'all']).status, 1);
+  assert.match(JSON.parse(readFileSync(join(output, 'original-build.json'))).error, /No license found/);
+  assert.equal(existsSync(join(output, 'original-sizes.json')), false);
+  assert.equal(existsSync(staging), false);
+}));
+test('invalid addon policy fails rather than silently selecting core-only', () => fixture(({ invoke, args }) => {
+  assert.notEqual(invoke([...args, '--addons', 'partial']).status, 0);
+}));
 test('existing staging content and dependencies are not replaced or deleted', () => fixture(({ source, deps, staging, args, invoke }) => {
   mkdirSync(staging);
   writeFileSync(join(staging, 'keep'), 'owned by another run');
