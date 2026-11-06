@@ -5,6 +5,8 @@ function buffer(b) {
   const rows=[];
   for(let y=0;y<b.lines.length;y++) {
     const l=b.lines.get(y), cells=[];
+    // Undefined slots are observable after callback-driven buffer mutations.
+    if (!l) { rows.push('-'); continue; }
     for(let x=0;x<l.length;x++) {
       const c=l.getCell(x),e=c.extended;
       cells.push([c.content>>>0,c.fg>>>0,c.bg>>>0,hex(c.getChars()),e.ext>>>0,e.urlId].join(','));

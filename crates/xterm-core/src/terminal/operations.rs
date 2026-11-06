@@ -88,13 +88,12 @@ pub fn clear_state_handle(
     let mut buffer = active
         .try_borrow_mut()
         .map_err(|_| TerminalError::Borrowed)?;
-    let row = buffer
-        .lines
-        .get(buffer.ybase + buffer.y)
-        .ok_or(TerminalError::MissingLine)?;
+    // Marker callbacks can leave a sparse cursor row. Source moves that
+    // undefined slot too, then rebuilds the remaining viewport and emits scroll.
+    let row = buffer.lines.get(buffer.ybase + buffer.y);
     buffer
         .lines
-        .set(0, Some(row))
+        .set(0, row)
         .map_err(crate::buffer::BufferError::from)?;
     buffer.lines.set_length(1);
     buffer.ydisp = 0;

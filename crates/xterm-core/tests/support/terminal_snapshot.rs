@@ -29,7 +29,10 @@ fn buffer(b: &Buffer) -> String {
         if y != 0 {
             result.push('/');
         }
-        let row = b.lines.get(y).unwrap();
+        let Some(row) = b.lines.get(y) else {
+            result.push('-');
+            continue;
+        };
         let row = row.borrow();
         write!(result, "{}:", u8::from(row.is_wrapped)).unwrap();
         for x in 0..row.len() {
