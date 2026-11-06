@@ -1,0 +1,45 @@
+    Checking memchr v2.8.3
+    Checking allocator-api2 v0.2.21
+    Checking equivalent v1.0.3
+    Checking foldhash v0.1.5
+    Checking ryu-js v1.0.3
+    Checking hashbrown v0.15.5
+    Checking adler2 v2.0.1
+    Checking miniz_oxide v0.8.9
+    Checking regress v0.10.4
+    Checking zmij v1.0.23
+    Checking serde_core v1.0.229
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\NefertitiCffFonts\crates\xterm-core)
+    Checking itoa v1.0.18
+    Checking serde_json v1.0.154
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\NefertitiCffFonts\crates\xterm-addons)
+error: file is loaded as a module multiple times: `crates\xterm-addons\tests\support\font_cff_container.rs`
+ --> crates\xterm-addons\tests\support\font_cff2_fonts_assertions.rs:3:1
+  |
+3 | /  #[path = "font_cff_container.rs"]
+4 | |  mod container;
+  | |_______________^ first loaded here
+  |
+ ::: crates\xterm-addons\tests\support\font_cff_header_assertions.rs:4:1
+  |
+4 |  / #[path = "font_cff_container.rs"]
+5 |  | mod container;
+  |  |______________^ loaded again here
+  |
+  = help: replace all but one `mod` item with `use` items
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#duplicate_mod
+  = note: `-D clippy::duplicate-mod` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(clippy::duplicate_mod)]`
+
+error: module has the same name as its containing module
+ --> crates\xterm-addons\tests\support\font_cff2_index_assertions.rs:4:1
+  |
+4 | mod previous;
+  | ^^^^^^^^^^^^^
+  |
+  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#module_inception
+  = note: `-D clippy::module-inception` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(clippy::module_inception)]`
+
+error: could not compile `xterm-addons` (test "font_cff2_fonts") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
