@@ -1,0 +1,337 @@
+// Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.
+//! BaseRenderLayer's real canvas. Optional renderer hooks are omitted rather
+//! than exposed as successful no-ops. Subclasses supply their reset/redraw work.
+use super::{config::AtlasDimensions, layer_services::LayerServices, texture_atlas::TextureAtlas};
+use crate::{api::RenderDimensions, theme::SharedColors};
+use js_sys::{Array, JsString};
+use std::{
+    cell::{Cell, RefCell},
+    rc::Rc,
+};
+use wasm_bindgen::{prelude::wasm_bindgen, JsCast, JsValue};
+use web_sys::HtmlCanvasElement;
+use xterm_core::lifecycle::DisposableHandle;
+#[path = "canvas_layer_text.rs"]
+mod text;
+
+// Only host property/method access lives in JS. Canvas geometry, state and
+// lifecycle decisions remain Rust; catching calls preserve thrown identities.
+#[wasm_bindgen(inline_js = "
+export function canvasLayerGet(o,k) { return o[k]; }
+export function canvasLayerSet(o,k,v) { o[k]=v; }
+export function canvasLayerCall(o,k,a) { return o[k](...a); }
+")]
+extern "C" {
+    #[wasm_bindgen(catch, js_name = canvasLayerGet)]
+    pub(super) fn get(o: &JsValue, k: &str) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(catch, js_name = canvasLayerSet)]
+    pub(super) fn set(o: &JsValue, k: &str, v: &JsValue) -> Result<(), JsValue>;
+    #[wasm_bindgen(catch, js_name = canvasLayerCall)]
+    pub(super) fn call(o: &JsValue, k: &str, a: &Array) -> Result<JsValue, JsValue>;
+}
+pub(super) fn args(values: &[JsValue]) -> Array {
+    values.iter().collect()
+}
+pub(super) fn rect(
+    context: &JsValue,
+    name: &str,
+    x: f64,
+    y: f64,
+    w: f64,
+    h: f64,
+) -> Result<(), JsValue> {
+    call(
+        context,
+        name,
+        &args(&[x.into(), y.into(), w.into(), h.into()]),
+    )?;
+    Ok(())
+}
+struct Canvas {
+    element: HtmlCanvasElement,
+    context: JsValue,
+}
+pub struct CanvasLayer {
+    pub services: Rc<LayerServices>,
+    container: web_sys::HtmlElement,
+    canvas: RefCell<Canvas>,
+    alpha: Cell<bool>,
+    dimensions: Cell<RenderDimensions>,
+    atlas: RefCell<Option<Rc<TextureAtlas>>>,
+    subscriptions: RefCell<Vec<DisposableHandle>>,
+    disposed: Cell<bool>,
+}
+impl CanvasLayer {
+    pub fn new(
+        services: Rc<LayerServices>,
+        container: web_sys::HtmlElement,
+        id: &str,
+        z_index: i32,
+        alpha: bool,
+    ) -> Result<Rc<Self>, JsValue> {
+        let canvas: HtmlCanvasElement = call(
+            services.browser.main_document().as_ref(),
+            "createElement",
+            &args(&["canvas".into()]),
+        )?
+        .dyn_into()?;
+        call(
+            &get(canvas.as_ref(), "classList")?,
+            "add",
+            &args(&[format!("xterm-{id}-layer").into()]),
+        )?;
+        set(
+            &get(canvas.as_ref(), "style")?,
+            "zIndex",
+            &z_index.to_string().into(),
+        )?;
+        let context = Self::context(&canvas, alpha)?;
+        let this = Rc::new(Self {
+            services,
+            container,
+            canvas: RefCell::new(Canvas {
+                element: canvas,
+                context,
+            }),
+            alpha: Cell::new(alpha),
+            dimensions: Cell::new(RenderDimensions::default()),
+            atlas: RefCell::new(None),
+            subscriptions: RefCell::new(Vec::new()),
+            disposed: Cell::new(false),
+        });
+        if !alpha {
+            this.clear_all()?;
+        }
+        call(
+            this.container.as_ref(),
+            "appendChild",
+            &args(&[this.canvas().into()]),
+        )?;
+        Ok(this)
+    }
+    fn context(canvas: &HtmlCanvasElement, alpha: bool) -> Result<JsValue, JsValue> {
+        let options = js_sys::Object::new();
+        set(options.as_ref(), "alpha", &alpha.into())?;
+        let context = call(
+            canvas.as_ref(),
+            "getContext",
+            &args(&["2d".into(), options.into()]),
+        )?;
+        if !context.is_truthy() {
+            return Err(js_sys::Error::new("value must not be falsy").into());
+        }
+        Ok(context)
+    }
+    /// Register the subclass's reset after refreshing the shared atlas. The
+    /// callback and canvas host operations never run under a RefCell borrow.
+    pub fn subscribe_theme(self: &Rc<Self>, reset: impl Fn() -> Result<(), JsValue> + 'static) {
+        let weak = Rc::downgrade(self);
+        let subscription = self
+            .services
+            .theme
+            .on_change_colors()
+            .try_subscribe(move |colors| {
+                if let Some(this) = weak.upgrade() {
+                    this.refresh_atlas(colors)
+                        .and_then(|()| reset())
+                        .map_err(crate::js_error::callback_error)?;
+                }
+                Ok(())
+            });
+        self.subscriptions.borrow_mut().push(subscription);
+    }
+    pub fn canvas(&self) -> HtmlCanvasElement {
+        self.canvas.borrow().element.clone()
+    }
+    pub fn context_value(&self) -> JsValue {
+        self.canvas.borrow().context.clone()
+    }
+    pub fn atlas(&self) -> Option<Rc<TextureAtlas>> {
+        self.atlas.borrow().clone()
+    }
+    pub fn resize(&self, dimensions: RenderDimensions) -> Result<(), JsValue> {
+        self.dimensions.set(dimensions);
+        let canvas = self.canvas();
+        set(
+            canvas.as_ref(),
+            "width",
+            &dimensions.device.canvas.width.into(),
+        )?;
+        set(
+            canvas.as_ref(),
+            "height",
+            &dimensions.device.canvas.height.into(),
+        )?;
+        let style = get(canvas.as_ref(), "style")?;
+        set(
+            &style,
+            "width",
+            &format!(
+                "{}px",
+                js_sys::Number::from(dimensions.css.canvas.width).to_string(10)?
+            )
+            .into(),
+        )?;
+        set(
+            &style,
+            "height",
+            &format!(
+                "{}px",
+                js_sys::Number::from(dimensions.css.canvas.height).to_string(10)?
+            )
+            .into(),
+        )?;
+        if !self.alpha.get() {
+            self.clear_all()?;
+        }
+        self.refresh_atlas(&self.services.theme.colors())
+    }
+    pub fn refresh_atlas(&self, colors: &SharedColors) -> Result<(), JsValue> {
+        let dim = self.dimensions.get().device;
+        // AND is intentional: one positive character dimension still acquires.
+        if dim.character.width <= 0.0 && dim.character.height <= 0.0 {
+            return Ok(());
+        }
+        // Copy the set's handles before host construction/disposal can reenter
+        // the live theme. Color objects and contrast caches keep their identity.
+        let colors = colors.borrow().clone();
+        let atlas = self.services.acquire(
+            AtlasDimensions {
+                device_cell_width: dim.cell.width,
+                device_cell_height: dim.cell.height,
+                device_char_width: dim.character.width,
+                device_char_height: dim.character.height,
+                device_pixel_ratio: self.services.browser.dpr()?,
+                device_max_texture_size: 2048.0,
+            },
+            &colors,
+        )?;
+        *self.atlas.borrow_mut() = Some(atlas.clone());
+        atlas.warm_up()
+    }
+    /// Clones before requesting a new context because browsers cannot change a
+    /// context's alpha mode in place. Unchanged alpha invokes no callback.
+    pub fn set_transparency(
+        &self,
+        alpha: bool,
+        redraw: impl FnOnce(usize) -> Result<(), JsValue>,
+    ) -> Result<(), JsValue> {
+        if alpha == self.alpha.get() {
+            return Ok(());
+        }
+        let old = self.canvas();
+        self.alpha.set(alpha);
+        let canvas: HtmlCanvasElement =
+            call(old.as_ref(), "cloneNode", &Array::new())?.dyn_into()?;
+        // Assign the new canvas before initializing its context, as the source.
+        self.canvas.borrow_mut().element = canvas.clone();
+        let context = Self::context(&canvas, alpha)?;
+        self.canvas.borrow_mut().context = context;
+        if !alpha {
+            self.clear_all()?;
+        }
+        call(
+            self.container.as_ref(),
+            "replaceChild",
+            &args(&[canvas.into(), old.into()]),
+        )?;
+        self.refresh_atlas(&self.services.theme.colors())?;
+        redraw(
+            self.services
+                .terminal
+                .rows()
+                .map_err(|e| crate::js_error::to_js_error(&e))?,
+        )
+    }
+    pub fn fill_style(&self, value: &JsValue) -> Result<(), JsValue> {
+        set(&self.context_value(), "fillStyle", value)
+    }
+    pub fn fill_bottom_line(&self, x: f64, y: f64, width: f64) -> Result<(), JsValue> {
+        let context = self.context_value();
+        let method = get(&context, "fillRect")?.dyn_into::<js_sys::Function>()?;
+        let left = x * self.dimensions.get().device.cell.width;
+        let top = (y + 1.0) * self.dimensions.get().device.cell.height
+            - self.services.browser.dpr()?
+            - 1.0;
+        let width = width * self.dimensions.get().device.cell.width;
+        let height = self.services.browser.dpr()?;
+        method.apply(
+            &context,
+            &args(&[left.into(), top.into(), width.into(), height.into()]),
+        )?;
+        Ok(())
+    }
+    pub fn clear_all(&self) -> Result<(), JsValue> {
+        let alpha = self.alpha.get();
+        if !alpha {
+            let context = self.context_value();
+            let background = self.services.theme.colors().borrow().background.css_units();
+            set(
+                &context,
+                "fillStyle",
+                &JsString::from_char_code(&background).into(),
+            )?;
+        }
+        let context = self.context_value();
+        let name = if alpha { "clearRect" } else { "fillRect" };
+        let method = get(&context, name)?.dyn_into::<js_sys::Function>()?;
+        let canvas = self.canvas();
+        let width = get(canvas.as_ref(), "width")?
+            .as_f64()
+            .ok_or_else(|| js_sys::TypeError::new("canvas width is not a number"))?;
+        let height = get(canvas.as_ref(), "height")?
+            .as_f64()
+            .ok_or_else(|| js_sys::TypeError::new("canvas height is not a number"))?;
+        method.apply(
+            &context,
+            &args(&[0.0.into(), 0.0.into(), width.into(), height.into()]),
+        )?;
+        Ok(())
+    }
+    pub fn clear_cells(&self, x: f64, y: f64, width: f64, height: f64) -> Result<(), JsValue> {
+        let context = self.context_value();
+        let alpha = self.alpha.get();
+        if !alpha {
+            let background = self.services.theme.colors().borrow().background.css_units();
+            set(
+                &context,
+                "fillStyle",
+                &JsString::from_char_code(&background).into(),
+            )?;
+        }
+        let context = self.context_value();
+        let method = get(&context, if alpha { "clearRect" } else { "fillRect" })?
+            .dyn_into::<js_sys::Function>()?;
+        let cell = self.dimensions.get().device.cell;
+        method.apply(
+            &context,
+            &args(&[
+                (x * cell.width).into(),
+                (y * cell.height).into(),
+                (width * cell.width).into(),
+                (height * cell.height).into(),
+            ]),
+        )?;
+        Ok(())
+    }
+    pub fn dispose(&self) -> Result<(), JsValue> {
+        if self.disposed.replace(true) {
+            return Ok(());
+        }
+        let subscriptions = self.subscriptions.borrow().clone();
+        for subscription in subscriptions {
+            subscription.dispose();
+        }
+        call(self.canvas().as_ref(), "remove", &Array::new())?;
+        Ok(())
+    }
+}
+impl Drop for CanvasLayer {
+    fn drop(&mut self) {
+        if !self.disposed.get() {
+            if let Err(error) = self.dispose() {
+                crate::write_scheduler::report_unhandled_error(&error);
+            }
+        }
+    }
+}

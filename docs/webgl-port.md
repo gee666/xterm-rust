@@ -28,7 +28,7 @@ Source CharAtlasCache uses one module-global pool shared across terminals. `term
 | TextureAtlas.ts | Planned cache, rasterization, page allocation/merging/eviction and versions |
 | CursorBlinkStateManager.ts | Planned clock-driven cursor work and cancellation |
 | DevicePixelObserver.ts | Planned real ResizeObserver device-pixel callback boundary |
-| renderLayer/BaseRenderLayer.ts and LinkRenderLayer.ts | Planned link canvas overlay, selection/style updates and cleanup |
+| renderLayer/BaseRenderLayer.ts and LinkRenderLayer.ts | Actual typed canvas base/link layers with shared atlas warmup, geometry, text clipping, theme/transparency and retained underline state; scoped evidence and remaining renderer attachment in `webgl-canvas-layers.md` |
 | customGlyphs/CustomGlyphDefinitions.ts | Planned attributed generated shape data, retained with source hash |
 | customGlyphs/CustomGlyphRasterizer.ts and Types.ts | Planned shape/pattern paths and main-realm/offscreen canvas selection |
 | WebglRenderer.ts | Planned live renderer service implementation |

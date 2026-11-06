@@ -24,6 +24,8 @@ mod atlas_styles;
 #[cfg(target_arch = "wasm32")]
 pub mod browser_cache;
 pub mod cache;
+#[cfg(target_arch = "wasm32")]
+pub mod canvas_layer;
 pub mod cell_colors;
 pub mod config;
 #[cfg(target_arch = "wasm32")]
@@ -32,6 +34,10 @@ pub mod custom_glyphs;
 #[cfg(target_arch = "wasm32")]
 pub mod device_pixel_observer;
 pub mod glyphs;
+#[cfg(target_arch = "wasm32")]
+pub mod layer_services;
+#[cfg(target_arch = "wasm32")]
+pub mod link_layer;
 pub mod math;
 pub mod model;
 pub mod rectangles;
