@@ -31,7 +31,7 @@ return (async()=>{{
       free:()=>{{term.dispose();addon.free();term.free();}}
     }};
   }};
-  const actual={{rows:await attachRemovalCases(create),registration:await attachRetainedRegistration(create),rawErrors:await attachRawRemovalErrors(create),literalArguments:await attachLiteralArguments(create)}};
+  const actual={{rows:await attachRemovalCases(create),registration:await attachRetainedRegistration(create),rawErrors:await attachRawRemovalErrors(create),literalArguments:await attachLiteralArguments(create),nonCallable:await attachNonCallableMethods(create)}};
   const expected={};
   if(JSON.stringify(actual)!==JSON.stringify(expected)){{
     const mismatch=actual.rows.findIndex((row,index)=>JSON.stringify(row)!==JSON.stringify(expected.rows[index]));

@@ -12,16 +12,13 @@ pub struct BrowserSocket(pub WebSocket);
 
 // Literal argument lists match source even if Array's iterator is replaced.
 #[wasm_bindgen(
-    inline_js = "export function attachSocketListener(socket, key, type, handler) { socket[key](type, handler); }"
+    inline_js = "export function attachAddListener(socket, type, handler) { socket.addEventListener(type, handler); } export function attachRemoveListener(socket, type, handler) { socket.removeEventListener(type, handler); }"
 )]
 extern "C" {
-    #[wasm_bindgen(catch, js_name = attachSocketListener)]
-    fn listener_call(
-        socket: &JsValue,
-        key: &str,
-        kind: &str,
-        handler: &JsValue,
-    ) -> Result<(), JsValue>;
+    #[wasm_bindgen(catch, js_name = attachAddListener)]
+    fn add_listener(socket: &JsValue, kind: &str, handler: &JsValue) -> Result<(), JsValue>;
+    #[wasm_bindgen(catch, js_name = attachRemoveListener)]
+    fn remove_listener(socket: &JsValue, kind: &str, handler: &JsValue) -> Result<(), JsValue>;
 }
 
 fn error(value: JsValue) -> AttachError {
@@ -109,12 +106,12 @@ impl AttachSocket for BrowserSocket {
         // into_js_value uses JS GC to keep the Rust closure alive for every
         // retained function reference, including an in-flight callback.
         let listener = listener.into_js_value();
-        listener_call(self.0.as_ref(), "addEventListener", kind, &listener).map_err(error)?;
+        add_listener(self.0.as_ref(), kind, &listener).map_err(error)?;
         let socket = self.0.clone();
         Ok(AttachListener::new(move || {
             // Resolve the current method on each call with the source receiver
             // and exact two arguments. Never consume a handle on failure.
-            listener_call(socket.as_ref(), "removeEventListener", kind, &listener).map_err(error)
+            remove_listener(socket.as_ref(), kind, &listener).map_err(error)
         }))
     }
     fn warn_closing(&self) -> Result<(), AttachError> {

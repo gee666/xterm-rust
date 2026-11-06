@@ -75,6 +75,27 @@ async function attachRemovalCases(create) {
   return rows;
 }
 
+async function attachNonCallableMethods(create) {
+  let count = 0;
+  for (const value of [undefined, null, false, 17, Symbol('method'), {}]) {
+    for (const key of ['addEventListener', 'removeEventListener']) {
+      const socket = { readyState: 1, send() {}, addEventListener() {}, removeEventListener() {} };
+      socket[key] = value;
+      const api = create(socket, false);
+      try {
+        let caught;
+        try { api.activate(); api.dispose(); } catch (error) { caught = error; }
+        if (!(caught instanceof TypeError)) throw Error('non-callable method ' + key);
+        count++;
+      } finally {
+        socket.removeEventListener = () => {};
+        api.dispose(); api.free?.();
+      }
+    }
+  }
+  return count;
+}
+
 async function attachLiteralArguments(create) {
   const iterator = Array.prototype[Symbol.iterator];
   const marker = Symbol('unexpected spread');
