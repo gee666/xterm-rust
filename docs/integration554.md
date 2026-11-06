@@ -1,6 +1,6 @@
 # Reviewed public API and renderer integration
 
-Task 554 assembles 73 reviewed producer commits on main `224d1b339a43eddf899c2944d9dad734d8c44234`. The frozen source assembly is `6cfd03d7`. The source is not yet integrated into main at this writing. Later producer code is excluded. This document will record actual integration and review results when they occur.
+Task 554 assembles 73 reviewed producer commits on main `224d1b339a43eddf899c2944d9dad734d8c44234`. The frozen source assembly is `6cfd03d7`. The unchanged canonical helper fast-forwarded main to `14139449bae2792afb019f42e8438b074938cfe7` after passing its gates in 332.21 seconds. Later producer code is excluded. Independent review and cleanup are separate from this completed integration.
 
 Full xterm.js and fourteen-addon equivalence remains NOT PROVEN. This integration does not accept the unfinished parent families, full upstream/demo matrices, native-platform proof, complete mapping or comparisons.
 
@@ -54,6 +54,8 @@ The source input hash stayed unchanged through all browser checks. Generated sha
 
 ## Main, review and cleanup
 
-Canonical gated merge, isolated independent review and final owned cleanup have not occurred at this writing. They must be recorded from actual receipts, not inferred from successful source assembly or native checks.
+The unchanged canonical helper passed changed-crate build/tests, affected dependents, native workspace and applicable WASM library checks, then fast-forwarded main to `14139449`. Default native tests passed 2,264 functions across 534 summaries, with no failures, ignores or warnings. The helper removed the private target. Main tracked files remained clean and unrelated untracked swarm content was preserved.
+
+Isolated independent review and final owned cleanup have not occurred at this writing. They must be recorded from actual receipts, not inferred from successful integration.
 
 The only owned temporary root is `O:/xterm-rust-swarm-16/tmp/worktrees/Mackenzie554`. Preserve committed evidence and branches, verify runtime hashes and both reference manifests, inspect links/redirects and owned processes, then use normal no-force Git worktree removal after acceptance. Do not clean another owner's paths, caches, credentials or the legacy dirty P: checkout. No remote push or CI launch is authorized by this document.
