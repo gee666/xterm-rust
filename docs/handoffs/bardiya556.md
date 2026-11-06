@@ -1,0 +1,13 @@
+# Bardiya556 pickup
+
+Task556 ACCEPTED. Full port/346/322 remain NOTPROVEN. Own3772d40f→57947490 plus this review/handoff receipt only, onmain224d. Approved549 PRIVATE copies6158c92a/7f027842/c284bad6/d5bb5892 are prerequisites and MUST be excluded from pickup. Original549 own4 remain canonical task309's separate integration responsibility.
+
+Production only serialize_addon/html.rs six-line raw subtraction operation and options.rs helper visibility. Shared new serialize-html-difference-cases.mjs contributes3groups20subcases, preserving previous93 assertion cases. Runner expects96. Native serializer remains Rust; no dependency/unsafe/source assertion/AGENTS/credential changes.
+
+Actual old control93P3F/96 EACH3, fixedChrome96/WebKit96/Firefox95. Only2Firefoxnonprimitive MESSAGE strings differ inonegroup, allphase/type/identity/reentry effects match. Original SAMEoperation itself cold=endRow/warm=objectliteral afterunchangedcorpus. Rawrunner still exits1, no normalization, no productionwarmupcrutch, no greenfullclaim.346 owns this diagnostic gap as well as successful raw traversal/host/palette/GC closure.
+
+Unchanged original suites120source+120Rust PASS zero fail/skip/unrun/retry; nativeweb56+strictnativeallfeatures/WASMlib+actualdebugbuild PASS. AggregatefmtOS206FAIL/all5packagefmtPASS notwaiver304. Initialsource summary Array.values failure retained and corrected onlyin temp reporting. SourceNode20PASS isnotbrowserproof. Evidence results/serialize-html-difference; docs/serialize-html-difference.md has commands/limits.
+
+Reviewer independently checked72producer/88runtime/source1907/776×2 refs/livebuildpointer and rawcounts, reranpinnednative56PASS; no sourcechanges/compiler/browser/server. Reviewreceipt inresults. ResourceALLrelease4910. Known livepointer+2untrackedgeneratedbuildtrees are own runtime outputs, exactcopies archived before/build andinitial-fixed/build. Source and receipts frozen; normal guarded cleanup is pending at this commit. Later private .pi/swarm/work/2/bardiya556-progress.md records actual removal. Do not assume cleanup or replay it without checking.
+
+329 performance remains full requested scope, not completed. Only private lightplan exists; no329 source edits/builds/measurements. A fresh replacement should take329 against agreed stable integrated freeze, reuse326 validation/runner, coordinate actual release artifacts withDale333. Do not measure debug builds or call snapshots/performance tools proof. Privateplan .pi/swarm/work/2/bardiya329-plan.md lists inspected APIs and next steps. Empty329 owned worktree will be removed before replacement, no artifact loan/hold accepted fromDale.
