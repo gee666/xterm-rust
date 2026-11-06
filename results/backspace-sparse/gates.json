@@ -1,0 +1,84 @@
+[
+  {
+    "name": "native-restored",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-core",
+      "--test",
+      "backspace_sparse",
+      "--test",
+      "input_handler_core_backspace",
+      "--test",
+      "control_margins"
+    ],
+    "started": "2026-11-06T02:23:13.204Z",
+    "exit": 0
+  },
+  {
+    "name": "core-all",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-core",
+      "--all-targets",
+      "--all-features"
+    ],
+    "started": "2026-11-06T02:23:19.187Z",
+    "exit": 0
+  },
+  {
+    "name": "core-clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "-j2",
+      "-p",
+      "xterm-core",
+      "--all-targets",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "started": "2026-11-06T02:26:58.771Z",
+    "exit": 0
+  },
+  {
+    "name": "affected-native",
+    "command": [
+      "cargo",
+      "check",
+      "--locked",
+      "-j2",
+      "--workspace",
+      "--all-targets",
+      "--all-features"
+    ],
+    "started": "2026-11-06T02:27:16.010Z",
+    "exit": 0
+  },
+  {
+    "name": "affected-wasm",
+    "command": [
+      "cargo",
+      "check",
+      "--locked",
+      "-j2",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--workspace",
+      "--lib",
+      "--all-features"
+    ],
+    "started": "2026-11-06T02:28:31.677Z",
+    "exit": 0
+  }
+]
