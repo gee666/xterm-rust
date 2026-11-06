@@ -1,5 +1,5 @@
 // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
-use super::{TerminalError, TerminalEvent, TerminalState};
+use super::{TerminalError, TerminalState};
 use crate::{core_service::CursorStyle, parser::params::Params};
 
 impl TerminalState {
@@ -22,10 +22,6 @@ impl TerminalState {
                 drop(b);
                 self.reply(&text)?;
             }
-            996 if private && self.mode_option("vtExtensions", "colorSchemeQuery", true)? => self
-                .events
-                .borrow_mut()
-                .push(TerminalEvent::ColorSchemeQuery),
             _ => {}
         }
         Ok(())

@@ -4,6 +4,42 @@ use super::{TerminalError, TerminalEvent, TerminalState};
 use crate::{buffer::AttributeData, options::OptionValue, parser::params::Params};
 use std::{cell::RefCell, rc::Rc};
 
+pub(super) fn device_status(
+    shared: &Rc<RefCell<TerminalState>>,
+    params: &Params,
+    private: bool,
+) -> Result<(), TerminalError> {
+    if private && params.values().first() == Some(&996) {
+        let options = Rc::clone(
+            &shared
+                .try_borrow()
+                .map_err(|_| TerminalError::Borrowed)?
+                .options,
+        );
+        // Both the raw bag and its nested property may invoke host getters.
+        // Resolve them before borrowing state, including optional/nullish defaults.
+        if super::commands::mode_callbacks::option_flag(
+            &options,
+            "vtExtensions",
+            "colorSchemeQuery",
+            true,
+        )? {
+            shared
+                .try_borrow()
+                .map_err(|_| TerminalError::Borrowed)?
+                .events
+                .borrow_mut()
+                .push(TerminalEvent::ColorSchemeQuery);
+        }
+        Ok(())
+    } else {
+        shared
+            .try_borrow_mut()
+            .map_err(|_| TerminalError::Borrowed)?
+            .device_status(params, private)
+    }
+}
+
 pub(super) fn device_attributes(
     shared: &Rc<RefCell<TerminalState>>,
     params: &Params,

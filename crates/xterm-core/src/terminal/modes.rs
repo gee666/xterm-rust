@@ -4,15 +4,6 @@ use super::{TerminalError, TerminalEvent, TerminalState};
 use crate::charset::DEFAULT_CHARSET;
 
 impl TerminalState {
-    pub(super) fn mode_option(
-        &self,
-        group: &str,
-        key: &str,
-        default: bool,
-    ) -> Result<bool, TerminalError> {
-        super::commands::mode_callbacks::option_flag(&self.options, group, key, default)
-    }
-
     pub(super) fn apply_state_mode(
         &mut self,
         private: bool,

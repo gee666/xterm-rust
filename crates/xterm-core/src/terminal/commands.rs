@@ -112,8 +112,8 @@ pub(super) fn register(
                 intermediates: None,
                 final_byte: "n",
             },
-            command(
-                move |s, p| s.device_status(p, prefix.is_some()),
+            shared_command(
+                move |s, p| super::reply_callbacks::device_status(s, p, prefix.is_some()),
                 Rc::clone(state),
             ),
         )?;
