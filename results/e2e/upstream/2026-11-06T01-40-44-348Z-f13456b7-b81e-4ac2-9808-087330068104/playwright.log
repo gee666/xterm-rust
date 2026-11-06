@@ -1,0 +1,184 @@
+
+Running 639 tests using 2 workers
+F··································°··[chromium:warning] IIP: error during BASE64 decoding
+··········F·········F·····················
+·····························F··················································
+··········°··[firefox:warning] IIP: error during BASE64 decoding
+······················F············································
+···F·············································F······························
+···············°···[webkit:warning] IIP: error during BASE64 decoding
+·····························································
+·······································································°········
+················································································
+···············································································
+
+  1) [Chromium] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
+
+    AssertionError: problem at _core._inputHandler
+
+    false !== true
+
+
+      112 |     ];
+      113 |     for (const prop of accessors) {
+    > 114 |       strictEqual(
+          |                  ^
+      115 |         await ctx.page.evaluate('(() => { const v = window.term.' + prop + '; return v !== undefined && v !== null; })()'),
+      116 |         true, `problem at ${prop}`
+      117 |       );
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Reese327\source_repo\addons\addon-image\test\ImageAddon.test.ts:114:18
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-Chromium\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-Chromium\error-context.md
+
+  2) [Chromium] › addons\addon-image\test\ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.png: N --> width=20 height=5 preserveAspectRatio=0 
+
+    AssertionError: Expected values to be strictly deep-equal:
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   165,
+    [31m-[39m   160,
+    [39m    90
+    [39m  ]
+
+
+      407 |         await ctx.proxy.write(`\x1b]1337;File=inline=1;size=${size};${header}:${payload}\x07`);
+      408 |         const dim = await getDimensions();
+    > 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);
+          |                        ^
+      410 |       });
+      411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {
+      412 |         // pixel based resize
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Reese327\source_repo\addons\addon-image\test\ImageAddon.test.ts:409:24
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-IIP--66317-ght-5-preserveAspectRatio-0-Chromium\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-IIP--66317-ght-5-preserveAspectRatio-0-Chromium\error-context.md
+
+  3) [Chromium] › addons\addon-image\test\ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.qoi: N --> width=20 height=5 preserveAspectRatio=0 
+
+    AssertionError: Expected values to be strictly deep-equal:
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   165,
+    [31m-[39m   160,
+    [39m    90
+    [39m  ]
+
+
+      407 |         await ctx.proxy.write(`\x1b]1337;File=inline=1;size=${size};${header}:${payload}\x07`);
+      408 |         const dim = await getDimensions();
+    > 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);
+          |                        ^
+      410 |       });
+      411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {
+      412 |         // pixel based resize
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Reese327\source_repo\addons\addon-image\test\ImageAddon.test.ts:409:24
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-IIP--828ea-ght-5-preserveAspectRatio-0-Chromium\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-IIP--828ea-ght-5-preserveAspectRatio-0-Chromium\error-context.md
+
+  4) [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
+
+    AssertionError: problem at _core._inputHandler
+
+    false !== true
+
+
+      112 |     ];
+      113 |     for (const prop of accessors) {
+    > 114 |       strictEqual(
+          |                  ^
+      115 |         await ctx.page.evaluate('(() => { const v = window.term.' + prop + '; return v !== undefined && v !== null; })()'),
+      116 |         true, `problem at ${prop}`
+      117 |       );
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Reese327\source_repo\addons\addon-image\test\ImageAddon.test.ts:114:18
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-FirefoxStable\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-FirefoxStable\error-context.md
+
+  5) [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.png: N --> width=20 height=5 preserveAspectRatio=0 
+
+    AssertionError: Expected values to be strictly deep-equal:
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   165,
+    [31m-[39m   160,
+    [39m    90
+    [39m  ]
+
+
+      407 |         await ctx.proxy.write(`\x1b]1337;File=inline=1;size=${size};${header}:${payload}\x07`);
+      408 |         const dim = await getDimensions();
+    > 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);
+          |                        ^
+      410 |       });
+      411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {
+      412 |         // pixel based resize
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Reese327\source_repo\addons\addon-image\test\ImageAddon.test.ts:409:24
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-IIP--66317-ght-5-preserveAspectRatio-0-FirefoxStable\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-IIP--66317-ght-5-preserveAspectRatio-0-FirefoxStable\error-context.md
+
+  6) [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.qoi: N --> width=20 height=5 preserveAspectRatio=0 
+
+    AssertionError: Expected values to be strictly deep-equal:
+    [32m+ actual[39m [31m- expected[39m
+
+    [39m  [
+    [32m+[39m   165,
+    [31m-[39m   160,
+    [39m    90
+    [39m  ]
+
+
+      407 |         await ctx.proxy.write(`\x1b]1337;File=inline=1;size=${size};${header}:${payload}\x07`);
+      408 |         const dim = await getDimensions();
+    > 409 |         deepStrictEqual(await getOrigSize(1), [dim.cellWidth * 20, dim.cellHeight * 5]);
+          |                        ^
+      410 |       });
+      411 |       test(name + ': Npx --> width=320px height=160px preserveAspectRatio=0', async () => {
+      412 |         // pixel based resize
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Reese327\source_repo\addons\addon-image\test\ImageAddon.test.ts:409:24
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-IIP--828ea-ght-5-preserveAspectRatio-0-FirefoxStable\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-IIP--828ea-ght-5-preserveAspectRatio-0-FirefoxStable\error-context.md
+
+  7) [WebKit] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
+
+    AssertionError: problem at _core._inputHandler
+
+    false !== true
+
+
+      112 |     ];
+      113 |     for (const prop of accessors) {
+    > 114 |       strictEqual(
+          |                  ^
+      115 |         await ctx.page.evaluate('(() => { const v = window.term.' + prop + '; return v !== undefined && v !== null; })()'),
+      116 |         true, `problem at ${prop}`
+      117 |       );
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Reese327\source_repo\addons\addon-image\test\ImageAddon.test.ts:114:18
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-WebKit\error-context.md
+
+    Error Context: ..\results\e2e\upstream\2026-11-06T01-40-44-348Z-f13456b7-b81e-4ac2-9808-087330068104\artifacts\ImageAddon-ImageAddon-test-for-private-accessors-WebKit\error-context.md
+
+  7 failed
+    [Chromium] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
+    [Chromium] › addons\addon-image\test\ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.png: N --> width=20 height=5 preserveAspectRatio=0 
+    [Chromium] › addons\addon-image\test\ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.qoi: N --> width=20 height=5 preserveAspectRatio=0 
+    [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
+    [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.png: N --> width=20 height=5 preserveAspectRatio=0 
+    [FirefoxStable] › addons\addon-image\test\ImageAddon.test.ts:404:11 › ImageAddon › IIP - resizing › palette.qoi: N --> width=20 height=5 preserveAspectRatio=0 
+    [WebKit] › addons\addon-image\test\ImageAddon.test.ts:101:7 › ImageAddon › test for private accessors 
+  4 skipped
+  628 passed (1.5m)

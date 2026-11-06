@@ -1,0 +1,1275 @@
+{
+  "config": {
+    "configFile": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\tmp\\e2e\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\playwright.cjs",
+    "rootDir": "O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/source_repo/addons/addon-fit/test",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 599500,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/results/e2e/upstream/2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "Chromium",
+        "name": "Chromium",
+        "testDir": "O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/source_repo/addons/addon-fit/test",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 10000
+      },
+      {
+        "outputDir": "O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/results/e2e/upstream/2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "FirefoxStable",
+        "name": "FirefoxStable",
+        "testDir": "O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/source_repo/addons/addon-fit/test",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 10000
+      },
+      {
+        "outputDir": "O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/results/e2e/upstream/2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "WebKit",
+        "name": "WebKit",
+        "testDir": "O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/source_repo/addons/addon-fit/test",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 10000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.60.0",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "FitAddon.test.ts",
+      "file": "FitAddon.test.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "FitAddon",
+          "file": "FitAddon.test.ts",
+          "line": 18,
+          "column": 6,
+          "specs": [
+            {
+              "title": "no terminal",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 10000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Chromium",
+                  "projectName": "Chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 15,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-06T00:37:15.217Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "fba60c0f87964e0e6682-9bbf5f0b285d47087d3e",
+              "file": "FitAddon.test.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "no terminal",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 10000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "FirefoxStable",
+                  "projectName": "FirefoxStable",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "timedOut",
+                      "duration": 0,
+                      "error": {
+                        "message": "\u001b[31m\"beforeAll\" hook timeout of 10000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31m\"beforeAll\" hook timeout of 10000ms exceeded.\u001b[39m\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:11:6",
+                        "location": {
+                          "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                          "column": 6,
+                          "line": 11
+                        },
+                        "snippet": "   9 |\n  10 | let ctx: ITestContext;\n> 11 | test.beforeAll(async ({ browser }) => {\n     |      ^\n  12 |   ctx = await createTestContext(browser);\n  13 |   ctx.page.setViewportSize({ width: 1024, height: 768 });\n  14 |   await openTerminal(ctx);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                            "column": 6,
+                            "line": 11
+                          },
+                          "message": "\u001b[31m\"beforeAll\" hook timeout of 10000ms exceeded.\u001b[39m\n\n   9 |\n  10 | let ctx: ITestContext;\n> 11 | test.beforeAll(async ({ browser }) => {\n     |      ^\n  12 |   ctx = await createTestContext(browser);\n  13 |   ctx.page.setViewportSize({ width: 1024, height: 768 });\n  14 |   await openTerminal(ctx);\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:11:6"
+                        },
+                        {
+                          "location": {
+                            "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                            "column": 12,
+                            "line": 13
+                          },
+                          "message": "Error: page.setViewportSize: Target page, context or browser has been closed\n\n  11 | test.beforeAll(async ({ browser }) => {\n  12 |   ctx = await createTestContext(browser);\n> 13 |   ctx.page.setViewportSize({ width: 1024, height: 768 });\n     |            ^\n  14 |   await openTerminal(ctx);\n  15 | });\n  16 | test.afterAll(async () => await ctx.page.close());\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:13:12"
+                        },
+                        {
+                          "location": {
+                            "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\test\\playwright\\TestUtils.ts",
+                            "column": 18,
+                            "line": 504
+                          },
+                          "message": "Error: page.evaluate: Target page, context or browser has been closed\n\n   at ..\\..\\..\\test\\playwright\\TestUtils.ts:504\n\n  502 |   `;\n  503 |\n> 504 |   await ctx.page.evaluate(script);\n      |                  ^\n  505 |\n  506 |   // HACK: This is a soft layer breaker that's temporarily included until unicode graphemes have\n  507 |   // more complete integration tests. See https://github.com/xtermjs/xterm.js/pull/4519#discussion_r1285234453\n    at openTerminal (O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\test\\playwright\\TestUtils.ts:504:18)\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:14:3"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-06T00:37:15.198Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-no-terminal-FirefoxStable\\error-context.md"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-no-terminal-FirefoxStable\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                        "column": 6,
+                        "line": 11
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "fba60c0f87964e0e6682-a1f47d0f494d1bd1ff07",
+              "file": "FitAddon.test.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "no terminal",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 10000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "WebKit",
+                  "projectName": "WebKit",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 24,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-06T00:37:40.350Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "fba60c0f87964e0e6682-f6101310db372f28e77d",
+              "file": "FitAddon.test.ts",
+              "line": 42,
+              "column": 7
+            }
+          ],
+          "suites": [
+            {
+              "title": "proposeDimensions",
+              "file": "FitAddon.test.ts",
+              "line": 48,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "default",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Chromium",
+                      "projectName": "Chromium",
+                      "results": [
+                        {
+                          "workerIndex": 0,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 520,
+                          "error": {
+                            "message": "AssertionError: The expression evaluated to a falsy value:\n\n  (dimensions.cols < 88)\n",
+                            "stack": "AssertionError: The expression evaluated to a falsy value:\n\n  (dimensions.cols < 88)\n\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:53:9",
+                            "location": {
+                              "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                              "column": 9,
+                              "line": 53
+                            },
+                            "snippet": "  51 |       const dimensions: {cols: number, rows: number} = await ctx.page.evaluate(`window.fit.proposeDimensions()`);\n  52 |       ok(dimensions.cols > 85);\n> 53 |       ok(dimensions.cols < 88);\n     |         ^\n  54 |       ok(dimensions.rows > 24);\n  55 |       ok(dimensions.rows < 29);\n  56 |     });"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                                "column": 9,
+                                "line": 53
+                              },
+                              "message": "AssertionError: The expression evaluated to a falsy value:\n\n  (dimensions.cols < 88)\n\n\n  51 |       const dimensions: {cols: number, rows: number} = await ctx.page.evaluate(`window.fit.proposeDimensions()`);\n  52 |       ok(dimensions.cols > 85);\n> 53 |       ok(dimensions.cols < 88);\n     |         ^\n  54 |       ok(dimensions.rows > 24);\n  55 |       ok(dimensions.rows < 29);\n  56 |     });\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:53:9"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:16.509Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-proposeDimensions-default-Chromium\\error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-proposeDimensions-default-Chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                            "column": 9,
+                            "line": 53
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-a200ea1dc7ff96451456",
+                  "file": "FitAddon.test.ts",
+                  "line": 49,
+                  "column": 9
+                },
+                {
+                  "title": "width",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Chromium",
+                      "projectName": "Chromium",
+                      "results": [
+                        {
+                          "workerIndex": 2,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 523,
+                          "error": {
+                            "message": "AssertionError: The expression evaluated to a falsy value:\n\n  (dimensions.cols < 111)\n",
+                            "stack": "AssertionError: The expression evaluated to a falsy value:\n\n  (dimensions.cols < 111)\n\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:62:9",
+                            "location": {
+                              "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                              "column": 9,
+                              "line": 62
+                            },
+                            "snippet": "  60 |       const dimensions: {cols: number, rows: number} = await ctx.page.evaluate(`window.fit.proposeDimensions()`);\n  61 |       ok(dimensions.cols > 108);\n> 62 |       ok(dimensions.cols < 111);\n     |         ^\n  63 |       ok(dimensions.rows > 24);\n  64 |       ok(dimensions.rows < 29);\n  65 |     });"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                                "column": 9,
+                                "line": 62
+                              },
+                              "message": "AssertionError: The expression evaluated to a falsy value:\n\n  (dimensions.cols < 111)\n\n\n  60 |       const dimensions: {cols: number, rows: number} = await ctx.page.evaluate(`window.fit.proposeDimensions()`);\n  61 |       ok(dimensions.cols > 108);\n> 62 |       ok(dimensions.cols < 111);\n     |         ^\n  63 |       ok(dimensions.rows > 24);\n  64 |       ok(dimensions.rows < 29);\n  65 |     });\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:62:9"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:20.252Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-proposeDimensions-width-Chromium\\error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-proposeDimensions-width-Chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                            "column": 9,
+                            "line": 62
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-1c05735a6d9cdaa3e097",
+                  "file": "FitAddon.test.ts",
+                  "line": 58,
+                  "column": 9
+                },
+                {
+                  "title": "small",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Chromium",
+                      "projectName": "Chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 529,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:23.665Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-c57d1827cf497f5e1a5b",
+                  "file": "FitAddon.test.ts",
+                  "line": 67,
+                  "column": 9
+                },
+                {
+                  "title": "hidden",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Chromium",
+                      "projectName": "Chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 550,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:25.427Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-c171692ea41dd2e49e7b",
+                  "file": "FitAddon.test.ts",
+                  "line": 75,
+                  "column": 9
+                },
+                {
+                  "title": "default",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "FirefoxStable",
+                      "projectName": "FirefoxStable",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:43.071Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-6f3277189e7f58afa0cc",
+                  "file": "FitAddon.test.ts",
+                  "line": 49,
+                  "column": 9
+                },
+                {
+                  "title": "width",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "FirefoxStable",
+                      "projectName": "FirefoxStable",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:43.071Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-6820a4c3b5232c79d76b",
+                  "file": "FitAddon.test.ts",
+                  "line": 58,
+                  "column": 9
+                },
+                {
+                  "title": "small",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "FirefoxStable",
+                      "projectName": "FirefoxStable",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:43.071Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-5623f9b8ce3feb02b39a",
+                  "file": "FitAddon.test.ts",
+                  "line": 67,
+                  "column": 9
+                },
+                {
+                  "title": "hidden",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "FirefoxStable",
+                      "projectName": "FirefoxStable",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:43.071Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-0059ebaa8191cebdf487",
+                  "file": "FitAddon.test.ts",
+                  "line": 75,
+                  "column": 9
+                },
+                {
+                  "title": "default",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "WebKit",
+                      "projectName": "WebKit",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 536,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:41.133Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-111bf29c1dfea17f74fe",
+                  "file": "FitAddon.test.ts",
+                  "line": 49,
+                  "column": 9
+                },
+                {
+                  "title": "width",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "WebKit",
+                      "projectName": "WebKit",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 521,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:41.674Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-f918458ec650e0e73ddf",
+                  "file": "FitAddon.test.ts",
+                  "line": 58,
+                  "column": 9
+                },
+                {
+                  "title": "small",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "WebKit",
+                      "projectName": "WebKit",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 524,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:42.202Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-dfd377167a0b273aef61",
+                  "file": "FitAddon.test.ts",
+                  "line": 67,
+                  "column": 9
+                },
+                {
+                  "title": "hidden",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "WebKit",
+                      "projectName": "WebKit",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 580,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:42.732Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-3ec9cdf1e98ad071c708",
+                  "file": "FitAddon.test.ts",
+                  "line": 75,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "fit",
+              "file": "FitAddon.test.ts",
+              "line": 93,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "default",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Chromium",
+                      "projectName": "Chromium",
+                      "results": [
+                        {
+                          "workerIndex": 3,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 537,
+                          "error": {
+                            "message": "AssertionError: The expression evaluated to a falsy value:\n\n  (cols < 88)\n",
+                            "stack": "AssertionError: The expression evaluated to a falsy value:\n\n  (cols < 88)\n\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:100:9",
+                            "location": {
+                              "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                              "column": 9,
+                              "line": 100
+                            },
+                            "snippet": "   98 |       const rows: number = await ctx.proxy.rows;\n   99 |       ok(cols > 85);\n> 100 |       ok(cols < 88);\n      |         ^\n  101 |       ok(rows > 24);\n  102 |       ok(rows < 29);\n  103 |     });"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                                "column": 9,
+                                "line": 100
+                              },
+                              "message": "AssertionError: The expression evaluated to a falsy value:\n\n  (cols < 88)\n\n\n   98 |       const rows: number = await ctx.proxy.rows;\n   99 |       ok(cols > 85);\n> 100 |       ok(cols < 88);\n      |         ^\n  101 |       ok(rows > 24);\n  102 |       ok(rows < 29);\n  103 |     });\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:100:9"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:25.985Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-fit-default-Chromium\\error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-fit-default-Chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                            "column": 9,
+                            "line": 100
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-b9af373d86e1824047e2",
+                  "file": "FitAddon.test.ts",
+                  "line": 94,
+                  "column": 9
+                },
+                {
+                  "title": "width",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Chromium",
+                      "projectName": "Chromium",
+                      "results": [
+                        {
+                          "workerIndex": 4,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 540,
+                          "error": {
+                            "message": "AssertionError: The expression evaluated to a falsy value:\n\n  (cols < 111)\n",
+                            "stack": "AssertionError: The expression evaluated to a falsy value:\n\n  (cols < 111)\n\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:111:9",
+                            "location": {
+                              "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                              "column": 9,
+                              "line": 111
+                            },
+                            "snippet": "  109 |       const rows: number = await ctx.proxy.rows;\n  110 |       ok(cols > 108);\n> 111 |       ok(cols < 111);\n      |         ^\n  112 |       ok(rows > 24);\n  113 |       ok(rows < 29);\n  114 |     });"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                                "column": 9,
+                                "line": 111
+                              },
+                              "message": "AssertionError: The expression evaluated to a falsy value:\n\n  (cols < 111)\n\n\n  109 |       const rows: number = await ctx.proxy.rows;\n  110 |       ok(cols > 108);\n> 111 |       ok(cols < 111);\n      |         ^\n  112 |       ok(rows > 24);\n  113 |       ok(rows < 29);\n  114 |     });\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:111:9"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:27.553Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-fit-width-Chromium\\error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-fit-width-Chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                            "column": 9,
+                            "line": 111
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-18857977805334de35b8",
+                  "file": "FitAddon.test.ts",
+                  "line": 105,
+                  "column": 9
+                },
+                {
+                  "title": "small",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Chromium",
+                      "projectName": "Chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 536,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:30.635Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-c2500460b22ad69c41bb",
+                  "file": "FitAddon.test.ts",
+                  "line": 116,
+                  "column": 9
+                },
+                {
+                  "title": "same dimensions",
+                  "ok": false,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Chromium",
+                      "projectName": "Chromium",
+                      "results": [
+                        {
+                          "workerIndex": 5,
+                          "parallelIndex": 0,
+                          "status": "failed",
+                          "duration": 547,
+                          "error": {
+                            "message": "AssertionError: Expected values to be strictly equal:\n\n95 !== 98\n",
+                            "stack": "AssertionError: Expected values to be strictly equal:\n\n95 !== 98\n\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:130:18",
+                            "location": {
+                              "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                              "column": 18,
+                              "line": 130
+                            },
+                            "snippet": "  128 |       // Calling fit() again at the same container size should not throw\n  129 |       await ctx.page.evaluate(`window.fit.fit()`);\n> 130 |       strictEqual(await ctx.proxy.cols, cols);\n      |                  ^\n  131 |       strictEqual(await ctx.proxy.rows, rows);\n  132 |     });\n  133 |   });"
+                          },
+                          "errors": [
+                            {
+                              "location": {
+                                "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                                "column": 18,
+                                "line": 130
+                              },
+                              "message": "AssertionError: Expected values to be strictly equal:\n\n95 !== 98\n\n\n  128 |       // Calling fit() again at the same container size should not throw\n  129 |       await ctx.page.evaluate(`window.fit.fit()`);\n> 130 |       strictEqual(await ctx.proxy.cols, cols);\n      |                  ^\n  131 |       strictEqual(await ctx.proxy.rows, rows);\n  132 |     });\n  133 |   });\n    at O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts:130:18"
+                            }
+                          ],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:32.556Z",
+                          "annotations": [],
+                          "attachments": [
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-fit-same-dimensions-Chromium\\error-context.md"
+                            },
+                            {
+                              "name": "error-context",
+                              "contentType": "text/markdown",
+                              "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\results\\e2e\\upstream\\2026-11-06T00-37-12-736Z-55180701-e5ab-49ad-ad10-1d2f5e9aef4b\\artifacts\\FitAddon-FitAddon-fit-same-dimensions-Chromium\\error-context.md"
+                            }
+                          ],
+                          "errorLocation": {
+                            "file": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Reese327\\source_repo\\addons\\addon-fit\\test\\FitAddon.test.ts",
+                            "column": 18,
+                            "line": 130
+                          }
+                        }
+                      ],
+                      "status": "unexpected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-d27cdf8c04e932e5fb37",
+                  "file": "FitAddon.test.ts",
+                  "line": 123,
+                  "column": 9
+                },
+                {
+                  "title": "default",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "FirefoxStable",
+                      "projectName": "FirefoxStable",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:43.071Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-dde9acae78ee324a71e5",
+                  "file": "FitAddon.test.ts",
+                  "line": 94,
+                  "column": 9
+                },
+                {
+                  "title": "width",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "FirefoxStable",
+                      "projectName": "FirefoxStable",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:43.071Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-2c0d881d14b01f0a744c",
+                  "file": "FitAddon.test.ts",
+                  "line": 105,
+                  "column": 9
+                },
+                {
+                  "title": "small",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "FirefoxStable",
+                      "projectName": "FirefoxStable",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:43.071Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-8e48432df087f58795ac",
+                  "file": "FitAddon.test.ts",
+                  "line": 116,
+                  "column": 9
+                },
+                {
+                  "title": "same dimensions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "FirefoxStable",
+                      "projectName": "FirefoxStable",
+                      "results": [
+                        {
+                          "workerIndex": -1,
+                          "parallelIndex": -1,
+                          "status": "skipped",
+                          "duration": 0,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:43.071Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-6815fc6b063ccb849819",
+                  "file": "FitAddon.test.ts",
+                  "line": 123,
+                  "column": 9
+                },
+                {
+                  "title": "default",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "WebKit",
+                      "projectName": "WebKit",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 545,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:43.320Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-aafb16a819e73ca1987a",
+                  "file": "FitAddon.test.ts",
+                  "line": 94,
+                  "column": 9
+                },
+                {
+                  "title": "width",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "WebKit",
+                      "projectName": "WebKit",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 546,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:43.871Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-db9ade900b17c9a0d40d",
+                  "file": "FitAddon.test.ts",
+                  "line": 105,
+                  "column": 9
+                },
+                {
+                  "title": "small",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "WebKit",
+                      "projectName": "WebKit",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 535,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:44.425Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-b8a02f1f4ee14fd5baed",
+                  "file": "FitAddon.test.ts",
+                  "line": 116,
+                  "column": 9
+                },
+                {
+                  "title": "same dimensions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 10000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "WebKit",
+                      "projectName": "WebKit",
+                      "results": [
+                        {
+                          "workerIndex": 6,
+                          "parallelIndex": 0,
+                          "status": "passed",
+                          "duration": 537,
+                          "errors": [],
+                          "stdout": [],
+                          "stderr": [],
+                          "retry": 0,
+                          "startTime": "2026-11-06T00:37:44.966Z",
+                          "annotations": [],
+                          "attachments": []
+                        }
+                      ],
+                      "status": "expected"
+                    }
+                  ],
+                  "id": "fba60c0f87964e0e6682-784300d5d94833dcef68",
+                  "file": "FitAddon.test.ts",
+                  "line": 123,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-06T00:37:14.740Z",
+    "duration": 30816.21,
+    "expected": 13,
+    "skipped": 8,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

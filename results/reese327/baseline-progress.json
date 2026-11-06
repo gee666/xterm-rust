@@ -1,0 +1,66 @@
+{
+  "status": "failed",
+  "process": 39264,
+  "startedAt": "2026-11-06T00:57:18.925Z",
+  "active": null,
+  "reason": "First baseline failed before any test because physical copy lacked generated demo server. Build existing original server/client without editing source/assertions, then run one corrected full baseline.",
+  "commands": [
+    {
+      "key": "source-demo-server-build",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "bin/esbuild.mjs",
+        "--demo-server"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 721.2586,
+      "status": "passed"
+    },
+    {
+      "key": "source-demo-client-build",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "bin/esbuild.mjs",
+        "--demo-client"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 149.57620000000009,
+      "status": "passed"
+    },
+    {
+      "key": "corrected-original-browser",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/upstream-browser-baseline.mjs",
+        "--run",
+        "--timeout-ms=900000"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 794513.3048,
+      "status": "failed"
+    }
+  ],
+  "errors": [],
+  "finishedAt": "2026-11-06T01:10:34.320Z"
+}

@@ -1,0 +1,54 @@
+✖ fetches exact package WASM before publishing constructors and releasing navigation (59.3845ms)
+✖ fetch rejection, HTTP failure and invalid WASM fail navigation without constructors (25.4857ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 148.7082
+
+✖ failing tests:
+
+test at scripts\e2e\build-bootstrap.test.mjs:40:1
+✖ fetches exact package WASM before publishing constructors and releasing navigation (59.3845ms)
+  AssertionError [ERR_ASSERTION]: The WASM request must precede initialization
+  
+  0 !== 1
+  
+      at file:///O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/scripts/e2e/build-bootstrap.test.mjs:58:10
+      at fixture (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/scripts/e2e/build-bootstrap.test.mjs:29:11)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\e2e\build-bootstrap.test.mjs:75:1
+✖ fetch rejection, HTTP failure and invalid WASM fail navigation without constructors (25.4857ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /WASM transport rejected/. Input:
+  
+  'TypeError: module_or_path.arrayBuffer is not a function\n' +
+    '    at initialize (evalmachine.<anonymous>:11:82)\n' +
+    '    at async evalmachine.<anonymous>:31:7\n' +
+    '    at async file:///O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/scripts/e2e/build-bootstrap.test.mjs:91:5\n' +
+    '    at async fixture (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/scripts/e2e/build-bootstrap.test.mjs:29:5)\n' +
+    '    at async Test.run (node:internal/test_runner/test:1208:7)\n' +
+    '    at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)'
+  
+      at file:///O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/scripts/e2e/build-bootstrap.test.mjs:94:12
+      at async fixture (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/scripts/e2e/build-bootstrap.test.mjs:29:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'TypeError: module_or_path.arrayBuffer is not a function\n    at initialize (evalmachine.<anonymous>:11:82)\n    at async evalmachine.<anonymous>:31:7\n    at async file:///O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/scripts/e2e/build-bootstrap.test.mjs:91:5\n    at async fixture (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Reese327/scripts/e2e/build-bootstrap.test.mjs:29:5)\n    at async Test.run (node:internal/test_runner/test:1208:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)',
+    expected: /WASM transport rejected/,
+    operator: 'match',
+    diff: 'simple'
+  }

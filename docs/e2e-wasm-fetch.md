@@ -20,4 +20,22 @@ The readiness image and token remain unchanged. Constructors are published only 
 
 The new ordering and failure tests first ran against the unchanged old production bootstrap and failed0/2, with the missing initial GET and wrong initializer input recorded. After the production change, all36 E2E/acceptance controls passed, including missing-WASM rejection, held compilation, constructor publication ordering, missing-addon reporting, network rejection, HTTP404 and invalid-WASM failure notification. Existing fixture server/readiness/cancellation/counter/provenance checks remain in the run. Test-only export stubs check transport order, not terminal behavior.
 
-Logs are `results/reese327/transport-unit-old.log`, `transport-unit-fixed.log` and the final unit logs. The old actual browser matrix and every original-source result remain intact. A separate new browser allocation is required for full core/image/Fit execution against the unchanged verified package. No new real-browser success is claimed here yet.
+Logs are `results/reese327/transport-unit-old.log`, `transport-unit-fixed.log` and `transport-unit-final2.log`. The old actual browser matrix and every original-source result remain intact.
+
+## Actual browser verification
+
+A separately granted browser-only phase executed complete, unfiltered core, image and Fit configs against the same package. All three original projects ran with two workers, unchanged10s hooks and zero retries. No Rust rebuild was needed.
+
+| Config | Discovered | Passed | Failed | Original skips | Unrun |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| core |1434|1167|27|240|0|
+| image |639|628|7|4|0|
+| Fit |27|17|10|0|0|
+
+There were no beforeAll startup failures or fixture server errors. Each report records successful GETs for the actual WASM path and ready constructor publication. The27 core failures are the absent registerDecoration API on this snapshot. Image private-accessor gaps and source-shared geometry failures remain; Fit's ten failures also occur in the fresh original baseline. Every command still returned nonzero for its application failures. Successful transport does not turn those failures into a pass.
+
+`results/reese327/transport-browser-progress.json` records finite commands and cleanup. `verify-transport.mjs` independently checks raw/stored counts, zero retries, zero setup fallout, successful WASM requests, current1866-input identity and all75 unchanged package files. It writes `transport-proof.json`. Both core/image/Fit first-attempt failures and complete reruns are retained. The first full14-config checkpoint is never overwritten.
+
+The derived latest complete-config accounting combines those three full reruns with the eleven other first-run configs on identical Rust inputs:4116 discovered,3825 attempted,3701 passed,124 failed,291 original skips and zero unrun. This is not one fresh14-config run under the new transport. `compare-baseline.mjs --updated` records3697 source/Rust passes,56 source-passed/Rust-failed,68 failures in both,291 skips in both and four source-failed/Rust-passed. These are named case outcomes, not full output equivalence.
+
+All resources from this phase were released after the owned supervisor and servers exited. Task327/330, application repair and final stable integration proof remain open.

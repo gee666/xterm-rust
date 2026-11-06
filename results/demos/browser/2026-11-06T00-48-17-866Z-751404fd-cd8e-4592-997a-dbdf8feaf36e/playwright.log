@@ -1,0 +1,136 @@
+
+Running 21 tests using 2 workers
+········F·······F··FF
+
+  1) [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:126:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      130 |   const canvases = await page.locator('.xterm canvas').count();
+      131 |   await change(page, 'renderer', 'webgl');
+    > 132 |   await expect.poll(() => page.locator('.xterm canvas').count()).toBeGreaterThan(canvases);
+          |                                                                  ^
+      133 |   expect(await snapshot(page)).toEqual(before);
+      134 |   expect(await page.evaluate(() => demo.terminal.getSelection())).toBe('renderer');
+      135 |   await change(page, 'renderer', 'dom');
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Reese327\scripts\demo-e2e\demo-05.spec.cjs:132:66
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-Chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:126:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      130 |   const canvases = await page.locator('.xterm canvas').count();
+      131 |   await change(page, 'renderer', 'webgl');
+    > 132 |   await expect.poll(() => page.locator('.xterm canvas').count()).toBeGreaterThan(canvases);
+          |                                                                  ^
+      133 |   expect(await snapshot(page)).toEqual(before);
+      134 |   expect(await page.evaluate(() => demo.terminal.getSelection())).toBe('renderer');
+      135 |   await change(page, 'renderer', 'dom');
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Reese327\scripts\demo-e2e\demo-05.spec.cjs:132:66
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-FirefoxStable\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+
+    Error: page.evaluate: NotAllowedError: The request is not allowed by the user agent or the platform in the current context, possibly because the user denied permission.
+
+      111 |   if (browserName === 'chromium') expect(copied, 'Granted Chromium clipboard permission must copy actual HTML').toBe(true);
+      112 |   if (copied) {
+    > 113 |     const actual = await page.evaluate(async () => {
+          |                               ^
+      114 |       const items = await navigator.clipboard.read();
+      115 |       const item = items.find(item => item.types.includes('text/html'));
+      116 |       if (!item) throw new Error('HTML clipboard item is missing');
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Reese327\scripts\demo-e2e\demo-05.spec.cjs:113:31
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-HTML-serialization-1e023-oard-or-reports-host-denial-WebKit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:126:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      130 |   const canvases = await page.locator('.xterm canvas').count();
+      131 |   await change(page, 'renderer', 'webgl');
+    > 132 |   await expect.poll(() => page.locator('.xterm canvas').count()).toBeGreaterThan(canvases);
+          |                                                                  ^
+      133 |   expect(await snapshot(page)).toEqual(before);
+      134 |   expect(await page.evaluate(() => demo.terminal.getSelection())).toBe('renderer');
+      135 |   await change(page, 'renderer', 'dom');
+        at O:\xterm-rust-swarm-16\tmp\worktrees\Reese327\scripts\demo-e2e\demo-05.spec.cjs:132:66
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\trace.zip
+    Usage:
+
+        npx playwright show-trace results\demos\browser\2026-11-06T00-48-17-866Z-751404fd-cd8e-4592-997a-dbdf8feaf36e\artifacts\demo-05-DOM-and-WebGL-cont-c146f-ership-and-retain-selection-WebKit\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [Chromium] › scripts\demo-e2e\demo-05.spec.cjs:126:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+    [FirefoxStable] › scripts\demo-e2e\demo-05.spec.cjs:126:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+    [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:95:1 › HTML serialization reaches the real clipboard or reports host denial 
+    [WebKit] › scripts\demo-e2e\demo-05.spec.cjs:126:1 › DOM and WebGL controls replace actual renderer ownership and retain selection 
+  17 passed (39.5s)
