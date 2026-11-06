@@ -1,0 +1,107 @@
+{
+  "status": "passed",
+  "producerPins": 16,
+  "runtimePins": 17,
+  "originalReferenceFiles": 776,
+  "physicalReferenceFiles": 776,
+  "nativePinned": true,
+  "prewarmCompilerWasmBindingsEqualActual": true,
+  "sourceBrowsers": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "parser": 1044,
+      "fontImpl": 1044,
+      "addon": 1044
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "parser": 1044,
+      "fontImpl": 1044,
+      "addon": 1044
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "parser": 1044,
+      "fontImpl": 1044,
+      "addon": 1044
+    }
+  ],
+  "rustBrowsers": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "tests": 2,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "tests": 2,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "tests": 2,
+      "counts": {
+        "passed": 2,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-font-addons",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "font_gsub_noncontext_browser",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EvelynCoverage\\results\\acceptance-artifacts\\04c51ba280d19ba7355fcb30bc46fe792273790da61b4551e408644317f705e4\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\EvelynCoverage\\results\\browser-host\\xterm-font-addons__font_gsub_noncontext_browser\\2026-11-06T01-17-35-128Z-a8b61220-6e02-4fc5-9491-5a53bb32d83c\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "status": "passed",
+      "exitCode": 0
+    }
+  ]
+}
