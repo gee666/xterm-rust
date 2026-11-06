@@ -44,6 +44,35 @@ pub fn composition_geometry(cursor: CursorGeometry) -> Option<CompositionGeometr
 mod tests {
     use super::*;
     #[test]
+    fn nan_overlay_bounds_remain_nan_instead_of_becoming_minimum_size() {
+        for (width, height) in [(f64::NAN, 4.5), (6.5, f64::NAN), (f64::NAN, f64::NAN)] {
+            let geometry = composition_geometry(CursorGeometry {
+                in_viewport: true,
+                x: 1,
+                y: 2,
+                cols: 80,
+                cell_width: 9.0,
+                cell_height: 18.0,
+                overlay_width: width,
+                overlay_height: height,
+            })
+            .unwrap();
+            if width.is_nan() {
+                assert!(geometry.textarea_width.is_nan());
+            } else {
+                assert_eq!(geometry.textarea_width, width);
+            }
+            if height.is_nan() {
+                assert!(geometry.textarea_height.is_nan());
+                assert!(geometry.textarea_line_height.is_nan());
+            } else {
+                assert_eq!(geometry.textarea_height, height);
+                assert_eq!(geometry.textarea_line_height, height);
+            }
+        }
+    }
+
+    #[test]
     fn clamps_wrap_pending_cursor_and_minimum_textarea() {
         let mut cursor = CursorGeometry {
             in_viewport: true,

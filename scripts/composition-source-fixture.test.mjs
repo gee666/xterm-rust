@@ -10,6 +10,7 @@ for (const [name, signature] of [
   ['textarea', 'private _handleAnyTextareaChanges(): void {'],
   ['end', 'public compositionend(): void {'],
   ['finalize', 'private _finalizeComposition(waitForPropagation: boolean): void {'],
+  ['geometry', 'public updateCompositionElements(dontRecurse?: boolean): void {'],
 ]) {
   test(`composition ${name} matches the unchanged reference body`, async () => {
     const raw = await readFile(new URL('source_repo/src/browser/input/CompositionHelper.ts', root), 'utf8');
