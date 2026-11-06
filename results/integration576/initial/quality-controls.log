@@ -1,0 +1,86 @@
+✔ retired queue refuses commands without starting work or creating lease data (62.4382ms)
+✔ managed readiness and explicit stop retain output and are idempotent (443.5485ms)
+✔ early exit is failed even with a zero exit code (58.0477ms)
+✔ readiness deadline terminates the owned server (741.8227ms)
+✔ readiness callback rejection is retained instead of retried (288.0927ms)
+✔ disk failure kills the server and retains the exact resource error (296.1567ms)
+✔ log write failure stops its server rather than throwing out of the data callback (202.6177ms)
+✔ expected false readiness responses can become ready within the startup deadline (419.7622ms)
+✔ lifetime remains bounded after readiness (716.2057ms)
+✔ a ready server that exits unexpectedly is not a stopped success (61.8734ms)
+✔ managed spawn errors reject readiness and retain a failed receipt (2.2706ms)
+✔ readiness thrown failure remains failed (314.6511ms)
+✔ readiness thrown Error remains failed (318.5792ms)
+✔ readiness thrown null remains failed (385.8148ms)
+✔ readiness thrown undefined remains failed (318.9749ms)
+✔ tree stop refuses arbitrary PIDs (0.2101ms)
+✔ options preserve explicit WASM intent, destination and finite deadlines (1.317ms)
+✔ output destinations cannot overwrite the root or escape results (0.3ms)
+✔ attempt reservation preserves existing evidence and rejects output junctions (13.4092ms)
+✔ native evidence rejects missing, foreign and ambient cross-compilation hosts (0.3078ms)
+✔ inherited build policy cannot redirect disk or override shared profiles (0.3283ms)
+✔ resolved Cargo cfg catches configuration-file targets, not only environment overrides (0.1854ms)
+✔ test counts preserve failures, ignored and filtered cases per suite (0.3236ms)
+✔ successful command retains stdout and stderr without a shell (141.5743ms)
+✔ failed command preserves exit status and output (50.7684ms)
+✔ missing executable is a recorded failure, not an uncaught spawn error (2.9588ms)
+✔ timeout terminates a blocked command and records the failure (801.5138ms)
+✔ disk monitor terminates a command and records its resource failure (339.2408ms)
+✔ an already-aborted signal does not start an executable (1.8108ms)
+✔ abort stops a running owned tree without reporting a timeout (397.4206ms)
+✔ timeout terminates descendants with detached=false (1188.6619ms)
+✔ timeout terminates descendants with detached=true (1314.9643ms)
+✔ snapshot changes for Rust, fixture, JS, workflow and profile edits (39.288ms)
+✔ unsafe scan retains exact file and line but does not claim semantic safety (14.1827ms)
+✔ disk preflight records byte counts and rejects insufficient headroom without cleanup (0.6954ms)
+✔ dry run reads exact cache metadata without creating a destination or link (25.1519ms)
+✔ promotion keeps one canonical link and preserves bytes and nanosecond times (54.9237ms)
+✔ existing destinations and active processes are refused without source loss (31.96ms)
+✔ a corrupt copied byte prevents source removal (37.8365ms)
+✔ junction creation failure restores the original real cache and keeps failure visible (235.4506ms)
+✔ partial backup cleanup leaves the verified canonical cache intact and fails honestly (49.6548ms)
+✔ an unknown canonical entry is preserved and maintenance remains paused (74.8807ms)
+✔ post-promotion probe failure rolls back by rename, not a second cross-volume copy (34.3297ms)
+✔ changed control files are not overwritten and force a safe rollback (412.8511ms)
+✔ a live foreign lane lease is never overwritten or removed (18.9234ms)
+✔ native gates and artifacts use the selected physical root without changing gate commands (0.525ms)
+✖ the current target inventory fits the shortened hosted Windows command line (434.3726ms)
+▶ Windows setup and cleanup preserve ownership, source identity and linked data
+  ✔ setup checks out the requested SHA and publishes only the owned root (381.7968ms)
+  ✔ a trailing runner-temp separator resolves to the same protected checkout (297.5313ms)
+  ✔ budget records the actual physical root and all metadata targets (359.2856ms)
+  ✔ an existing path is preserved and setup fails visibly (281.5192ms)
+  ✔ cleanup rejects an unexpected ownership marker (270.0925ms)
+  ✔ cleanup refuses a child junction and preserves its target (274.527ms)
+  ✔ cleanup removes owned generated files after an earlier failed step (322.9402ms)
+  ✔ cleanup refuses a root junction before inspecting descendants (261.3062ms)
+  ✔ a failed checkout remains failed and cleanup preserves the source repository (590.0686ms)
+✔ Windows setup and cleanup preserve ownership, source identity and linked data (5656.9012ms)
+ℹ tests 57
+ℹ suites 0
+ℹ pass 56
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6231.6413
+
+✖ failing tests:
+
+test at scripts\windows-quality-worktree.test.mjs:28:1
+✖ the current target inventory fits the shortened hosted Windows command line (434.3726ms)
+  AssertionError [ERR_ASSERTION]: edition 2021: 550 roots need 32876 file-argument characters
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Sydney576/scripts/windows-quality-worktree.test.mjs:49:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
