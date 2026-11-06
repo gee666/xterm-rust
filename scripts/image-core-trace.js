@@ -40,6 +40,12 @@ return (async () => {
   await write('B');
   equal(Array.from(capturedRow._data), Array.from(core.buffer.lines.get(0)._data), 'retained row');
   snapshot('retained-row');
+  await write('\x1b[4:3;58:2::1:2:3mC\x1b]8;;https://example.invalid/image-core\x1b\\D\x1b]8;;\x1b\\');
+  const extended = core.buffer.lines.get(0)._extendedAttrs;
+  equal(Object.keys(extended), ['2', '3'], 'real sparse extended cells');
+  equal(extended[2].urlId, 0, 'underline has no hyperlink');
+  equal(extended[3].urlId > 0, true, 'hyperlink stored in native row');
+  snapshot('extended-row');
   const lf = [];
   const listener = terminal.onLineFeed(() => lf.push([core.buffer.x, core.buffer.y]));
   equal(input.lineFeed(), true, 'LF operation return');

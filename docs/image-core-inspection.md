@@ -18,13 +18,13 @@ The upstream test transport bundles the generated bindings. It previously rename
 
 ## Scope limits
 
-This is read-only inspection plus the listed operations, not a source-writable private object graph. Packed arrays, extended-attribute maps, color arrays and Params data are owned projections, not shared mutable JavaScript backing arrays. Retained Params are callback snapshots rather than parser scratch identities. Streaming payloads preserve codepoints but use owned slices with zero-based offsets. Repeated line/color reads need not return identical wrapper objects.
+This is read-only inspection plus the listed operations, not a source-writable private object graph. Packed arrays, extended-attribute maps, color arrays and Params data are owned projections, not shared mutable JavaScript backing arrays. Retained Params are callback snapshots rather than parser scratch identities. Streaming payloads preserve codepoints but use owned slices with zero-based offsets. Repeated line/color reads need not return identical wrapper objects. Private CSI callback-array receiver identity is not represented by this adapter.
 
 Raw JavaScript number/operator semantics for dirty-row indices, direct mutation/replacement of private services and attributes, all other private parser/attribute methods, complete descriptor/enumeration semantics and GC equivalence remain open under the full image/public/browser families. The pending dirty getters expose the native pending range; they do not promise the source's retained post-parse tracker history. Unsupported methods are absent, not successful no-ops.
 
 ## Verification
 
-The shared `scripts/image-core-trace.js` runs through real original and Rust Terminals. It checks18 complete snapshots covering live/retained attributes and rows, LF/events, numeric dirty ranges, theme mutation, browser ownership, streaming DCS LIFO/async cleanup, OSC/APC/CSI, reset listener disposal and normal/alternate buffers. The generated fixture exceeds350 lines because it preserves complete source snapshots, including packed rows.
+The shared `scripts/image-core-trace.js` runs through real original and Rust Terminals. It checks19 complete snapshots covering live/retained attributes and rows, nonempty underline/hyperlink maps, LF/events, numeric dirty ranges, theme mutation, browser ownership, streaming DCS LIFO/async cleanup, OSC/APC/CSI, reset listener disposal and normal/alternate buffers. The generated fixture exceeds350 lines because it preserves complete source snapshots, including packed rows.
 
 The unchanged original ImageAddon accessor test runs separately through the actual production WASM package. The raw initial transport-name failures are retained, not normalized. Scoped results, source/input/artifact pins, exact commands and remaining unrun gates are recorded in `results/image-core/summary.json`.
 
