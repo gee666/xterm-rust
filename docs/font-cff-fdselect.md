@@ -20,7 +20,7 @@ On the first browser launch, unchanged source277 constructors plus4 actual addon
 
 All compiler/browser/server resources were released at409 comment5048. The second read-only review verified2377 producer pins,277 input hashes,231 native functions/55 summaries and196 negative mismatches with exact restoration, finding no implementation defect. Its sole pending item was this browser proof. The final audit verifies producer/runtime/log/cached-test pins, independent reconstruction, receipts and776 original plus776 physical-copy source hashes. Scope is Windows and browser components only. No full-workspace/native Linux/macOS or full upstream suite claim.
 
-Run the retained read-only audit from a fresh checkout with REFERENCE_ROOT pointing to the original source and `node results/font-cff-fdselect/audit.mjs --original-only`. Before owned-tree cleanup, add `--cached --runtime` to check generated artifacts too. Those generated outputs are intentionally absent after cleanup; the immutable compiler and raw receipts remain.
+Run the retained read-only audit from a fresh checkout of this exact producer/archive with REFERENCE_ROOT pointing to the original source and `node results/font-cff-fdselect/audit.mjs --original-only`. Before owned-tree cleanup, add `--cached --runtime` to check generated artifacts too. Those generated outputs are intentionally absent after cleanup; the immutable compiler and raw receipts remain.
 
 Commands use a private O:target/TEMP/TMP, Cargo-j2 and the coordinator's bounded heavy-job grant. Set SOURCE_PACKAGE_JSON to the original read-only source_repo/package.json, PLAYWRIGHT_MODULE to the installed reference playwright/index.mjs, and WASM_BINDGEN to the matching0.2.100 CLI.
 
