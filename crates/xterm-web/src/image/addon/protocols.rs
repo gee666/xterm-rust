@@ -16,14 +16,10 @@ use xterm_addons::image::{
     storage::ImageStorage,
 };
 impl State {
-    pub(super) fn register_protocols(
-        self: &Rc<Self>,
-        terminal: &Terminal,
-        renderer: Rc<ImageRendererLifecycle>,
-        storage: ImageStorage,
-    ) -> Result<(), JsValue> {
+    pub(super) fn register_protocols(self: &Rc<Self>, terminal: &Terminal) -> Result<(), JsValue> {
         let options = self.options.get();
         if options.sixel_support {
+            let (renderer, storage) = self.protocol_context()?;
             // Source evaluates *4 before reading the decoder palette option.
             let memory_limit = super::super::pixel_limit::memory(&self.pixel_limit)?;
             let palette = self.palette.get();
@@ -56,6 +52,7 @@ impl State {
             self.cleanups.borrow_mut().push(token(protocol.register()?));
         }
         if self.options.get().iip_support {
+            let (renderer, storage) = self.protocol_context()?;
             // Conversion may reset/dispose the addon. Read live typed options
             // afterwards, with no state borrow held across the host callback.
             let encoded_limit = super::options::iip_encoded_limit(&self.iip_size_limit)?;
@@ -75,6 +72,7 @@ impl State {
             self.cleanups.borrow_mut().push(token(protocol.register()?));
         }
         if self.options.get().kitty_support {
+            let (renderer, storage) = self.protocol_context()?;
             // Source first coerces this raw value in the enabled handler's
             // constructor. Keep state borrows released across user conversion.
             let encoded_limit = super::options::kitty_encoded_limit(&self.kitty_size_limit)?;
@@ -101,5 +99,16 @@ impl State {
                 .extend([cleanup, token(registration)]);
         }
         Ok(())
+    }
+    /// Each source constructor evaluates its renderer/storage arguments before
+    /// its option conversion. A prior conversion may have reactivated the addon.
+    fn protocol_context(&self) -> Result<(Rc<ImageRendererLifecycle>, ImageStorage), JsValue> {
+        let renderer = self
+            .renderer()
+            .ok_or_else(|| js_sys::Error::new("Image renderer is not initialized"))?;
+        let storage = self
+            .storage()
+            .ok_or_else(|| js_sys::Error::new("Image storage is not initialized"))?;
+        Ok((renderer, storage))
     }
 }

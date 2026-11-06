@@ -53,8 +53,8 @@ impl State {
         if self.options.get().enable_size_reports {
             controls::enable_reports(terminal)?;
         }
-        let cleanups = self.parent_registrations(terminal, renderer.clone(), storage.clone())?;
+        let cleanups = self.parent_registrations(terminal, renderer, storage)?;
         self.cleanups.borrow_mut().extend(cleanups);
-        self.register_protocols(terminal, renderer, storage)
+        self.register_protocols(terminal)
     }
 }

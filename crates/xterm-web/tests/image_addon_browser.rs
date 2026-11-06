@@ -31,6 +31,8 @@ mod raw_pixel;
 mod raw_pixel_protocols;
 #[path = "image_addon_support/raw_pixel_public.rs"]
 mod raw_pixel_public;
+#[path = "image_addon_support/raw_pixel_reactivation.rs"]
+mod raw_pixel_reactivation;
 #[path = "image_addon_support/raw_placeholder.rs"]
 mod raw_placeholder;
 #[path = "image_addon_support/raw_sixel_limit.rs"]
