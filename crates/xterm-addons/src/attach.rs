@@ -223,9 +223,15 @@ impl Drop for AttachAddon {
 }
 
 fn dispose_all(disposables: &RefCell<Vec<DisposableHandle>>) {
-    // Upstream retains the handles and invokes them on repeated dispose calls.
-    let snapshot = disposables.borrow().clone();
-    for disposable in snapshot {
+    // Source iterates the live array, including handles appended by activate
+    // during removal. Release the vector borrow before foreign disposal code.
+    let mut index = 0;
+    loop {
+        let disposable = disposables.borrow().get(index).cloned();
+        let Some(disposable) = disposable else {
+            break;
+        };
+        index += 1;
         disposable.dispose();
     }
 }
