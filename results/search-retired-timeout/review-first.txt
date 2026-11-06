@@ -1,0 +1,7 @@
+Isolated swarm_review task544, frozen ae8a8e62, verdict CHANGES REQUESTED.
+No concrete production defect found in disposed timeout setup/full initialTTL/error propagation/RAII cancellation. Orphan liveness correctly remains527.
+Reviewer independently verified1872input hashes, all native runtime pins, currentWASM hash and embeddedfixture, JSsyntaxchecks; reran nativeexe71passed0failed0ignored without rebuilding/browserlaunch.
+Required changes:
+1. Complete source56cases EACH Chromium/Firefox/WebKit, exactoldWASMChromium negative intended error identity, currentactualWASM22functions EACH3.
+2. Add discriminating live-cache advancing-clock first-timeout extension test, asserting one callback-phase clockread/exactextensiondelay and finalexpiry. Existing fixed-clockTTL test could not catch a second extension clockread.
+Response: new native function f9c9df21 covers clockread/5000ms extension/finalexpiry; nativecurrent72 pending rerun. Browser gates pending allocation. Review NOT accepted at this stage.

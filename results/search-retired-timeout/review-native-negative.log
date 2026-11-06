@@ -1,0 +1,24 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\Luke527\crates\xterm-addons)
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\Luke527\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 9.60s
+     Running tests\search_addon.rs (target\debug\deps\search_addon-a9ec83e89c96f449.exe)
+
+running 1 test
+test retired_timeout::retired_cache_setup_preserves_timer_errors_and_successful_setup_matching_order ... FAILED
+
+failures:
+
+---- retired_timeout::retired_cache_setup_preserves_timer_errors_and_successful_setup_matching_order stdout ----
+
+thread 'retired_timeout::retired_cache_setup_preserves_timer_errors_and_successful_setup_matching_order' panicked at crates\xterm-web\tests\search_cases\retired_timeout.rs:166:25:
+assertion failed: Rc::ptr_eq(&actual,
+    if mode == "throw" { &timer_error } else { &matching_error })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    retired_timeout::retired_cache_setup_preserves_timer_errors_and_successful_setup_matching_order
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 71 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-web --test search_addon`
