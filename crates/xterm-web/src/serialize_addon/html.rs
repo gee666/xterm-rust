@@ -121,6 +121,12 @@ fn explicit_range(host: &Shared, range: &JsValue) -> Result<Range, JsValue> {
     let end_col = columns(host)?;
     get(range, "endLine")?;
     let end = get(range, "endLine")?;
+    // BaseSerializeHandler evaluates the difference before the HTML header,
+    // even though HTML ignores its value. Raw operands can throw or reenter,
+    // with end coerced before start and before any cell-column conversion.
+    if start.as_f64().is_none() || end.as_f64().is_none() {
+        options::row_difference(&end, &start)?;
+    }
     if matches!((start.as_f64(), end.as_f64()), (Some(start), Some(end)) if start.is_nan() || end.is_nan() || start > end)
     {
         // A false numeric row comparison skips the cell loop entirely, even for

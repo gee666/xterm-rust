@@ -10,7 +10,7 @@ export function checkSerializeArrayLength(length) { new Array(length); }
 ")]
 extern "C" {
     #[wasm_bindgen(catch, js_name = serializeRowDifference)]
-    fn row_difference(end: &JsValue, start: &JsValue) -> Result<JsValue, JsValue>;
+    pub(super) fn row_difference(end: &JsValue, start: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = checkSerializeArrayLength)]
     fn check_array_length(length: f64) -> Result<(), JsValue>;
 }

@@ -12,6 +12,7 @@ import { configForRust, testCounts } from './e2e/upstream-config.mjs';
 import { runCommand } from './quality-process.mjs';
 import { referenceIntegrity } from './upstream-baseline-utils.mjs';
 import { serializationCases } from './serialize-browser-cases.mjs';
+import { htmlRowDifferenceCases } from './serialize-html-difference-cases.mjs';
 import { serializationGc } from './serialize-browser-gc.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 if (process.argv.slice(2).some(arg => !['--suite', '--gc'].includes(arg)) || process.argv.length > 3) throw Error('Usage: node scripts/serialize-browser-check.mjs [--suite|--gc]');
@@ -31,7 +32,7 @@ try {
   report.referenceBefore = referenceIntegrity(reference, manifest);
   assert.equal(report.referenceBefore.mismatches.length, 0);
   report.source = await sourceIdentity(root); report.build = await verifyBuiltPackage(root, report.source);
-  const runnerFiles = ['scripts/serialize-browser-check.mjs', 'scripts/serialize-browser-cases.mjs', 'scripts/serialize-browser-gc.mjs', 'browser/xterm.mjs',
+  const runnerFiles = ['scripts/serialize-browser-check.mjs', 'scripts/serialize-browser-cases.mjs', 'scripts/serialize-html-difference-cases.mjs', 'scripts/serialize-browser-gc.mjs', 'browser/xterm.mjs',
     'scripts/e2e/build-bootstrap.mjs', 'scripts/e2e/fixture-server.mjs', 'scripts/e2e/test-page.mjs'];
   report.runner = await artifactIdentity(root, runnerFiles);
   report.declarations = await artifactIdentity(root, ['browser/pkg/xterm_web.d.ts']);
@@ -66,7 +67,9 @@ try {
         const page = await browser.newPage(); page.setDefaultTimeout(45000);
         await page.goto(`${origin}/test`);
         let deadline;
-        try { traces[engine] = await Promise.race([page.evaluate(serializationCases), new Promise((_, reject) => {
+        try { traces[engine] = await Promise.race([(async () => [
+          ...await page.evaluate(serializationCases), ...await page.evaluate(htmlRowDifferenceCases)
+        ])(), new Promise((_, reject) => {
           deadline = setTimeout(() => reject(Error(`${engine} serialization probes exceeded45s`)), 45000);
         })]); } finally { clearTimeout(deadline); }
         await writeFile(join(output, `${name}-${engine}.json`), JSON.stringify(traces[engine]) + '\n');
@@ -85,7 +88,7 @@ try {
         }
         await page.close();
       }
-      assert.equal(traces.source.length, 93, 'Expected61 directed and32 seeded cases');
+      assert.equal(traces.source.length, 96, 'Expected64 directed and32 seeded cases');
       assert.equal(traces.source.filter(entry => entry.name.startsWith('seeded-')).length, 32);
       assert.equal(traces.source.length, traces.rust.length);
       entry.discovered = traces.source.length; entry.executed = traces.rust.length;
