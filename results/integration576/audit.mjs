@@ -60,6 +60,22 @@ function resolveConflict(file, output) {
       return '}\nimpl BrowserMarker {\n    pub(super) fn native(&self) -> Marker {\n        self.marker.clone()\n    }';
     }
     if (file === 'scripts/search-call-args-source.mjs') return replaceOnce(ours, "'search-delayed-expiry': 6", "'search-delayed-expiry': 6, 'search-highlight-bounds': 8");
+    if (file === 'scripts/e2e/build-bootstrap.test.mjs') {
+      if (!ours.includes('missing WASM fails') || !theirs.includes("terminal.getAttrData().constructor.name")) throw Error('Unexpected transport union');
+      return ours;
+    }
+    if (file === 'scripts/demo-e2e.mjs') return "  const fixtureFiles = ['scripts/demo-e2e.mjs', 'scripts/e2e/upstream-config.mjs',\n    'scripts/serve-demo.mjs', 'scripts/quality-process.mjs', 'scripts/quality-tree.mjs',\n    'scripts/owned-command.mjs', 'scripts/windows-owned-job.ps1',\n    'scripts/windows-owned-job.cs', 'scripts/demo-e2e/support.cjs',";
+    if (file === 'docs/comparison.md') {
+      const beforeTiming = ours.indexOf('- Output-validated matched release timing');
+      const newTiming = theirs.indexOf('- Final integrated timing refresh');
+      const newParagraph = theirs.indexOf('\n\nTask 333');
+      const oldParagraph = ours.indexOf('Task 568 retains');
+      const oldFuture = ours.indexOf('Task 329 still needs');
+      const measured = theirs.indexOf("Task 329's");
+      if ([beforeTiming,newTiming,newParagraph,oldParagraph,oldFuture,measured].some(i => i < 0)) throw Error('Unexpected comparison union');
+      return ours.slice(0,beforeTiming) + theirs.slice(newTiming,newParagraph) + '\n\n'
+        + ours.slice(oldParagraph,oldFuture) + theirs.slice(measured);
+    }
     throw Error('Undeclared source union ' + file + '\n' + ours + '\n===\n' + theirs);
   });
 }
@@ -73,6 +89,17 @@ function merge(file, ours, base, theirs) {
     {timeout:30000, maxBuffer:16 * 1024 * 1024});
   if (result.error || result.status < 0 || result.status >= 128 || result.status === null) throw Error(`Cannot merge expected ${file}`);
   let bytes = result.status === 0 ? result.stdout : Buffer.from(resolveConflict(file, result.stdout.toString()));
+  if (file === 'scripts/e2e/build-bootstrap.test.mjs') {
+    let value = bytes.toString();
+    const anchor = "  assert.ok(vm.initialized instanceof WebAssembly.Instance);\n  assert.equal(typeof window.Terminal, 'function'); assert.equal(typeof window.FitAddon, 'function');\n";
+    value = replaceOnce(value, anchor, anchor + "  const terminal = new window.Terminal();\n  assert.equal(terminal.getAttrData().constructor.name, '_AttributeData');\n  assert.equal(terminal.getParser().constructor.name, 'EscapeSequenceParser');\n");
+    value = replaceOnce(value, "test('fetch rejection, HTTP failure and invalid WASM fail navigation without constructors'", "test('fetch, HTTP, WASM and initializer failures stop navigation without constructors'");
+    value = replaceOnce(value, "['fetch', 'http', 'wasm']", "['fetch', 'http', 'wasm', 'initialize']");
+    value = replaceOnce(value, '      compileReady: Promise.resolve(),', "      compileReady: failure === 'initialize' ? Promise.reject(new Error('broken WASM module')) : Promise.resolve(),");
+    value = replaceOnce(value, "          return { ok: failure !== 'http', status: 404, arrayBuffer: async () => new Uint8Array([1]) };", "          return { ok: failure !== 'http', status: 404,\n            arrayBuffer: async () => failure === 'initialize' ? minimalWasm : new Uint8Array([1]) };");
+    value = replaceOnce(value, "failure === 'http' ? /WASM fetch failed: 404/ : /WebAssembly|CompileError/);", "failure === 'http' ? /WASM fetch failed: 404/\n        : failure === 'initialize' ? /broken WASM module/ : /WebAssembly|CompileError/);");
+    bytes = Buffer.from(value);
+  }
   if (/^(<<<<<<<|=======|>>>>>>>)/m.test(bytes.toString())) throw Error(`Unresolved expected ${file}`);
   return {bytes, composed:true};
 }

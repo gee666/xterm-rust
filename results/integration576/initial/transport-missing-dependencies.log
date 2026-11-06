@@ -1,0 +1,82 @@
+✖ missing WASM fails before emitting a bootstrap (4.7951ms)
+✖ fetches exact package WASM before publishing constructors and releasing navigation (5.865ms)
+✖ fetch, HTTP, WASM and initializer failures stop navigation without constructors (3.6149ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 78.7879
+
+✖ failing tests:
+
+test at scripts\e2e\build-bootstrap.test.mjs:38:1
+✖ missing WASM fails before emitting a bootstrap (4.7951ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  Error: Cannot find module 'esbuild'
+  Require stack:
+  - O:\xterm-rust-swarm-16\tmp\worktrees\Sydney576\source_repo\package.json
+      at async TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Sydney576/scripts/e2e/build-bootstrap.test.mjs:43:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Cannot find module 'esbuild'
+    Require stack:
+    - O:\xterm-rust-swarm-16\tmp\worktrees\Sydney576\source_repo\package.json
+        at Module._resolveFilename (node:internal/modules/cjs/loader:1476:15)
+        at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)
+        at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)
+        at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1094:12)
+        at Module._load (node:internal/modules/cjs/loader:1262:25)
+        at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+        at Module.require (node:internal/modules/cjs/loader:1576:12)
+        at require (node:internal/modules/helpers:153:16)
+        at buildBootstrap (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Sydney576/scripts/e2e/build-bootstrap.mjs:10:71)
+        at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Sydney576/scripts/e2e/build-bootstrap.test.mjs:43:26),
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at scripts\e2e\build-bootstrap.test.mjs:56:1
+✖ fetches exact package WASM before publishing constructors and releasing navigation (5.865ms)
+  Error: Cannot find module 'esbuild'
+  Require stack:
+  - O:\xterm-rust-swarm-16\tmp\worktrees\Sydney576\source_repo\package.json
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1476:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1094:12)
+      at Module._load (node:internal/modules/cjs/loader:1262:25)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+      at Module.require (node:internal/modules/cjs/loader:1576:12)
+      at require (node:internal/modules/helpers:153:16)
+      at buildBootstrap (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Sydney576/scripts/e2e/build-bootstrap.mjs:10:71)
+      at fixture (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Sydney576/scripts/e2e/build-bootstrap.test.mjs:33:11) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Sydney576\\source_repo\\package.json' ]
+  }
+
+test at scripts\e2e\build-bootstrap.test.mjs:94:1
+✖ fetch, HTTP, WASM and initializer failures stop navigation without constructors (3.6149ms)
+  Error: Cannot find module 'esbuild'
+  Require stack:
+  - O:\xterm-rust-swarm-16\tmp\worktrees\Sydney576\source_repo\package.json
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1476:15)
+      at wrapResolveFilename (node:internal/modules/cjs/loader:1049:27)
+      at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1073:10)
+      at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1094:12)
+      at Module._load (node:internal/modules/cjs/loader:1262:25)
+      at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+      at Module.require (node:internal/modules/cjs/loader:1576:12)
+      at require (node:internal/modules/helpers:153:16)
+      at buildBootstrap (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Sydney576/scripts/e2e/build-bootstrap.mjs:10:71)
+      at fixture (file:///O:/xterm-rust-swarm-16/tmp/worktrees/Sydney576/scripts/e2e/build-bootstrap.test.mjs:33:11) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [ 'O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Sydney576\\source_repo\\package.json' ]
+  }

@@ -1375,7 +1375,7 @@
   },
   {
     "task": 562,
-    "archive": "7ee881b1",
+    "archive": "archive/Damaris562-complete",
     "first": "4ba3ad4d",
     "tip": "7ee881b1d2fc1f2bdeb5a9649554ef851ebf7497",
     "chain": [
@@ -1749,6 +1749,486 @@
           "docs/handoffs/chagatai-complete.md",
           "results/core574/cleanup-preflight.json",
           "results/core574/review574.json"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 569,
+    "archive": "archive/Gavrila569-complete",
+    "first": "41c0a497",
+    "tip": "4a9b1a6455b8b280e5989fe29cd121ba2dfb5325",
+    "chain": [
+      "41c0a497975b7121caf758623fe5da5a068d31e8",
+      "23a89b253fb987f9318b91e8f2fc608c7af21f4e",
+      "41e2090d277e4c79e1aec2d629976a08a6c3ff09",
+      "a011c4aced04b1e58c6114f961f94e9ee696442b",
+      "4a9b1a6455b8b280e5989fe29cd121ba2dfb5325"
+    ],
+    "commits": [
+      {
+        "ref": "41c0a497975b7121caf758623fe5da5a068d31e8",
+        "parents": "41c0a497975b7121caf758623fe5da5a068d31e8 224d1b339a43eddf899c2944d9dad734d8c44234",
+        "subject": "Expose native-backed image-required internal core inspection",
+        "paths": [
+          "crates/xterm-core/src/public_api/parser.rs",
+          "crates/xterm-core/src/terminal/attribute_view.rs",
+          "crates/xterm-core/src/terminal/mod.rs",
+          "crates/xterm-core/src/terminal/state.rs",
+          "crates/xterm-core/tests/internal_attribute_view.rs",
+          "crates/xterm-wasm-support/src/public_api/parser_api.rs",
+          "crates/xterm-wasm-support/src/public_api/parser_identifier.rs",
+          "crates/xterm-web/src/terminal/browser_open.rs",
+          "crates/xterm-web/src/terminal/internal_api.rs",
+          "crates/xterm-web/src/terminal/internal_browser.rs",
+          "crates/xterm-web/src/terminal/internal_buffer.rs",
+          "crates/xterm-web/src/terminal/internal_input.rs",
+          "crates/xterm-web/src/terminal/internal_lines.rs",
+          "crates/xterm-web/src/terminal/internal_parser.rs",
+          "crates/xterm-web/src/terminal/mod.rs",
+          "crates/xterm-web/tests/fixtures/image-core.json",
+          "crates/xterm-web/tests/wasm_image_core.rs",
+          "docs/image-core-inspection.md",
+          "scripts/core-views-source.mjs",
+          "scripts/e2e/build-bootstrap.mjs",
+          "scripts/e2e/build-bootstrap.test.mjs",
+          "scripts/image-core-trace.js"
+        ]
+      },
+      {
+        "ref": "23a89b253fb987f9318b91e8f2fc608c7af21f4e",
+        "parents": "23a89b253fb987f9318b91e8f2fc608c7af21f4e 41c0a497975b7121caf758623fe5da5a068d31e8",
+        "subject": "Exercise nonempty underline and hyperlink row inspection",
+        "paths": [
+          "crates/xterm-web/tests/fixtures/image-core.json",
+          "docs/image-core-inspection.md",
+          "scripts/image-core-trace.js"
+        ]
+      },
+      {
+        "ref": "41e2090d277e4c79e1aec2d629976a08a6c3ff09",
+        "parents": "41e2090d277e4c79e1aec2d629976a08a6c3ff09 23a89b253fb987f9318b91e8f2fc608c7af21f4e",
+        "subject": "Retain native and three-engine image core inspection proof",
+        "paths": [
+          "docs/image-core-inspection.md",
+          "results/image-core/browser-commands.json",
+          "results/image-core/check-commands.json",
+          "results/image-core/check-wasm-fixed.log",
+          "results/image-core/check-wasm.log",
+          "results/image-core/check-workspace-native.log",
+          "results/image-core/clippy-native-41.log",
+          "results/image-core/clippy-native-final.log",
+          "results/image-core/clippy-native.log",
+          "results/image-core/clippy-wasm-41.log",
+          "results/image-core/clippy-wasm-final.log",
+          "results/image-core/clippy-wasm.log",
+          "results/image-core/consumers-commands.json",
+          "results/image-core/durable-pins.json",
+          "results/image-core/final19-commands.json",
+          "results/image-core/finalquality-commands.json",
+          "results/image-core/fixed19/commands.json",
+          "results/image-core/fixed19/wasm_image_core-bindgen-version.log",
+          "results/image-core/fixed19/wasm_image_core-bindgen.log",
+          "results/image-core/fixed19/wasm_image_core-build.log",
+          "results/image-core/fixed19/wasm_image_core-chromium.log",
+          "results/image-core/fixed19/wasm_image_core-firefox.log",
+          "results/image-core/fixed19/wasm_image_core-results.json",
+          "results/image-core/fixed19/wasm_image_core-webkit.log",
+          "results/image-core/fixed41/wasm_image_core-results.json",
+          "results/image-core/fmt-all.log",
+          "results/image-core/fmt-xterm-addons.log",
+          "results/image-core/fmt-xterm-core.log",
+          "results/image-core/fmt-xterm-font-addons.log",
+          "results/image-core/fmt-xterm-wasm-support.log",
+          "results/image-core/fmt-xterm-web.log",
+          "results/image-core/fmtall-commands.json",
+          "results/image-core/fmtmembers-commands.json",
+          "results/image-core/generated-restores.json",
+          "results/image-core/generated/results/buffer-terminal/rust-failures.txt",
+          "results/image-core/generated/results/buffer-terminal/rust-summary.json",
+          "results/image-core/generated/results/demos/build/latest.json",
+          "results/image-core/generated/results/serialize/html-differential.tsv",
+          "results/image-core/initial-commands.json",
+          "results/image-core/inputs.json",
+          "results/image-core/native-attributes.log",
+          "results/image-core/nativefinal-commands.json",
+          "results/image-core/negative-19.json",
+          "results/image-core/negative-commands.json",
+          "results/image-core/negative-control.log",
+          "results/image-core/negative-control.mjs",
+          "results/image-core/negative-control18.mjs",
+          "results/image-core/negative-control19-executed.mjs",
+          "results/image-core/negative.json",
+          "results/image-core/negative19.log",
+          "results/image-core/old19/commands.json",
+          "results/image-core/old19/wasm_image_core-bindgen-version.log",
+          "results/image-core/old19/wasm_image_core-bindgen.log",
+          "results/image-core/old19/wasm_image_core-build.log",
+          "results/image-core/old19/wasm_image_core-chromium.log",
+          "results/image-core/old19/wasm_image_core-results.json",
+          "results/image-core/original-accessors-41.log",
+          "results/image-core/original-accessors-fixed.log",
+          "results/image-core/original-accessors.log",
+          "results/image-core/original-accessors19.log",
+          "results/image-core/original-final19/artifacts/.last-run.json",
+          "results/image-core/original-final19/playwright.json",
+          "results/image-core/original-final19/playwright.log",
+          "results/image-core/original-final19/production-build/bindgen-version.log",
+          "results/image-core/original-final19/production-build/bindgen.log",
+          "results/image-core/original-final19/production-build/cargo-version.log",
+          "results/image-core/original-final19/production-build/debug-wasm.log",
+          "results/image-core/original-final19/production-build/report.json",
+          "results/image-core/original-final19/production-build/rustc-version.log",
+          "results/image-core/original-final19/summary.json",
+          "results/image-core/original-initial/artifacts/.last-run.json",
+          "results/image-core/original-initial/artifacts/ImageAddon-ImageAddon-test-for-private-accessors-Chromium/error-context.md",
+          "results/image-core/original-initial/artifacts/ImageAddon-ImageAddon-test-for-private-accessors-FirefoxStable/error-context.md",
+          "results/image-core/original-initial/artifacts/ImageAddon-ImageAddon-test-for-private-accessors-WebKit/error-context.md",
+          "results/image-core/original-initial/playwright.json",
+          "results/image-core/original-initial/playwright.log",
+          "results/image-core/original-initial/production-build/bindgen-version.log",
+          "results/image-core/original-initial/production-build/bindgen.log",
+          "results/image-core/original-initial/production-build/cargo-version.log",
+          "results/image-core/original-initial/production-build/debug-wasm.log",
+          "results/image-core/original-initial/production-build/report.json",
+          "results/image-core/original-initial/production-build/rustc-version.log",
+          "results/image-core/original-initial/summary.json",
+          "results/image-core/original-source41/artifacts/.last-run.json",
+          "results/image-core/original-source41/playwright.json",
+          "results/image-core/original-source41/playwright.log",
+          "results/image-core/original-source41/production-build/bindgen-version.log",
+          "results/image-core/original-source41/production-build/bindgen.log",
+          "results/image-core/original-source41/production-build/cargo-version.log",
+          "results/image-core/original-source41/production-build/debug-wasm.log",
+          "results/image-core/original-source41/production-build/report.json",
+          "results/image-core/original-source41/production-build/rustc-version.log",
+          "results/image-core/original-source41/summary.json",
+          "results/image-core/original-transport-fixed/artifacts/.last-run.json",
+          "results/image-core/original-transport-fixed/playwright.json",
+          "results/image-core/original-transport-fixed/playwright.log",
+          "results/image-core/original-transport-fixed/production-build/bindgen-version.log",
+          "results/image-core/original-transport-fixed/production-build/bindgen.log",
+          "results/image-core/original-transport-fixed/production-build/cargo-version.log",
+          "results/image-core/original-transport-fixed/production-build/debug-wasm.log",
+          "results/image-core/original-transport-fixed/production-build/report.json",
+          "results/image-core/original-transport-fixed/production-build/rustc-version.log",
+          "results/image-core/original-transport-fixed/summary.json",
+          "results/image-core/originalfixed-commands.json",
+          "results/image-core/production-commands.json",
+          "results/image-core/production-debug-41.log",
+          "results/image-core/production-debug.log",
+          "results/image-core/production-debug19.log",
+          "results/image-core/quality-commands.json",
+          "results/image-core/runtime-pins.json",
+          "results/image-core/source-commands.json",
+          "results/image-core/source-generate.log",
+          "results/image-core/source.json",
+          "results/image-core/source18-fixture.json",
+          "results/image-core/source18.json",
+          "results/image-core/source19-commands.json",
+          "results/image-core/source19-generate.log",
+          "results/image-core/source41-commands.json",
+          "results/image-core/summary.json",
+          "results/image-core/test-core-final.log",
+          "results/image-core/test-core.log",
+          "results/image-core/transport-fixed.log",
+          "results/image-core/transport-old.log",
+          "results/image-core/wasm-fixed-41.log",
+          "results/image-core/wasm-fixed-final.log",
+          "results/image-core/wasm-fixed-initial.log",
+          "results/image-core/wasm-fixed19.log",
+          "results/image-core/wasm-old-19.log",
+          "results/image-core/wasm-old.log"
+        ]
+      },
+      {
+        "ref": "a011c4aced04b1e58c6114f961f94e9ee696442b",
+        "parents": "a011c4aced04b1e58c6114f961f94e9ee696442b 41e2090d277e4c79e1aec2d629976a08a6c3ff09",
+        "subject": "Record accepted image inspection review and cleanup preflight",
+        "paths": [
+          "docs/handoffs/gavrila569.md",
+          "results/image-core/cleanup-preflight.json",
+          "results/image-core/durable-pins.json",
+          "results/image-core/review.json"
+        ]
+      },
+      {
+        "ref": "4a9b1a6455b8b280e5989fe29cd121ba2dfb5325",
+        "parents": "4a9b1a6455b8b280e5989fe29cd121ba2dfb5325 a011c4aced04b1e58c6114f961f94e9ee696442b",
+        "subject": "Record inherited checkout newline differences in archive inputs",
+        "paths": [
+          "docs/handoffs/gavrila569.md",
+          "results/image-core/archive-inputs.json",
+          "results/image-core/durable-pins.json"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 579,
+    "archive": "archive/Parker579-complete",
+    "first": "8fcf69c9",
+    "tip": "716c97bce70257cbdd48d2ba0dca6e06f855aede",
+    "chain": [
+      "8fcf69c987c01ac5190d441702afc5be7f784f3e",
+      "17fcfc1049b81972af00c4c902e929077e3c22c4",
+      "752830b81ff923e5400f6d451022a20e9553a3ab",
+      "716c97bce70257cbdd48d2ba0dca6e06f855aede"
+    ],
+    "commits": [
+      {
+        "ref": "8fcf69c987c01ac5190d441702afc5be7f784f3e",
+        "parents": "8fcf69c987c01ac5190d441702afc5be7f784f3e 14139449bae2792afb019f42e8438b074938cfe7",
+        "subject": "Preserve negative typed-array combining targets during print",
+        "paths": [
+          "crates/xterm-core/src/terminal/print_render.rs",
+          "crates/xterm-core/tests/fixtures/print-negative-target579.tsv",
+          "crates/xterm-core/tests/print_negative_target.rs",
+          "scripts/print-negative-target-oracle.mjs"
+        ]
+      },
+      {
+        "ref": "17fcfc1049b81972af00c4c902e929077e3c22c4",
+        "parents": "17fcfc1049b81972af00c4c902e929077e3c22c4 8fcf69c987c01ac5190d441702afc5be7f784f3e",
+        "subject": "Retain source and native negative combining-target controls",
+        "paths": [
+          ".pi/swarm/skills/print-negative-target/SKILL.md",
+          "docs/handoffs/parker579.md",
+          "docs/print-negative-target.md",
+          "results/print-negative-target579/clippy579-sparse-missing.log.gz",
+          "results/print-negative-target579/clippy579.log.gz",
+          "results/print-negative-target579/fixed579.log.gz",
+          "results/print-negative-target579/fmt-xterm-addons579.log.gz",
+          "results/print-negative-target579/fmt-xterm-core579.log.gz",
+          "results/print-negative-target579/fmt-xterm-font-addons579.log.gz",
+          "results/print-negative-target579/fmt-xterm-wasm-support579.log.gz",
+          "results/print-negative-target579/fmt-xterm-web579.log.gz",
+          "results/print-negative-target579/fmt579.log.gz",
+          "results/print-negative-target579/focused579.log.gz",
+          "results/print-negative-target579/initial-type-error579.log.gz",
+          "results/print-negative-target579/old-first-failure579.log.gz",
+          "results/print-negative-target579/old579.log.gz",
+          "results/print-negative-target579/source.json",
+          "results/print-negative-target579/source579-final.log.gz",
+          "results/print-negative-target579/source579.log.gz",
+          "results/print-negative-target579/summary.json",
+          "results/print-negative-target579/unit579.log.gz"
+        ]
+      },
+      {
+        "ref": "752830b81ff923e5400f6d451022a20e9553a3ab",
+        "parents": "752830b81ff923e5400f6d451022a20e9553a3ab 17fcfc1049b81972af00c4c902e929077e3c22c4",
+        "subject": "Record accepted negative combining-target review and cleanup preflight",
+        "paths": [
+          "docs/handoffs/parker579.md",
+          "results/print-negative-target579/cleanup-preflight.json",
+          "results/print-negative-target579/review.json"
+        ]
+      },
+      {
+        "ref": "716c97bce70257cbdd48d2ba0dca6e06f855aede",
+        "parents": "716c97bce70257cbdd48d2ba0dca6e06f855aede 752830b81ff923e5400f6d451022a20e9553a3ab",
+        "subject": "Record completed negative combining-target owned cleanup",
+        "paths": [
+          "docs/handoffs/parker579.md",
+          "results/print-negative-target579/cleanup.json"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 584,
+    "archive": "archive/Sydney584-reviewed",
+    "first": "d7a3b39a",
+    "tip": "172f906896ce0998539ca1665471d780df2aac70",
+    "chain": [
+      "d7a3b39aabcc5808cd38a587887f513df43d7a5d",
+      "172f906896ce0998539ca1665471d780df2aac70"
+    ],
+    "commits": [
+      {
+        "ref": "d7a3b39aabcc5808cd38a587887f513df43d7a5d",
+        "parents": "d7a3b39aabcc5808cd38a587887f513df43d7a5d 7616b25d0232d834f64a994c598ccb9c44ffc94f",
+        "subject": "Use a shorter physical hosted Windows quality root without reducing gates",
+        "paths": [
+          ".github/workflows/rust.yml",
+          "docs/windows-quality-root-next.md",
+          "results/windows-root584/controls.log",
+          "results/windows-root584/model.json",
+          "results/windows-root584/model.mjs",
+          "scripts/windows-quality-worktree.test.mjs"
+        ]
+      },
+      {
+        "ref": "172f906896ce0998539ca1665471d780df2aac70",
+        "parents": "172f906896ce0998539ca1665471d780df2aac70 d7a3b39aabcc5808cd38a587887f513df43d7a5d",
+        "subject": "Retain accepted full-target Windows root repair review",
+        "paths": [
+          "results/windows-root584/review.md"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 577,
+    "archive": "archive/Briseis577-complete",
+    "first": "f837222d",
+    "tip": "926287787c803e322fd0559ab374a73cf0cab6b4",
+    "chain": [
+      "f837222df414cd9eac23ff9d01ad955d71856aa2",
+      "d97b82bea8d8fcbd68f543b838fb122ea6cdc450",
+      "926287787c803e322fd0559ab374a73cf0cab6b4"
+    ],
+    "commits": [
+      {
+        "ref": "f837222df414cd9eac23ff9d01ad955d71856aa2",
+        "parents": "f837222df414cd9eac23ff9d01ad955d71856aa2 14139449bae2792afb019f42e8438b074938cfe7",
+        "subject": "Add actual output-validated matched headless benchmark adapters",
+        "paths": [
+          "crates/xterm-addons/examples/matched_benchmark.rs",
+          "docs/matched-headless-performance.md",
+          "scripts/full-trace-source.mjs",
+          "scripts/matched-benchmark-adapter.mjs",
+          "scripts/matched-benchmark-js.mjs",
+          "scripts/matched-benchmark-native-build.mjs",
+          "scripts/matched-benchmark-preflight.mjs",
+          "scripts/matched-benchmark-workloads.mjs",
+          "scripts/matched-benchmark.test.mjs"
+        ]
+      },
+      {
+        "ref": "d97b82bea8d8fcbd68f543b838fb122ea6cdc450",
+        "parents": "d97b82bea8d8fcbd68f543b838fb122ea6cdc450 f837222df414cd9eac23ff9d01ad955d71856aa2",
+        "subject": "Retain validated public latency and synchronous core comparison evidence",
+        "paths": [
+          ".pi/swarm/skills/benchmark-validation/SKILL.md",
+          "docs/comparison.md",
+          "docs/matched-headless-performance.md",
+          "results/matched-performance329/README.md",
+          "results/matched-performance329/adapter-tests-final.log",
+          "results/matched-performance329/adapter-tests.log",
+          "results/matched-performance329/addons-fmt.log",
+          "results/matched-performance329/addons-native-clippy.log",
+          "results/matched-performance329/addons-native-tests.log",
+          "results/matched-performance329/aggregate-fmt.log",
+          "results/matched-performance329/archive-public.executed.mjs.txt",
+          "results/matched-performance329/capture-resources.json",
+          "results/matched-performance329/config.json",
+          "results/matched-performance329/import-controls-final.log",
+          "results/matched-performance329/import-controls.executed.mjs.txt",
+          "results/matched-performance329/import-controls.json",
+          "results/matched-performance329/import-controls.log",
+          "results/matched-performance329/javascript-provenance.json",
+          "results/matched-performance329/manifest.json",
+          "results/matched-performance329/measurement-resources.json",
+          "results/matched-performance329/measurement-run.log",
+          "results/matched-performance329/measurements.json",
+          "results/matched-performance329/native-clippy.log",
+          "results/matched-performance329/native-release-build.json",
+          "results/matched-performance329/native-release-build.log",
+          "results/matched-performance329/paired.json",
+          "results/matched-performance329/paired.log",
+          "results/matched-performance329/prepare-js.executed.mjs.txt",
+          "results/matched-performance329/processes-after-runs.json",
+          "results/matched-performance329/producer-original-build.json",
+          "results/matched-performance329/producer-original-sizes.json",
+          "results/matched-performance329/proof-pins.json",
+          "results/matched-performance329/public-callback/adapter-tests-final.log",
+          "results/matched-performance329/public-callback/adapter-tests.log",
+          "results/matched-performance329/public-callback/aggregate-fmt.log",
+          "results/matched-performance329/public-callback/archive.json",
+          "results/matched-performance329/public-callback/capture-resources.json",
+          "results/matched-performance329/public-callback/config.json",
+          "results/matched-performance329/public-callback/javascript-provenance.json",
+          "results/matched-performance329/public-callback/manifest.json",
+          "results/matched-performance329/public-callback/measurement-resources.json",
+          "results/matched-performance329/public-callback/measurement-run.log",
+          "results/matched-performance329/public-callback/measurements.json",
+          "results/matched-performance329/public-callback/native-clippy.log",
+          "results/matched-performance329/public-callback/native-release-build.json",
+          "results/matched-performance329/public-callback/native-release-build.log",
+          "results/matched-performance329/public-callback/paired.json",
+          "results/matched-performance329/public-callback/paired.log",
+          "results/matched-performance329/public-callback/prepare-js.executed.mjs.txt",
+          "results/matched-performance329/public-callback/producer-original-build.json",
+          "results/matched-performance329/public-callback/producer-original-sizes.json",
+          "results/matched-performance329/public-callback/rust-provenance.json",
+          "results/matched-performance329/public-callback/source-capture.log",
+          "results/matched-performance329/run-measurements.executed.mjs.txt",
+          "results/matched-performance329/rust-provenance.json",
+          "results/matched-performance329/seal-evidence.executed.mjs.txt",
+          "results/matched-performance329/seal-js.executed.mjs.txt",
+          "results/matched-performance329/seal-runtime.executed.mjs.txt",
+          "results/matched-performance329/source-capture.log",
+          "results/matched-performance329/summary.json",
+          "results/matched-performance329/synchronous-adapter-tests.log",
+          "results/matched-performance329/worker-boundaries.executed.mjs.txt",
+          "results/matched-performance329/worker-boundaries.json",
+          "scripts/matched-benchmark-adapter.mjs",
+          "scripts/matched-benchmark-import.mjs",
+          "scripts/matched-benchmark-js.mjs",
+          "scripts/matched-benchmark-preflight.mjs",
+          "scripts/matched-benchmark-workloads.mjs"
+        ]
+      },
+      {
+        "ref": "926287787c803e322fd0559ab374a73cf0cab6b4",
+        "parents": "926287787c803e322fd0559ab374a73cf0cab6b4 d97b82bea8d8fcbd68f543b838fb122ea6cdc450",
+        "subject": "Record independent matched comparison review and safe cleanup preflight",
+        "paths": [
+          "docs/handoffs/briseis577.md",
+          "results/matched-performance329/cleanup-preflight.executed.ps1.txt",
+          "results/matched-performance329/cleanup-preflight.json",
+          "results/matched-performance329/review-receipt.md"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 583,
+    "archive": "archive/Tyler583-complete",
+    "first": "d3dc6e5a",
+    "tip": "c0092e791ecae6de85b677656b244e5299ae430b",
+    "chain": [
+      "d3dc6e5a12e5dbe356a415b6f9ad2bc14f8b838b",
+      "c0092e791ecae6de85b677656b244e5299ae430b"
+    ],
+    "commits": [
+      {
+        "ref": "d3dc6e5a12e5dbe356a415b6f9ad2bc14f8b838b",
+        "parents": "d3dc6e5a12e5dbe356a415b6f9ad2bc14f8b838b 14139449bae2792afb019f42e8438b074938cfe7",
+        "subject": "Reject incomplete or malformed successful E2E reports",
+        "paths": [
+          "docs/e2e-report-validation.md",
+          "results/e2e-report583/all-e2e-unit.log",
+          "results/e2e-report583/default-command-final.log",
+          "results/e2e-report583/default-command.log",
+          "results/e2e-report583/final25-controls.log",
+          "results/e2e-report583/fixed-controls-corrected.log",
+          "results/e2e-report583/fixed-controls-final.log",
+          "results/e2e-report583/fixed-controls.log",
+          "results/e2e-report583/old-report-control.mjs",
+          "results/e2e-report583/old-runner-controls-corrected.log",
+          "results/e2e-report583/old-runner-controls-final.log",
+          "results/e2e-report583/old-runner-controls.log",
+          "results/e2e-report583/retained-core-validation.json",
+          "results/e2e-report583/sealed-all-e2e-default.log",
+          "results/e2e-report583/sealed-all-e2e-direct.log",
+          "results/e2e-report583/summary.json",
+          "scripts/demo-e2e.mjs",
+          "scripts/e2e-upstream.mjs",
+          "scripts/e2e/report-validation.test.mjs",
+          "scripts/e2e/runner-report.test.mjs",
+          "scripts/e2e/upstream-config.mjs"
+        ]
+      },
+      {
+        "ref": "c0092e791ecae6de85b677656b244e5299ae430b",
+        "parents": "c0092e791ecae6de85b677656b244e5299ae430b d3dc6e5a12e5dbe356a415b6f9ad2bc14f8b838b",
+        "subject": "Record accepted E2E report controls and cleanup custody",
+        "paths": [
+          "docs/handoffs/tyler583.md",
+          "results/e2e-report583/cleanup-preflight.json"
         ]
       }
     ]
