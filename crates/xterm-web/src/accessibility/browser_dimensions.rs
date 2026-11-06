@@ -35,7 +35,8 @@ impl Inner {
             self.refresh_row_dimensions(&row.element)?;
             // A height setter can resize/replace the row array. Source selects
             // the alignment receiver only after that setter has returned.
-            self.align_width(&self.dimension_row(index)?)?;
+            let row = self.dimension_row(index)?;
+            self.align_width(&row)?;
             index += 1;
         }
         Ok(())
