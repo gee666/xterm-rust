@@ -38,6 +38,22 @@ fn should_not_reinitialize_if_cache_already_exists() {
     assert_eq!(cache.get(0), Some(&entry("test")));
 }
 #[test]
+fn overdue_access_retains_rows_until_the_host_expiry_callback() {
+    for delayed in [CACHE_TTL_MS - 1, CACHE_TTL_MS, CACHE_TTL_MS * 3] {
+        let mut cache = SearchLineCache::default();
+        cache.init(0);
+        cache.set(0, entry("retained"));
+        cache.init(delayed);
+        assert_eq!(cache.get(0), Some(&entry("retained")));
+        cache.expire(delayed);
+        assert_eq!(cache.get(0), Some(&entry("retained")));
+        cache.expire(delayed + CACHE_TTL_MS - 1);
+        assert_eq!(cache.get(0), Some(&entry("retained")));
+        cache.expire(delayed + CACHE_TTL_MS);
+        assert!(cache.get(0).is_none());
+    }
+}
+#[test]
 fn should_set_up_ttl_timeout() {
     let mut cache = SearchLineCache::default();
     cache.init(0);

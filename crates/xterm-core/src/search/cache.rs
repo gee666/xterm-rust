@@ -26,7 +26,8 @@ pub struct SearchLineCache {
 
 impl SearchLineCache {
     pub fn init(&mut self, now_ms: u64) {
-        self.expire(now_ms);
+        // A delayed host timeout has not expired the cache yet. Access extends
+        // its lifetime even after the old deadline, matching initLinesCache.
         self.entries.get_or_insert_with(BTreeMap::new);
         self.last_access = now_ms;
     }

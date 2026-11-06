@@ -20,6 +20,8 @@ mod cached_argument;
 mod clocks;
 #[path = "search_cases/decorations.rs"]
 mod decorations;
+#[path = "search_cases/delayed_expiry.rs"]
+mod delayed_expiry;
 #[path = "search_cases/empty.rs"]
 mod empty;
 #[path = "search_cases/engine_cache.rs"]

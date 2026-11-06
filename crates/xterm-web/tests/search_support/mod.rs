@@ -32,6 +32,22 @@ impl Clock {
     pub fn pending(&self) -> usize {
         self.jobs.borrow().len()
     }
+    /// Fire one overdue job at the current clock time, as a throttled browser does.
+    pub fn fire_due_now(&self) -> Result<bool, SearchAddonError> {
+        let next = self
+            .jobs
+            .borrow()
+            .iter()
+            .filter(|(_, (due, _))| *due <= self.now.get())
+            .min_by_key(|(id, (due, _))| (*due, **id))
+            .map(|(&id, _)| id);
+        let Some(id) = next else {
+            return Ok(false);
+        };
+        let (_, callback) = self.jobs.borrow_mut().remove(&id).unwrap();
+        callback()?;
+        Ok(true)
+    }
     pub fn advance(&self, now: u64) -> Result<(), SearchAddonError> {
         assert!(now >= self.now.get());
         for _ in 0..1000 {
