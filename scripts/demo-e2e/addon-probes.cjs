@@ -101,6 +101,9 @@ async function probe(page, name, phase) {
     const box = await page.locator('.xterm-screen').boundingBox();
     const dimensions = await page.evaluate(() => [demo.terminal.cols, demo.terminal.rows]);
     const x = box.x + box.width / dimensions[0] * 3, y = box.y + box.height / dimensions[1] / 2;
+    // Source Linkifier retains its last cell across addon reload. Visit another
+    // row so this probe requests fresh provider results instead of its old cache.
+    await page.mouse.move(x, y + box.height / dimensions[1]);
     await page.mouse.move(x, y);
     await expect(page.locator('.xterm-cursor-pointer')).toBeVisible();
     const popupPromise = page.waitForEvent('popup');
