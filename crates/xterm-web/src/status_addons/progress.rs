@@ -18,6 +18,9 @@ struct BindingState {
     // The declared API uses numbers, but source stores the actual third state
     // property read, even an object or undefined supplied by an untyped caller.
     api_state: RefCell<Option<JsValue>>,
+    // Replaced Math.min can return any JavaScript value. Keep the raw public
+    // assignment separate from the portable addon's numeric protocol state.
+    api_value: RefCell<Option<JsValue>>,
     api_event: Cell<bool>,
 }
 fn to_js(progress: &ProgressState, binding: &BindingState) -> Result<JsValue, JsValue> {
@@ -27,8 +30,13 @@ fn to_js(progress: &ProgressState, binding: &BindingState) -> Result<JsValue, Js
         .borrow()
         .clone()
         .unwrap_or_else(|| progress.state.into());
+    let value = binding
+        .api_value
+        .borrow()
+        .clone()
+        .unwrap_or_else(|| progress.value.into());
     set(&object, "state", &state)?;
-    set(&object, "value", &progress.value.into())?;
+    set(&object, "value", &value)?;
     Ok(object.into())
 }
 #[wasm_bindgen]
@@ -62,10 +70,11 @@ impl ProgressAddon {
             .ok_or_else(|| js_sys::Error::new("progress emitter was not initialized"))?;
         let binding = self.binding.clone();
         event.subscribe(move |_| {
-            // Protocol reports replace _st with a numeric state. API calls have
-            // already stored their raw state before evaluating the value.
-            if !binding.api_event.get() {
+            // Consume the API origin before notifying public listeners, so a
+            // nested protocol report cannot inherit the outer setter's origin.
+            if !binding.api_event.replace(false) {
                 binding.api_state.borrow_mut().take();
+                binding.api_value.borrow_mut().take();
             }
         });
         let binding = self.binding.clone();
@@ -90,9 +99,13 @@ impl ProgressAddon {
         }
         let state = coercion::property(&progress, "state")?;
         *self.binding.api_state.borrow_mut() = Some(state);
-        // Keep that partial assignment if the value getter/coercion throws.
-        let value = coercion::number(&coercion::property(&progress, "value")?)?;
-        // Value getters can reenter this setter or produce a protocol report.
+        // Math.min is resolved before Math.max and the value getter. Preserve
+        // the partial state assignment and previous value if any host step
+        // throws. The raw result is assigned only after all host calls return.
+        let raw_value = coercion::progress_value(&progress)?;
+        *self.binding.api_value.borrow_mut() = Some(raw_value.clone());
+        let value = raw_value.as_f64().unwrap_or(f64::NAN);
+        // Host methods and value getters can reenter or produce a protocol report.
         // Read the current state only after those callbacks, matching _st/_pr.
         let state = self.binding.api_state.borrow().as_ref().map_or_else(
             || self.addon.progress().state,
