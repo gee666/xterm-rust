@@ -38,7 +38,7 @@ const modifiers = node => (node.modifiers ?? []).map(m => m.getText());
 const nameOf = (sf, node) => node.name?.getText(sf) ?? (ts.isConstructorDeclaration(node) ? 'constructor' : ts.isCallSignatureDeclaration(node) ? '<call>' : ts.isConstructSignatureDeclaration(node) ? '<new>' : '<index>');
 const referenceFiles = await listReferenceFiles(root);
 const entries = JSON.parse(await read(mappingsPath));
-const supplementalMappings = ['tools/compatibility/addon-mappings.json', 'tools/compatibility/public-mappings.json'];
+const supplementalMappings = ['tools/compatibility/addon-mappings.json', 'tools/compatibility/public-mappings.json', 'tools/compatibility/internal-mappings.json'];
 if (mappingsPath === 'tools/compatibility/mappings.json') {
   for (const mapping of supplementalMappings) {
     const additional = JSON.parse(await read(mapping));

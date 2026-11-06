@@ -15,7 +15,8 @@ const combine = async () => {
   const base = await load('tools/compatibility/mappings.json');
   const addons = await load('tools/compatibility/addon-mappings.json');
   const publicApis = await load('tools/compatibility/public-mappings.json');
-  return Object.fromEntries(['modules', 'apiOwners', 'suites'].map(k => [k, [...(base[k] ?? []), ...(addons[k] ?? []), ...(publicApis[k] ?? [])]]));
+  const internal = await load('tools/compatibility/internal-mappings.json');
+  return Object.fromEntries(['modules', 'apiOwners', 'suites'].map(k => [k, [...(base[k] ?? []), ...(addons[k] ?? []), ...(publicApis[k] ?? []), ...(internal[k] ?? [])]]));
 };
 
 test('all fourteen addons link scoped components without certifying APIs, GPU or suite outcomes', async () => {
@@ -41,8 +42,8 @@ test('all fourteen addons link scoped components without certifying APIs, GPU or
   }
   const summary = await load('results/compatibility/summary.json');
   assert.equal(summary.equivalence, 'NOT PROVEN');
-  assert.deepEqual(summary.counts.moduleStatuses, {missing: 103, partial: 106});
-  assert.deepEqual(summary.counts.apiStatuses, {missing: 239, partial: 531});
+  assert.deepEqual(summary.counts.moduleStatuses, {missing: 17, partial: 192});
+  assert.deepEqual(summary.counts.apiStatuses, {missing: 37, partial: 733});
   const hashes = await load('results/compatibility/evidence-manifest.json');
   for (const p of ['tools/compatibility/mappings.json', 'tools/compatibility/addon-mappings.json', 'tools/compatibility/public-mappings.json', 'tools/compatibility/behavior-criteria.json']) assert(hashes.some(h => h.path === p));
 });

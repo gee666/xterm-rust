@@ -19852,13 +19852,27 @@
       "docs/browser-input-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/input/clipboard.rs",
+      "crates/xterm-web/src/input/composition.rs",
+      "crates/xterm-web/src/input/composition_geometry.rs",
+      "crates/xterm-web/src/terminal/input_keyboard.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_input.rs",
+      "crates/xterm-web/tests/wasm_input_callbacks.rs",
+      "crates/xterm-web/tests/wasm_clipboard_values.rs"
+    ],
+    "evidence": [
+      "docs/browser-input-oracle.md",
+      "docs/composition-start-order.md",
+      "docs/composition-end-order.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_input node scripts/browser-host-check.mjs; WASM_TEST=wasm_input_callbacks node scripts/browser-host-check.mjs; WASM_TEST=wasm_clipboard_values node scripts/browser-host-check.mjs",
+    "binding": "Rust clipboard helpers/CompositionHelper route actual textarea and terminal input through DOM/WebIDL bindings; input is not display echo.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Trusted clipboard permissions, IME timing and every hostile event getter remain distinct checks."
   },
   {
     "source": "source_repo/src/browser/ColorContrastCache.test.ts",
@@ -19967,13 +19981,23 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/contrast_cache.rs",
+      "crates/xterm-web/src/theme/mod.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/theme_upstream.rs",
+      "crates/xterm-web/tests/theme_edges.rs"
+    ],
+    "evidence": [
+      "docs/webgl-contrast-cache.md",
+      "docs/acceptance-color-rendering.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-web --test theme_upstream; cargo test --locked -p xterm-web --test theme_edges",
+    "binding": "ColorContrastCache tri-state entries and ThemeService colors use shared Rust ColorRef values.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Cache helpers are not real WebGL/DOM pixels or complete theme mutation proof."
   },
   {
     "source": "source_repo/src/browser/Linkifier.test.ts",
@@ -20125,13 +20149,30 @@
       "docs/link-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/links/browser_linkifier.rs",
+      "crates/xterm-web/src/links/provider.rs",
+      "crates/xterm-web/src/links/osc.rs",
+      "crates/xterm-web/src/links/browser_payload.rs",
+      "crates/xterm-web/src/terminal/link_services.rs",
+      "crates/xterm-web/src/terminal/link_api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_linkifier.rs",
+      "crates/xterm-web/tests/wasm_public_link_provider.rs",
+      "crates/xterm-web/tests/wasm_link_mouse_path.rs"
+    ],
+    "evidence": [
+      "docs/links.md",
+      "docs/live-link-design.md",
+      "docs/public-link-provider.md",
+      "docs/link-mouse-path.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_linkifier node scripts/browser-host-check.mjs; WASM_TEST=wasm_public_link_provider node scripts/browser-host-check.mjs; WASM_TEST=wasm_link_mouse_path node scripts/browser-host-check.mjs",
+    "binding": "Linkifier/provider registration/OSC policy share real buffer, selection, render and DOM event services; raw JS payloads stay at the boundary.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Live range getters, callbacks, selection priority, hover/mouseup and asynchronous reentry require full source-case accounting."
   },
   {
     "source": "source_repo/src/browser/OscLinkProvider.test.ts",
@@ -20260,13 +20301,30 @@
       "docs/link-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/links/browser_linkifier.rs",
+      "crates/xterm-web/src/links/provider.rs",
+      "crates/xterm-web/src/links/osc.rs",
+      "crates/xterm-web/src/links/browser_payload.rs",
+      "crates/xterm-web/src/terminal/link_services.rs",
+      "crates/xterm-web/src/terminal/link_api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_linkifier.rs",
+      "crates/xterm-web/tests/wasm_public_link_provider.rs",
+      "crates/xterm-web/tests/wasm_link_mouse_path.rs"
+    ],
+    "evidence": [
+      "docs/links.md",
+      "docs/live-link-design.md",
+      "docs/public-link-provider.md",
+      "docs/link-mouse-path.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_linkifier node scripts/browser-host-check.mjs; WASM_TEST=wasm_public_link_provider node scripts/browser-host-check.mjs; WASM_TEST=wasm_link_mouse_path node scripts/browser-host-check.mjs",
+    "binding": "Linkifier/provider registration/OSC policy share real buffer, selection, render and DOM event services; raw JS payloads stay at the boundary.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Live range getters, callbacks, selection priority, hover/mouseup and asynchronous reentry require full source-case accounting."
   },
   {
     "source": "source_repo/src/browser/Terminal.test.ts",
@@ -22400,13 +22458,28 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/terminal/mod.rs",
+      "crates/xterm-web/src/terminal/browser_services.rs",
+      "crates/xterm-web/src/terminal/browser_open.rs",
+      "crates/xterm-web/src/terminal/browser_lifecycle.rs",
+      "crates/xterm-web/src/dom.rs",
+      "crates/xterm-web/src/api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_host.rs",
+      "crates/xterm-web/tests/wasm_terminal_disposal.rs"
+    ],
+    "evidence": [
+      "docs/browser-contract.md",
+      "docs/public-api-coverage-audit.md",
+      "docs/integration554.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_host node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_disposal node scripts/browser-host-check.mjs",
+    "binding": "WASM Terminal owns real browser services/DOM and shared Rust CoreTerminal; browser/xterm.mjs is a facade, not an engine delegate.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Browser Types/Services are mixed contracts; no single shared guide certifies every internal service or JS replacement. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/src/browser/Terminal2.test.ts",
@@ -22478,13 +22551,28 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/terminal/mod.rs",
+      "crates/xterm-web/src/terminal/browser_services.rs",
+      "crates/xterm-web/src/terminal/browser_open.rs",
+      "crates/xterm-web/src/terminal/browser_lifecycle.rs",
+      "crates/xterm-web/src/dom.rs",
+      "crates/xterm-web/src/api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_host.rs",
+      "crates/xterm-web/tests/wasm_terminal_disposal.rs"
+    ],
+    "evidence": [
+      "docs/browser-contract.md",
+      "docs/public-api-coverage-audit.md",
+      "docs/integration554.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_host node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_disposal node scripts/browser-host-check.mjs",
+    "binding": "WASM Terminal owns real browser services/DOM and shared Rust CoreTerminal; browser/xterm.mjs is a facade, not an engine delegate.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Browser Types/Services are mixed contracts; no single shared guide certifies every internal service or JS replacement. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/src/browser/TestUtils.test.ts",
@@ -22518,13 +22606,28 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/terminal/mod.rs",
+      "crates/xterm-web/src/terminal/browser_services.rs",
+      "crates/xterm-web/src/terminal/browser_open.rs",
+      "crates/xterm-web/src/terminal/browser_lifecycle.rs",
+      "crates/xterm-web/src/dom.rs",
+      "crates/xterm-web/src/api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_host.rs",
+      "crates/xterm-web/tests/wasm_terminal_disposal.rs"
+    ],
+    "evidence": [
+      "docs/browser-contract.md",
+      "docs/public-api-coverage-audit.md",
+      "docs/integration554.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_host node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_disposal node scripts/browser-host-check.mjs",
+    "binding": "WASM Terminal owns real browser services/DOM and shared Rust CoreTerminal; browser/xterm.mjs is a facade, not an engine delegate.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Browser Types/Services are mixed contracts; no single shared guide certifies every internal service or JS replacement. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/src/browser/decorations/ColorZoneStore.test.ts",
@@ -22633,13 +22736,21 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/renderer/color_zone_store.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/color_zone_store.rs",
+      "crates/xterm-web/tests/color_zone_differential.rs"
+    ],
+    "evidence": [
+      "docs/color-zone-store.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-web --test color_zone_store; cargo test --locked -p xterm-web --test color_zone_differential",
+    "binding": "ColorZoneStore merges named position/color row ranges using Rust zone records.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. This is a geometry component, not full OverviewRuler rendering equivalence."
   },
   {
     "source": "source_repo/src/browser/input/CompositionHelper.test.ts",
@@ -22914,13 +23025,27 @@
       "docs/browser-input-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/input/clipboard.rs",
+      "crates/xterm-web/src/input/composition.rs",
+      "crates/xterm-web/src/input/composition_geometry.rs",
+      "crates/xterm-web/src/terminal/input_keyboard.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_input.rs",
+      "crates/xterm-web/tests/wasm_input_callbacks.rs",
+      "crates/xterm-web/tests/wasm_clipboard_values.rs"
+    ],
+    "evidence": [
+      "docs/browser-input-oracle.md",
+      "docs/composition-start-order.md",
+      "docs/composition-end-order.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_input node scripts/browser-host-check.mjs; WASM_TEST=wasm_input_callbacks node scripts/browser-host-check.mjs; WASM_TEST=wasm_clipboard_values node scripts/browser-host-check.mjs",
+    "binding": "Rust clipboard helpers/CompositionHelper route actual textarea and terminal input through DOM/WebIDL bindings; input is not display echo.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Trusted clipboard permissions, IME timing and every hostile event getter remain distinct checks."
   },
   {
     "source": "source_repo/src/browser/input/Mouse.test.ts",
@@ -23026,13 +23151,27 @@
       "docs/browser-input-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/input/mouse_coords.rs",
+      "crates/xterm-web/src/input/mouse_policy.rs",
+      "crates/xterm-web/src/terminal/input_mouse.rs",
+      "crates/xterm-web/src/terminal/mouse_api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_mouse.rs",
+      "crates/xterm-web/tests/mouse_routing.rs",
+      "crates/xterm-web/tests/mouse_coordinate_zero.rs"
+    ],
+    "evidence": [
+      "docs/browser-mouse-dom.md",
+      "docs/browser-mouse.md",
+      "docs/mouse-coordinate-zero.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_mouse node scripts/browser-host-check.mjs; cargo test --locked -p xterm-web --test mouse_routing; cargo test --locked -p xterm-web --test mouse_coordinate_zero",
+    "binding": "MouseCoordsService maps actual DOM coordinates, MousePolicy routes browser events to shared Rust MouseStateService; typed native policies remain separate.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Raw registry facade, action Number conversion, getter order and trusted event behavior need exact upstream/browser assertions."
   },
   {
     "source": "source_repo/src/browser/input/MoveToCell.test.ts",
@@ -23242,13 +23381,23 @@
       "results/acceptance/criteria-index.json"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/selection/service_actions.rs",
+      "crates/xterm-web/src/terminal/input_data.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/input_upstream.rs",
+      "crates/xterm-web/tests/wasm_terminal_selection.rs"
+    ],
+    "evidence": [
+      "docs/move-to-cell.md",
+      "docs/selection-service.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-web --test input_upstream; WASM_TEST=wasm_terminal_selection node scripts/browser-host-check.mjs",
+    "binding": "Browser alt-click invokes xterm_core::input::move_to_cell through shared SelectionHost/data path, not local display writes.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Raw coordinates and trusted modifier/event paths remain separate checks."
   },
   {
     "source": "source_repo/src/browser/renderer/dom/DomRendererRowFactory.test.ts",
@@ -24185,13 +24334,26 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/renderer/row.rs",
+      "crates/xterm-web/src/renderer/row_dom.rs",
+      "crates/xterm-web/src/renderer/row_types.rs",
+      "crates/xterm-web/src/renderer/row_raw.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/row_factory_browser.rs",
+      "crates/xterm-web/tests/wasm_joiner_row_live.rs"
+    ],
+    "evidence": [
+      "docs/rendering-progress.md",
+      "docs/raw-dom-joiners.md",
+      "results/renderer/row-original.json",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=row_factory_browser node scripts/browser-host-check.mjs; WASM_TEST=wasm_joiner_row_live node scripts/browser-host-check.mjs",
+    "binding": "DomRendererRowFactory plans Rust spans then builds actual DOM; character joiners receive lossless UTF-16 and live width values.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Historical row source captures are not complete raw getter/reentrant full-terminal/pixel proof."
   },
   {
     "source": "source_repo/src/browser/renderer/dom/WidthCache.test.ts",
@@ -24481,13 +24643,24 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/renderer/width_cache.rs",
+      "crates/xterm-web/src/renderer/canvas_width.rs",
+      "crates/xterm-web/src/renderer/raw_font.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/dom_font_browser.rs",
+      "crates/xterm-web/tests/wasm_raw_font_terminal.rs"
+    ],
+    "evidence": [
+      "docs/raw-character-joiners.md",
+      "docs/theme-css.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=dom_font_browser node scripts/browser-host-check.mjs; WASM_TEST=wasm_raw_font_terminal node scripts/browser-host-check.mjs",
+    "binding": "WidthCache callback-safe raw font cache and browser canvas measurement feed the actual row renderer; callbacks run without cache guards.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. All raw coercion/constructor order, reentry, font loading and fallback glyph paths require complete assertions."
   },
   {
     "source": "source_repo/src/browser/renderer/shared/RendererUtils.test.ts",
@@ -24558,13 +24731,23 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/renderer/utils.rs",
+      "crates/xterm-web/src/renderer/selection_model.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/render_callback_iteration.rs",
+      "crates/xterm-web/tests/selection_model.rs"
+    ],
+    "evidence": [
+      "docs/render-callback-iteration.md",
+      "docs/selection-model.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-web --test render_callback_iteration; cargo test --locked -p xterm-web --test selection_model",
+    "binding": "Renderer utility/selection geometry values are Rust helpers, separate from DOM SelectionService and actual render ownership.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. SelectionRenderModel has no dedicated full-suite certification; geometry helper evidence does not prove DOM selection."
   },
   {
     "source": "source_repo/src/browser/renderer/shared/TextBlinkStateManager.test.ts",
@@ -24692,13 +24875,22 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/renderer/text_blink.rs",
+      "crates/xterm-web/src/renderer/dom/blink.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/render_service_browser.rs"
+    ],
+    "evidence": [
+      "docs/cursor-blink.md",
+      "docs/rendering-progress.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=render_service_browser node scripts/browser-host-check.mjs",
+    "binding": "Text blink uses actual browser timers/frame invalidation; cursor blinking has separate ownership under DOM renderer.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Cursor timer tests do not certify every TextBlinkStateManager callback or window lifecycle."
   },
   {
     "source": "source_repo/src/browser/selection/SelectionModel.test.ts",
@@ -25305,13 +25497,29 @@
       "docs/selection-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/selection/model.rs",
+      "crates/xterm-web/src/selection/service.rs",
+      "crates/xterm-web/src/selection/service_actions.rs",
+      "crates/xterm-web/src/selection/dom.rs",
+      "crates/xterm-web/src/terminal/selection_services.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/selection_model.rs",
+      "crates/xterm-web/tests/selection_service_differential.rs",
+      "crates/xterm-web/tests/wasm_selection.rs",
+      "crates/xterm-web/tests/wasm_terminal_selection.rs"
+    ],
+    "evidence": [
+      "docs/selection-model.md",
+      "docs/selection-service.md",
+      "docs/selection-reentry.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-web --test selection_model; cargo test --locked -p xterm-web --test selection_service_differential; WASM_TEST=wasm_selection node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_selection node scripts/browser-host-check.mjs",
+    "binding": "SelectionModel and SelectionService share signed native coordinates and actual browser DOM/input/render services; public selection uses the same state.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Raw Number/negative-zero endpoints and dynamic wordSeparator errors/reentry are not proven by typed model tests."
   },
   {
     "source": "source_repo/src/browser/services/CharacterJoinerService.test.ts",
@@ -25846,13 +26054,26 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/character_joiner.rs",
+      "crates/xterm-web/src/character_joiner/raw.rs",
+      "crates/xterm-web/src/terminal/joiner_api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/character_joiner_upstream.rs",
+      "crates/xterm-web/tests/wasm_joiner_raw.rs",
+      "crates/xterm-web/tests/wasm_joiner_row_live.rs"
+    ],
+    "evidence": [
+      "docs/raw-character-joiners.md",
+      "docs/raw-dom-joiners.md",
+      "results/renderer/joiner-original.json",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-web --test character_joiner_upstream; WASM_TEST=wasm_joiner_raw node scripts/browser-host-check.mjs; WASM_TEST=wasm_joiner_row_live node scripts/browser-host-check.mjs",
+    "binding": "CharacterJoinerService maps UTF-16 callback ranges to cell spans; public registerCharacterJoiner uses this service and actual DOM rows.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. All raw malformed ranges, mutation and rendering interactions require full-source assertion reconciliation."
   },
   {
     "source": "source_repo/src/browser/services/MouseService.test.ts",
@@ -26279,13 +26500,27 @@
       "docs/browser-input-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/input/mouse_coords.rs",
+      "crates/xterm-web/src/input/mouse_policy.rs",
+      "crates/xterm-web/src/terminal/input_mouse.rs",
+      "crates/xterm-web/src/terminal/mouse_api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_mouse.rs",
+      "crates/xterm-web/tests/mouse_routing.rs",
+      "crates/xterm-web/tests/mouse_coordinate_zero.rs"
+    ],
+    "evidence": [
+      "docs/browser-mouse-dom.md",
+      "docs/browser-mouse.md",
+      "docs/mouse-coordinate-zero.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_mouse node scripts/browser-host-check.mjs; cargo test --locked -p xterm-web --test mouse_routing; cargo test --locked -p xterm-web --test mouse_coordinate_zero",
+    "binding": "MouseCoordsService maps actual DOM coordinates, MousePolicy routes browser events to shared Rust MouseStateService; typed native policies remain separate.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Raw registry facade, action Number conversion, getter order and trusted event behavior need exact upstream/browser assertions."
   },
   {
     "source": "source_repo/src/browser/services/SelectionService.test.ts",
@@ -27182,13 +27417,29 @@
       "docs/selection-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/selection/model.rs",
+      "crates/xterm-web/src/selection/service.rs",
+      "crates/xterm-web/src/selection/service_actions.rs",
+      "crates/xterm-web/src/selection/dom.rs",
+      "crates/xterm-web/src/terminal/selection_services.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/selection_model.rs",
+      "crates/xterm-web/tests/selection_service_differential.rs",
+      "crates/xterm-web/tests/wasm_selection.rs",
+      "crates/xterm-web/tests/wasm_terminal_selection.rs"
+    ],
+    "evidence": [
+      "docs/selection-model.md",
+      "docs/selection-service.md",
+      "docs/selection-reentry.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-web --test selection_model; cargo test --locked -p xterm-web --test selection_service_differential; WASM_TEST=wasm_selection node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_selection node scripts/browser-host-check.mjs",
+    "binding": "SelectionModel and SelectionService share signed native coordinates and actual browser DOM/input/render services; public selection uses the same state.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Raw Number/negative-zero endpoints and dynamic wordSeparator errors/reentry are not proven by typed model tests."
   },
   {
     "source": "source_repo/src/browser/services/ThemeService.test.ts",
@@ -27438,13 +27689,27 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/theme/mod.rs",
+      "crates/xterm-web/src/theme/live.rs",
+      "crates/xterm-web/src/theme/resolve.rs",
+      "crates/xterm-web/src/theme/option.rs",
+      "crates/xterm-web/src/renderer/theme_css.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/theme_upstream.rs",
+      "crates/xterm-web/tests/theme_edges.rs",
+      "crates/xterm-web/tests/theme_css_raw.rs"
+    ],
+    "evidence": [
+      "docs/theme-css.md",
+      "docs/acceptance-color-rendering.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-web --test theme_upstream; cargo test --locked -p xterm-web --test theme_edges; cargo test --locked -p xterm-web --test theme_css_raw",
+    "binding": "ThemeService shares mutable ColorRefs and raw UTF-16 CSS parsing with real DOM and canvas adapters; headless theme is configuration only.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. All lazy getter/coercion/partial-update semantics and browser pixels require scoped live assertions."
   },
   {
     "source": "source_repo/src/common/CircularList.test.ts",
@@ -39082,13 +39347,31 @@
       "results/acceptance/criteria-index.json"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/terminal/mod.rs",
+      "crates/xterm-core/src/terminal/parse.rs",
+      "crates/xterm-core/src/terminal/dispatch.rs",
+      "crates/xterm-core/src/terminal/print.rs",
+      "crates/xterm-core/src/terminal/csi.rs",
+      "crates/xterm-core/src/terminal/osc.rs",
+      "crates/xterm-core/src/terminal/state.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/terminal_engine.rs",
+      "crates/xterm-core/tests/terminal_engine_differential.rs",
+      "crates/xterm-core/tests/input_handler_core_print.rs",
+      "crates/xterm-core/tests/input_handler_async.rs"
+    ],
+    "evidence": [
+      "docs/terminal-engine.md",
+      "docs/engine-contract.md",
+      "results/terminal-engine/oracle.json",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test terminal_engine --test terminal_engine_differential --test input_handler_core_print --test input_handler_async",
+    "binding": "CoreTerminal owns Rust parser/decoders/buffers/handlers; typed UTF-16/byte writes return Result and Pending; NativeWritePump/browser writer drive suspension.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. All InputHandler registrations, callback errors/reentry and native signed cursor preconditions need complete reconciliation."
   },
   {
     "source": "source_repo/src/common/MultiKeyMap.test.ts",
@@ -40297,13 +40580,26 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/terminal/state.rs",
+      "crates/xterm-core/src/parser/handler.rs",
+      "crates/xterm-core/src/buffer/range.rs",
+      "crates/xterm-core/src/core_service.rs",
+      "crates/xterm-core/src/options/value.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/terminal_engine.rs",
+      "crates/xterm-core/tests/public_api_integration.rs"
+    ],
+    "evidence": [
+      "docs/common-type-mapping.md",
+      "docs/engine-contract.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test terminal_engine --test public_api_integration",
+    "binding": "Common interfaces map to owning Rust structs/enums/traits, not a disconnected mirrored Types module. See the explicit 36-declaration ownership table.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. This family guide does not certify every interface field or mock substitution. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/src/common/WindowsMode.test.ts",
@@ -40458,13 +40754,29 @@
       "docs/task-scheduling-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/platform.rs",
+      "crates/xterm-core/src/windows_mode.rs",
+      "crates/xterm-core/src/version.rs",
+      "crates/xterm-core/src/task_queue.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/platform_windows.rs",
+      "crates/xterm-core/tests/windows_terminal.rs",
+      "crates/xterm-core/tests/windows_wrapping_order.rs",
+      "crates/xterm-core/tests/task_queue.rs",
+      "crates/xterm-core/tests/task_queue_edges.rs"
+    ],
+    "evidence": [
+      "docs/task-platform.md",
+      "docs/task-queue-clock-gap.md",
+      "docs/task-queue-capture-cleanup.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test platform_windows --test windows_terminal --test windows_wrapping_order --test task_queue --test task_queue_edges",
+    "binding": "Platform::detect receives host metadata; WindowsMode operates shared Rust lines; version constant and TaskQueue<Scheduler> replace module globals/timers.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Callback clocks/errors/disposal and browser realm differences require their dedicated live tests."
   },
   {
     "source": "source_repo/src/common/buffer/Buffer.test.ts",
@@ -43151,13 +43463,36 @@
       "docs/acceptance-color-range-marker.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/buffer/screen.rs",
+      "crates/xterm-core/src/buffer/line.rs",
+      "crates/xterm-core/src/buffer/line_numeric.rs",
+      "crates/xterm-core/src/buffer/range.rs",
+      "crates/xterm-core/src/buffer/reflow.rs",
+      "crates/xterm-core/src/buffer/buffer_set.rs",
+      "crates/xterm-core/src/buffer/marker.rs",
+      "crates/xterm-core/src/buffer/service.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/buffer_line_upstream.rs",
+      "crates/xterm-core/tests/buffer_reflow_upstream.rs",
+      "crates/xterm-core/tests/buffer_set_upstream.rs",
+      "crates/xterm-core/tests/buffer_service_upstream.rs",
+      "crates/xterm-core/tests/buffer_range_marker.rs",
+      "crates/xterm-core/tests/buffer_terminal_differential.rs"
+    ],
+    "evidence": [
+      "docs/buffer-line.md",
+      "docs/buffer-reflow.md",
+      "docs/buffer-service.md",
+      "docs/buffer-terminal-integration.md",
+      "docs/buffer-range-marker.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test buffer_line_upstream --test buffer_reflow_upstream --test buffer_set_upstream --test buffer_service_upstream --test buffer_range_marker --test buffer_terminal_differential",
+    "binding": "Buffer/BufferSet/BufferService share owned line handles and markers; Rust range structs, Result and numeric-index adapters replace JS arrays/Numbers.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Aliasing, cleanup callbacks, sparse/raw Number access and reentrant resize remain distinct contracts, not inferred from cell helpers."
   },
   {
     "source": "source_repo/src/common/buffer/BufferLine.test.ts",
@@ -44883,13 +45218,36 @@
       "docs/criteria/buffer-line.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/buffer/screen.rs",
+      "crates/xterm-core/src/buffer/line.rs",
+      "crates/xterm-core/src/buffer/line_numeric.rs",
+      "crates/xterm-core/src/buffer/range.rs",
+      "crates/xterm-core/src/buffer/reflow.rs",
+      "crates/xterm-core/src/buffer/buffer_set.rs",
+      "crates/xterm-core/src/buffer/marker.rs",
+      "crates/xterm-core/src/buffer/service.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/buffer_line_upstream.rs",
+      "crates/xterm-core/tests/buffer_reflow_upstream.rs",
+      "crates/xterm-core/tests/buffer_set_upstream.rs",
+      "crates/xterm-core/tests/buffer_service_upstream.rs",
+      "crates/xterm-core/tests/buffer_range_marker.rs",
+      "crates/xterm-core/tests/buffer_terminal_differential.rs"
+    ],
+    "evidence": [
+      "docs/buffer-line.md",
+      "docs/buffer-reflow.md",
+      "docs/buffer-service.md",
+      "docs/buffer-terminal-integration.md",
+      "docs/buffer-range-marker.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test buffer_line_upstream --test buffer_reflow_upstream --test buffer_set_upstream --test buffer_service_upstream --test buffer_range_marker --test buffer_terminal_differential",
+    "binding": "Buffer/BufferSet/BufferService share owned line handles and markers; Rust range structs, Result and numeric-index adapters replace JS arrays/Numbers.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Aliasing, cleanup callbacks, sparse/raw Number access and reentrant resize remain distinct contracts, not inferred from cell helpers."
   },
   {
     "source": "source_repo/src/common/buffer/BufferRange.test.ts",
@@ -45068,13 +45426,36 @@
       "docs/acceptance-color-range-marker.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/buffer/screen.rs",
+      "crates/xterm-core/src/buffer/line.rs",
+      "crates/xterm-core/src/buffer/line_numeric.rs",
+      "crates/xterm-core/src/buffer/range.rs",
+      "crates/xterm-core/src/buffer/reflow.rs",
+      "crates/xterm-core/src/buffer/buffer_set.rs",
+      "crates/xterm-core/src/buffer/marker.rs",
+      "crates/xterm-core/src/buffer/service.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/buffer_line_upstream.rs",
+      "crates/xterm-core/tests/buffer_reflow_upstream.rs",
+      "crates/xterm-core/tests/buffer_set_upstream.rs",
+      "crates/xterm-core/tests/buffer_service_upstream.rs",
+      "crates/xterm-core/tests/buffer_range_marker.rs",
+      "crates/xterm-core/tests/buffer_terminal_differential.rs"
+    ],
+    "evidence": [
+      "docs/buffer-line.md",
+      "docs/buffer-reflow.md",
+      "docs/buffer-service.md",
+      "docs/buffer-terminal-integration.md",
+      "docs/buffer-range-marker.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test buffer_line_upstream --test buffer_reflow_upstream --test buffer_set_upstream --test buffer_service_upstream --test buffer_range_marker --test buffer_terminal_differential",
+    "binding": "Buffer/BufferSet/BufferService share owned line handles and markers; Rust range structs, Result and numeric-index adapters replace JS arrays/Numbers.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Aliasing, cleanup callbacks, sparse/raw Number access and reentrant resize remain distinct contracts, not inferred from cell helpers."
   },
   {
     "source": "source_repo/src/common/buffer/BufferReflow.test.ts",
@@ -45304,13 +45685,36 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/buffer/screen.rs",
+      "crates/xterm-core/src/buffer/line.rs",
+      "crates/xterm-core/src/buffer/line_numeric.rs",
+      "crates/xterm-core/src/buffer/range.rs",
+      "crates/xterm-core/src/buffer/reflow.rs",
+      "crates/xterm-core/src/buffer/buffer_set.rs",
+      "crates/xterm-core/src/buffer/marker.rs",
+      "crates/xterm-core/src/buffer/service.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/buffer_line_upstream.rs",
+      "crates/xterm-core/tests/buffer_reflow_upstream.rs",
+      "crates/xterm-core/tests/buffer_set_upstream.rs",
+      "crates/xterm-core/tests/buffer_service_upstream.rs",
+      "crates/xterm-core/tests/buffer_range_marker.rs",
+      "crates/xterm-core/tests/buffer_terminal_differential.rs"
+    ],
+    "evidence": [
+      "docs/buffer-line.md",
+      "docs/buffer-reflow.md",
+      "docs/buffer-service.md",
+      "docs/buffer-terminal-integration.md",
+      "docs/buffer-range-marker.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test buffer_line_upstream --test buffer_reflow_upstream --test buffer_set_upstream --test buffer_service_upstream --test buffer_range_marker --test buffer_terminal_differential",
+    "binding": "Buffer/BufferSet/BufferService share owned line handles and markers; Rust range structs, Result and numeric-index adapters replace JS arrays/Numbers.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Aliasing, cleanup callbacks, sparse/raw Number access and reentrant resize remain distinct contracts, not inferred from cell helpers."
   },
   {
     "source": "source_repo/src/common/buffer/BufferSet.test.ts",
@@ -45577,13 +45981,36 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/buffer/screen.rs",
+      "crates/xterm-core/src/buffer/line.rs",
+      "crates/xterm-core/src/buffer/line_numeric.rs",
+      "crates/xterm-core/src/buffer/range.rs",
+      "crates/xterm-core/src/buffer/reflow.rs",
+      "crates/xterm-core/src/buffer/buffer_set.rs",
+      "crates/xterm-core/src/buffer/marker.rs",
+      "crates/xterm-core/src/buffer/service.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/buffer_line_upstream.rs",
+      "crates/xterm-core/tests/buffer_reflow_upstream.rs",
+      "crates/xterm-core/tests/buffer_set_upstream.rs",
+      "crates/xterm-core/tests/buffer_service_upstream.rs",
+      "crates/xterm-core/tests/buffer_range_marker.rs",
+      "crates/xterm-core/tests/buffer_terminal_differential.rs"
+    ],
+    "evidence": [
+      "docs/buffer-line.md",
+      "docs/buffer-reflow.md",
+      "docs/buffer-service.md",
+      "docs/buffer-terminal-integration.md",
+      "docs/buffer-range-marker.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test buffer_line_upstream --test buffer_reflow_upstream --test buffer_set_upstream --test buffer_service_upstream --test buffer_range_marker --test buffer_terminal_differential",
+    "binding": "Buffer/BufferSet/BufferService share owned line handles and markers; Rust range structs, Result and numeric-index adapters replace JS arrays/Numbers.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Aliasing, cleanup callbacks, sparse/raw Number access and reentrant resize remain distinct contracts, not inferred from cell helpers."
   },
   {
     "source": "source_repo/src/common/buffer/CellData.test.ts",
@@ -53213,13 +53640,24 @@
       "docs/kitty-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/input/kitty_keyboard.rs",
+      "crates/xterm-core/src/terminal/kitty_modes.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/kitty_upstream.rs",
+      "crates/xterm-core/tests/kitty_edges.rs",
+      "crates/xterm-core/tests/kitty_lookup.rs"
+    ],
+    "evidence": [
+      "docs/kitty-keyboard.md",
+      "docs/kitty-verification.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test kitty_upstream --test kitty_edges --test kitty_lookup",
+    "binding": "Kitty keyboard encoder consumes typed key/state inputs and shared terminal mode stacks; browser keyboard supplies raw event adapters.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Native event shape is not arbitrary JS event coercion or trusted key dispatch proof."
   },
   {
     "source": "source_repo/src/common/input/TextDecoder.test.ts",
@@ -55992,13 +56430,27 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/input/write_buffer.rs",
+      "crates/xterm-core/src/input/write_buffer_drain.rs",
+      "crates/xterm-core/src/input/write_buffer_source.rs",
+      "crates/xterm-core/src/headless/native_queue.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/write_buffer.rs",
+      "crates/xterm-core/tests/headless_queue.rs",
+      "crates/xterm-core/tests/native_queue_differential.rs"
+    ],
+    "evidence": [
+      "docs/write-buffer.md",
+      "docs/browser-writer-queue.md",
+      "docs/native-queue-review.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test write_buffer --test headless_queue --test native_queue_differential",
+    "binding": "WriteBuffer/NativeWritePump use explicit scheduler and owned pending futures; browser timer/promise adapter drives the same Rust parser, not the JS terminal.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Native host-driven polling differs from JS event-loop/Promise scheduling; Async.ts composition is not independently certified."
   },
   {
     "source": "source_repo/src/common/input/XParseColor.test.ts",
@@ -63834,13 +64286,31 @@
       "docs/osc.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/parser/escape.rs",
+      "crates/xterm-core/src/parser/escape_parse.rs",
+      "crates/xterm-core/src/parser/table.rs",
+      "crates/xterm-core/src/parser/vt500_table.rs",
+      "crates/xterm-core/src/parser/handler.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/escape_upstream.rs",
+      "crates/xterm-core/tests/escape_async.rs",
+      "crates/xterm-core/tests/escape_differential.rs",
+      "crates/xterm-core/tests/parser_table.rs"
+    ],
+    "evidence": [
+      "docs/escape-parser.md",
+      "docs/escape-upstream-tests.md",
+      "docs/parser-table.md",
+      "docs/parser-types.md",
+      "results/escape-upstream/mapping.json",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test escape_upstream --test escape_async --test escape_differential --test parser_table",
+    "binding": "EscapeSequenceParser uses Rust state/action tables, typed HandlerResult and explicit continuation; JS promises/errors are adapted at the WASM boundary.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Synchronous source-case mapping is not complete async/hostile callback or whole-terminal proof."
   },
   {
     "source": "source_repo/src/common/parser/OscParser.test.ts",
@@ -65969,13 +66439,36 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/buffer/screen.rs",
+      "crates/xterm-core/src/buffer/line.rs",
+      "crates/xterm-core/src/buffer/line_numeric.rs",
+      "crates/xterm-core/src/buffer/range.rs",
+      "crates/xterm-core/src/buffer/reflow.rs",
+      "crates/xterm-core/src/buffer/buffer_set.rs",
+      "crates/xterm-core/src/buffer/marker.rs",
+      "crates/xterm-core/src/buffer/service.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/buffer_line_upstream.rs",
+      "crates/xterm-core/tests/buffer_reflow_upstream.rs",
+      "crates/xterm-core/tests/buffer_set_upstream.rs",
+      "crates/xterm-core/tests/buffer_service_upstream.rs",
+      "crates/xterm-core/tests/buffer_range_marker.rs",
+      "crates/xterm-core/tests/buffer_terminal_differential.rs"
+    ],
+    "evidence": [
+      "docs/buffer-line.md",
+      "docs/buffer-reflow.md",
+      "docs/buffer-service.md",
+      "docs/buffer-terminal-integration.md",
+      "docs/buffer-range-marker.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test buffer_line_upstream --test buffer_reflow_upstream --test buffer_set_upstream --test buffer_service_upstream --test buffer_range_marker --test buffer_terminal_differential",
+    "binding": "Buffer/BufferSet/BufferService share owned line handles and markers; Rust range structs, Result and numeric-index adapters replace JS arrays/Numbers.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Aliasing, cleanup callbacks, sparse/raw Number access and reentrant resize remain distinct contracts, not inferred from cell helpers."
   },
   {
     "source": "source_repo/src/common/services/CharsetService.test.ts",
@@ -66349,13 +66842,25 @@
       "docs/core-service-acceptance.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/core_service.rs",
+      "crates/xterm-core/src/core_service/mode_capture.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/core_service.rs",
+      "crates/xterm-core/tests/core_data_delivery.rs",
+      "crates/xterm-core/tests/core_services_integration.rs"
+    ],
+    "evidence": [
+      "docs/core-services.md",
+      "docs/core-services-integration.md",
+      "docs/core-service-acceptance.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test core_service --test core_data_delivery --test core_services_integration",
+    "binding": "CoreService owns shared modes, data/binary/user-input events and disableStdin checks; parser/browser forward the same service.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Raw callbacks and exact event/reply ordering require full traces."
   },
   {
     "source": "source_repo/src/common/services/DecorationService.test.ts",
@@ -66682,13 +67187,28 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/decoration.rs",
+      "crates/xterm-core/src/decoration_service.rs",
+      "crates/xterm-core/src/decoration_properties.rs",
+      "crates/xterm-core/src/decoration_iterator.rs",
+      "crates/xterm-core/src/decoration_span.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/decoration_upstream.rs",
+      "crates/xterm-core/tests/decoration_differential.rs",
+      "crates/xterm-core/tests/decoration_raw.rs"
+    ],
+    "evidence": [
+      "docs/decoration.md",
+      "docs/decoration-acceptance.md",
+      "docs/public-decoration.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test decoration_upstream --test decoration_differential --test decoration_raw",
+    "binding": "DecorationService shares marker-backed Decoration handles; browser registration produces live disposable/event/element records.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Huge spans have a documented safety boundary; raw option mutation, DOM lifetime and GC are not certified by native span tests."
   },
   {
     "source": "source_repo/src/common/services/MouseStateService.test.ts",
@@ -66892,13 +67412,28 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/mouse_state.rs",
+      "crates/xterm-core/src/mouse_protocol.rs",
+      "crates/xterm-core/src/mouse_fields.rs",
+      "crates/xterm-core/src/mouse_fields_typed.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/mouse_state.rs",
+      "crates/xterm-core/tests/mouse_differential.rs",
+      "crates/xterm-core/tests/mouse_registry_names.rs",
+      "crates/xterm-core/tests/mouse_callbacks.rs"
+    ],
+    "evidence": [
+      "docs/mouse-state.md",
+      "docs/mouse-registry-gaps.md",
+      "docs/mouse-interop-source-contract.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test mouse_state --test mouse_differential --test mouse_registry_names --test mouse_callbacks",
+    "binding": "MouseStateService owns protocol/encoding state; browser live registry facade forwards to this authority.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Inherited keys, hostile names, receiver identity, raw wheel/return/error identity are not closed by built-in policy tests."
   },
   {
     "source": "source_repo/src/common/services/OptionsService.test.ts",
@@ -67519,13 +68054,21 @@
       "docs/acceptance/osc-link-service.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/osc_link_service.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/osc_link_service.rs"
+    ],
+    "evidence": [
+      "docs/osc-link-service.md",
+      "docs/links.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test osc_link_service",
+    "binding": "OscLinkService allocates ids and marker resources shared by Rust parser and browser OSC link provider.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Native UTF-16/Result representation and live provider disposal/reentry need their separate traces."
   },
   {
     "source": "source_repo/src/common/services/UnicodeService.test.ts",
@@ -67721,13 +68264,26 @@
       "docs/acceptance/unicode-core.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/unicode_service.rs",
+      "crates/xterm-core/src/unicode_callbacks.rs",
+      "crates/xterm-core/src/unicode_properties.rs",
+      "crates/xterm-core/src/unicode_graphemes.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/unicode_service.rs",
+      "crates/xterm-core/tests/unicode_service_differential.rs",
+      "crates/xterm-core/tests/unicode_addons.rs"
+    ],
+    "evidence": [
+      "docs/unicode-service.md",
+      "docs/unicode-browser-api.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test unicode_service --test unicode_service_differential --test unicode_addons",
+    "binding": "UnicodeService shares providers, version callbacks and packed properties with public native/WASM views; lossless UTF-16 is used at JS boundaries.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Provider mutation/errors/raw Number properties and every generated-table contract remain explicit."
   },
   {
     "source": "source_repo/src/headless/public/Terminal.test.ts",
@@ -69196,13 +69752,28 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/decoration.rs",
+      "crates/xterm-core/src/decoration_service.rs",
+      "crates/xterm-core/src/decoration_properties.rs",
+      "crates/xterm-core/src/decoration_iterator.rs",
+      "crates/xterm-core/src/decoration_span.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/decoration_upstream.rs",
+      "crates/xterm-core/tests/decoration_differential.rs",
+      "crates/xterm-core/tests/decoration_raw.rs"
+    ],
+    "evidence": [
+      "docs/decoration.md",
+      "docs/decoration-acceptance.md",
+      "docs/public-decoration.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test decoration_upstream --test decoration_differential --test decoration_raw",
+    "binding": "DecorationService shares marker-backed Decoration handles; browser registration produces live disposable/event/element records.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Huge spans have a documented safety boundary; raw option mutation, DOM lifetime and GC are not certified by native span tests. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/test/benchmark/EscapeSequenceParser.benchmark.ts",
@@ -70034,13 +70605,31 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/parser/escape.rs",
+      "crates/xterm-core/src/parser/escape_parse.rs",
+      "crates/xterm-core/src/parser/table.rs",
+      "crates/xterm-core/src/parser/vt500_table.rs",
+      "crates/xterm-core/src/parser/handler.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/escape_upstream.rs",
+      "crates/xterm-core/tests/escape_async.rs",
+      "crates/xterm-core/tests/escape_differential.rs",
+      "crates/xterm-core/tests/parser_table.rs"
+    ],
+    "evidence": [
+      "docs/escape-parser.md",
+      "docs/escape-upstream-tests.md",
+      "docs/parser-table.md",
+      "docs/parser-types.md",
+      "results/escape-upstream/mapping.json",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test escape_upstream --test escape_async --test escape_differential --test parser_table",
+    "binding": "EscapeSequenceParser uses Rust state/action tables, typed HandlerResult and explicit continuation; JS promises/errors are adapted at the WASM boundary.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Synchronous source-case mapping is not complete async/hostile callback or whole-terminal proof. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/test/benchmark/Event.benchmark.ts",
@@ -70248,13 +70837,20 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/event.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/event.rs"
+    ],
+    "evidence": [
+      "results/events-circular-list/verification.json",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "node scripts/check-events-and-circular-list.mjs; cargo test -p xterm-core --test event",
+    "binding": "Emitter<T> snapshots listeners; errors use Result; Rust closures replace JS thisArg.",
+    "gap": "Complete terminal event wiring and native Linux/macOS execution not established. Benchmark mapping is not an output-validated timing result."
   },
   {
     "source": "source_repo/test/benchmark/Terminal.benchmark.ts",
@@ -70384,13 +70980,31 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/terminal/mod.rs",
+      "crates/xterm-core/src/terminal/parse.rs",
+      "crates/xterm-core/src/terminal/dispatch.rs",
+      "crates/xterm-core/src/terminal/print.rs",
+      "crates/xterm-core/src/terminal/csi.rs",
+      "crates/xterm-core/src/terminal/osc.rs",
+      "crates/xterm-core/src/terminal/state.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/terminal_engine.rs",
+      "crates/xterm-core/tests/terminal_engine_differential.rs",
+      "crates/xterm-core/tests/input_handler_core_print.rs",
+      "crates/xterm-core/tests/input_handler_async.rs"
+    ],
+    "evidence": [
+      "docs/terminal-engine.md",
+      "docs/engine-contract.md",
+      "results/terminal-engine/oracle.json",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test terminal_engine --test terminal_engine_differential --test input_handler_core_print --test input_handler_async",
+    "binding": "CoreTerminal owns Rust parser/decoders/buffers/handlers; typed UTF-16/byte writes return Result and Pending; NativeWritePump/browser writer drive suspension.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. All InputHandler registrations, callback errors/reentry and native signed cursor preconditions need complete reconciliation. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/test/playwright/CharWidth.test.ts",
@@ -70581,13 +71195,22 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/char_size.rs",
+      "crates/xterm-web/src/char_size_browser.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/dom_font_browser.rs"
+    ],
+    "evidence": [
+      "docs/fit-browser-geometry.md",
+      "docs/browser-contract.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=dom_font_browser node scripts/browser-host-check.mjs",
+    "binding": "CharSizeService measures actual DOM spans and shares width/height/change events with Fit and renderer services.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Browser geometry/default fonts/DPR/hidden-node behavior needs complete three-engine assertion evidence. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/test/playwright/InputHandler.test.ts",
@@ -81847,13 +82470,31 @@
       "results/acceptance/criteria-index.json"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/terminal/mod.rs",
+      "crates/xterm-core/src/terminal/parse.rs",
+      "crates/xterm-core/src/terminal/dispatch.rs",
+      "crates/xterm-core/src/terminal/print.rs",
+      "crates/xterm-core/src/terminal/csi.rs",
+      "crates/xterm-core/src/terminal/osc.rs",
+      "crates/xterm-core/src/terminal/state.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/terminal_engine.rs",
+      "crates/xterm-core/tests/terminal_engine_differential.rs",
+      "crates/xterm-core/tests/input_handler_core_print.rs",
+      "crates/xterm-core/tests/input_handler_async.rs"
+    ],
+    "evidence": [
+      "docs/terminal-engine.md",
+      "docs/engine-contract.md",
+      "results/terminal-engine/oracle.json",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "cargo test --locked -p xterm-core --test terminal_engine --test terminal_engine_differential --test input_handler_core_print --test input_handler_async",
+    "binding": "CoreTerminal owns Rust parser/decoders/buffers/handlers; typed UTF-16/byte writes return Result and Pending; NativeWritePump/browser writer drive suspension.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. All InputHandler registrations, callback errors/reentry and native signed cursor preconditions need complete reconciliation. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/test/playwright/MouseTracking.test.ts",
@@ -82141,13 +82782,27 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/input/mouse_coords.rs",
+      "crates/xterm-web/src/input/mouse_policy.rs",
+      "crates/xterm-web/src/terminal/input_mouse.rs",
+      "crates/xterm-web/src/terminal/mouse_api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_mouse.rs",
+      "crates/xterm-web/tests/mouse_routing.rs",
+      "crates/xterm-web/tests/mouse_coordinate_zero.rs"
+    ],
+    "evidence": [
+      "docs/browser-mouse-dom.md",
+      "docs/browser-mouse.md",
+      "docs/mouse-coordinate-zero.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_mouse node scripts/browser-host-check.mjs; cargo test --locked -p xterm-web --test mouse_routing; cargo test --locked -p xterm-web --test mouse_coordinate_zero",
+    "binding": "MouseCoordsService maps actual DOM coordinates, MousePolicy routes browser events to shared Rust MouseStateService; typed native policies remain separate.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Raw registry facade, action Number conversion, getter order and trusted event behavior need exact upstream/browser assertions. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/test/playwright/Parser.test.ts",
@@ -82729,13 +83384,26 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/renderer/service.rs",
+      "crates/xterm-web/src/renderer/service_api.rs",
+      "crates/xterm-web/src/renderer/service_lifecycle.rs",
+      "crates/xterm-web/src/terminal/internal_render.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/render_service_browser.rs",
+      "crates/xterm-web/tests/render_scheduler_browser.rs"
+    ],
+    "evidence": [
+      "docs/render-scheduler.md",
+      "docs/render-dimensions-inspection.md",
+      "results/renderer/render-service-original.json",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=render_service_browser node scripts/browser-host-check.mjs; WASM_TEST=render_scheduler_browser node scripts/browser-host-check.mjs",
+    "binding": "RenderService owns real backend/scheduler/visibility/sync-output lifecycle; public dimensions are snapshots and internal view tracks its renderer.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Full callback/error/reentry, backend replacement, CSS and stable original renderer suites remain open. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/test/playwright/SharedRendererTests.ts",
@@ -84530,13 +85198,28 @@
       "docs/webgl-port.md"
     ],
     "acceptanceGap": null,
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/renderer/dom/mod.rs",
+      "crates/xterm-web/src/renderer/dom/backend.rs",
+      "crates/xterm-web/src/renderer/dom/draw.rs",
+      "crates/xterm-web/src/renderer/dom/styles.rs",
+      "crates/xterm-web/src/renderer/row_types.rs",
+      "crates/xterm-web/src/api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/dom_font_browser.rs",
+      "crates/xterm-web/tests/wasm_joiner_row_live.rs"
+    ],
+    "evidence": [
+      "docs/rendering-progress.md",
+      "docs/raw-dom-joiners.md",
+      "docs/render-dimensions-inspection.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=dom_font_browser node scripts/browser-host-check.mjs; WASM_TEST=wasm_joiner_row_live node scripts/browser-host-check.mjs",
+    "binding": "DomRenderer owns actual rows, CSS, cursor/selection and link decoration rendering; RenderDimensions/RowOptions replace TS record types.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Canonical stylesheet, geometry/pixels and complete replacement/error/lifecycle contracts remain unproven. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/test/playwright/Terminal.test.ts",
@@ -86596,13 +87279,28 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/terminal/mod.rs",
+      "crates/xterm-web/src/terminal/browser_services.rs",
+      "crates/xterm-web/src/terminal/browser_open.rs",
+      "crates/xterm-web/src/terminal/browser_lifecycle.rs",
+      "crates/xterm-web/src/dom.rs",
+      "crates/xterm-web/src/api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_host.rs",
+      "crates/xterm-web/tests/wasm_terminal_disposal.rs"
+    ],
+    "evidence": [
+      "docs/browser-contract.md",
+      "docs/public-api-coverage-audit.md",
+      "docs/integration554.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_host node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_disposal node scripts/browser-host-check.mjs",
+    "binding": "WASM Terminal owns real browser services/DOM and shared Rust CoreTerminal; browser/xterm.mjs is a facade, not an engine delegate.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Browser Types/Services are mixed contracts; no single shared guide certifies every internal service or JS replacement. Support/benchmark path mapping is not a runtime test or timing result."
   },
   {
     "source": "source_repo/test/playwright/playwright.config.ts",
@@ -86636,12 +87334,27 @@
     "behaviorCriteria": [],
     "acceptanceDocuments": [],
     "acceptanceGap": "No focused behavior acceptance criterion mapped. Inventory criteria do not prove behavior coverage.",
-    "status": "missing",
-    "implementation": [],
-    "tests": [],
-    "evidence": [],
-    "command": null,
-    "binding": null,
-    "gap": "No Rust implementation or executable equivalence evidence mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/terminal/mod.rs",
+      "crates/xterm-web/src/terminal/browser_services.rs",
+      "crates/xterm-web/src/terminal/browser_open.rs",
+      "crates/xterm-web/src/terminal/browser_lifecycle.rs",
+      "crates/xterm-web/src/dom.rs",
+      "crates/xterm-web/src/api.rs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_host.rs",
+      "crates/xterm-web/tests/wasm_terminal_disposal.rs"
+    ],
+    "evidence": [
+      "docs/browser-contract.md",
+      "docs/public-api-coverage-audit.md",
+      "docs/integration554.md",
+      "docs/internal-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_host node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_disposal node scripts/browser-host-check.mjs",
+    "binding": "WASM Terminal owns real browser services/DOM and shared Rust CoreTerminal; browser/xterm.mjs is a facade, not an engine delegate.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Browser Types/Services are mixed contracts; no single shared guide certifies every internal service or JS replacement. Support/benchmark path mapping is not a runtime test or timing result."
   }
 ]

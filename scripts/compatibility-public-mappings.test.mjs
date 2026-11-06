@@ -12,7 +12,7 @@ const run = args => spawnSync(process.execPath, ['scripts/compatibility-inventor
   cwd: root, encoding: 'utf8', timeout: 60_000, maxBuffer: 4 * 1024 * 1024
 });
 const combine = async () => {
-  const inputs = await Promise.all(['mappings', 'addon-mappings', 'public-mappings'].map(p => load(`tools/compatibility/${p}.json`)));
+  const inputs = await Promise.all(['mappings', 'addon-mappings', 'public-mappings', 'internal-mappings'].map(p => load(`tools/compatibility/${p}.json`)));
   return Object.fromEntries(['modules', 'apiOwners', 'suites'].map(k => [k, inputs.flatMap(i => i[k] ?? [])]));
 };
 

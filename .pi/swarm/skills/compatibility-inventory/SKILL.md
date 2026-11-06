@@ -11,12 +11,12 @@ Run from the repository root with Node22+ and npm:
 npm ci --prefix tools/compatibility --ignore-scripts --no-audit --no-fund
 node scripts/compatibility-inventory.mjs
 node scripts/compatibility-inventory.mjs --check
-node --test scripts/compatibility-inventory.test.mjs scripts/compatibility-baseline-links.test.mjs
+node --test scripts/compatibility-inventory.test.mjs scripts/compatibility-baseline-links.test.mjs scripts/compatibility-addon-mappings.test.mjs scripts/compatibility-public-mappings.test.mjs scripts/compatibility-internal-mappings.test.mjs
 ```
 
 The exact TypeScript5.9.3 parser is tooling-only. The generator does not execute terminal logic or mutate source_repo. Its reference exclusions and schema are documented in docs/compatibility.md; acceptance is docs/acceptance/compatibility.md.
 
-Edit tools/compatibility/mappings.json for reviewed implementation/test/evidence/binding/gap references. Add exact focused criterion/checklist rules to tools/compatibility/behavior-criteria.json. Do not guess coverage from filenames or task titles. Unmapped rows must remain explicit gaps; no implemented helper establishes a public/browser binding.
+Edit tools/compatibility/mappings.json and the source-qualified addon/public/internal-mappings.json supplements for reviewed implementation/test/evidence/binding/gap references. docs/internal-coverage-audit.md records the canonical141 guide scope and all remaining mapping/assertion gaps. A suite guide is not individual assertion coverage; support/benchmark guides are not runtime or timing evidence. Add exact focused criterion/checklist rules to tools/compatibility/behavior-criteria.json. Do not guess coverage from filenames or task titles. Unmapped rows must remain explicit gaps; no implemented helper establishes a public/browser binding.
 
 Read results/compatibility/summary.json for counts, modules.json/apis.json/suites.json for exact source contracts and gaps, manifest.json for source hashes and evidence-manifest.json for mapped snapshot hashes. Original counters are copied only from explicit upstream-baseline per-source evidence. Rust unassessed counters stay null.
 
