@@ -1,0 +1,12 @@
+{
+  "task": 537,
+  "reviewedCommit": "b31bc29f19e30f7e18a8d1b21a1722f20fde9a3b",
+  "base": "0442e3578a7f57d35c2ae6ff20d7186820983065",
+  "verdict": "accept",
+  "reviewer": "Sarah review",
+  "acceptedAt": 1793929075082,
+  "result": "VERDICT: accept\n\nProblems: none within task 537's stated scope.\n\n- The exported `Terminal.registerDecoration` connects real markers, including cross-Terminal markers, to the Rust decoration service, cache, DOM overlay, row colors and overview ruler.\n- Live option reads preserve options identity. Fallible lookup and rendering paths retain host exceptions, and cleanup is installed before cache getters can throw.\n- Existing assertion changes only adapt to fallible Rust return types. No upstream source assertions, dependencies, ignores or unsafe code were added.\n\nVerification:\n- All 1,872 source inputs, 21 harness inputs, 150 receipts, 773 runtime artifacts and seven cached executables match their recorded hashes.\n- Independently reran the seven pinned native executables: **36 passed**, with no failures or ignored tests.\n- Formatting checks passed for all 25 changed Rust files.\n- Retained browser receipts show the shared 14-phase trace passing against original and exported Rust Terminals in Chromium, Firefox and WebKit. Unchanged scoped original suites report 27 passes, six original WebKit skips and zero unrun cases.\n- Reviewed the retained negative-control evidence without replaying it.\n\nThis accepts the public-decoration milestone only. The documented task-331 raw-marker, writable-field, getter-phase and full GC/reentry gaps remain open. No files were modified or review scratch files created.",
+  "reviewerModifiedFiles": false,
+  "reviewScratchFiles": [],
+  "scope": "Public decoration milestone only. Full331/global equivalence NOT PROVEN."
+}

@@ -1,6 +1,6 @@
 # Public decoration registration
 
-Task 537 implements a milestone of task 331. It is awaiting independent review and is not integrated. Full decoration/marker parity and overall equivalence remain NOT PROVEN.
+Independent review accepted task 537 at `b31bc29f`, with no findings. It implements a milestone of task 331 and is not integrated. Full decoration/marker parity and overall equivalence remain NOT PROVEN.
 
 ## Implementation and binding
 
@@ -59,4 +59,6 @@ Early schema commands set TEMP to O: but assigned TMP from the old shell variabl
 
 ## Resources
 
-Browser/server work and the final compiler allocation were released in post 409, ending with comment 4573. No owned jobs remain. Only `O:/xterm-rust-swarm-16/tmp/worktrees/SarahDecoration` is owned temporary storage. It contains a regular target and physical reference/dependency copies, with no reference junction. Preserve it through independent review, then archive committed work and remove only verified owned paths. This document grants no build, browser, main-ref or cleanup replay.
+Browser/server work and the final compiler allocation were released in post 409, ending with comment 4573. No owned jobs remain. Review verified every indexed hash, reran seven cached executables containing 36 tests, checked all 25 changed Rust files' formatting and left no scratch files. See `results/public-decoration/review.json`.
+
+Only `O:/xterm-rust-swarm-16/tmp/worktrees/SarahDecoration` is owned temporary storage. It contains a regular target and physical reference/dependency copies, with no reference junction. Accepted owner cleanup will archive the branch, inspect every path/process, remove only verified generated outputs and use normal Git worktree removal. Post 409 and the private `sarah537-cleanup.json` receipt establish actual completion. This pre-removal document does not claim the root is already absent and grants no build, browser, main-ref or cleanup replay.
