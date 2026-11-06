@@ -24,4 +24,8 @@ A native test expands 24 scenarios over the same direction, cache and lifecycle 
 
 ## Verification
 
-Pending actual execution. Historical 518 results are prerequisites, not current 544 passes. Its seven approved private prerequisite copies are excluded from the eventual 544 pickup, and all four private 508 copies are excluded entirely. Main is read-only throughout producer work. Commands and results will be recorded under `results/search-retired-timeout/`.
+Native Windows Rust/Cargo 1.85.1 execution passed all 71 functions, zero failed, ignored or filtered. Exact accepted-518 engine bytes failed only the new filtered native function, zero passes, one failure and 70 filtered, at the intended retained-error identity assertion. The finally block restored the fixed source hash, then all 71 passed again. Scoped native and WASM library/search-test Clippy passed with `-D warnings`. All five whole-member formatting checks passed. All-feature WASM compilation produced a fresh test artifact embedding the exact shared fixture. Browser execution, complete original suites, full-workspace quality/release and native Linux/macOS are still UNRUN for 544.
+
+The initial native run passed 70 and failed the new clock-count assertion. Its total-count expectation overlooked the existing `run_engine` clock read during warmup. The corrected assertion measures the cache phase relative to the completed warmup. Both raw failure and corrected passes are retained; no original assertion changed.
+
+Historical 518 results are prerequisites, not current 544 passes. Its seven approved private prerequisite copies are excluded from the eventual 544 pickup, and all four private 508 copies are excluded entirely. Main is read-only throughout producer work. Commands, raw logs, 1,872 tracked build-input hashes, native runtime descriptors and actual compiler/fixture identity are under `results/search-retired-timeout/`.
