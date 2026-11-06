@@ -25,4 +25,14 @@ async fn exported_decoration_registration_shares_native_geometry_events_and_life
         .await
         .unwrap();
     assert_eq!(Array::from(&trace).length(), 14);
+    let actual: serde_json::Value = serde_json::from_str(
+        &js_sys::JSON::stringify(&trace)
+            .unwrap()
+            .as_string()
+            .unwrap(),
+    )
+    .unwrap();
+    let expected: serde_json::Value =
+        serde_json::from_str(include_str!("fixtures/public-decoration.json")).unwrap();
+    assert_eq!(actual, expected);
 }

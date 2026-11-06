@@ -110,7 +110,11 @@ return (async () => {
     await until(() => renders > before && decoration.element.style.width === `${Math.round(3 * terminal.dimensions.css.cell.width)}px`);
     cell = terminal.dimensions.css.cell;
     check(decoration.element.style.height === `${cell.height}px`, 'mutated height');
-    check(decoration.element.style.right === `${2 * cell.width}px`, 'mutated anchor and x');
+    // CSSOM serializes fractional positions to browser precision. Normalize
+    // the expected value through the same platform parser, not a tolerance.
+    const expectedPosition = document.createElement('div').style;
+    expectedPosition.right = `${2 * cell.width}px`;
+    check(decoration.element.style.right === expectedPosition.right, 'mutated anchor and x');
     check(decoration.options === options, 'options replaced with snapshot');
     trace.push({ name: 'live mutable geometry', ok: true });
     tokens[0].dispose();
