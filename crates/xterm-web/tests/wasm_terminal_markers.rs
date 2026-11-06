@@ -18,6 +18,8 @@ extern "C" {
     fn resources_case(terminal: JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(js_name = markerBufferCase)]
     fn buffer_case(terminal: JsValue) -> Promise;
+    #[wasm_bindgen(js_name = markerEventPropertyCase)]
+    fn event_property_case(terminal: JsValue) -> Promise;
 }
 
 fn terminal() -> JsValue {
@@ -67,6 +69,19 @@ fn marker_resources_preserve_live_methods_receiver_errors_and_traversal() {
         serde_json::json!({
             "log": ["event", "resource", "resource", "event-added", "appended", "appended", "changed"],
             "gets": 2, "errors": [true, true, true, true]
+        }),
+    );
+}
+
+#[wasm_bindgen_test(async)]
+async fn marker_event_is_a_writable_own_property_independent_of_native_disposal() {
+    assert_capture(
+        JsFuture::from(event_property_case(terminal()))
+            .await
+            .unwrap(),
+        serde_json::json!({
+            "descriptor": [true, true, true], "gets": 1,
+            "events": ["replacement", "first", "resource", "trim", "saved"], "remaining": 0
         }),
     );
 }

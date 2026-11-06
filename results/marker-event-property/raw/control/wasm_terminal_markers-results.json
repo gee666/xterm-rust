@@ -1,0 +1,129 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_terminal_markers",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-06T02:16:32.587Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_terminal_markers",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 20543.9768,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.371100000000297,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JanakaMarkerEvent\\results\\acceptance-artifacts\\03d9261aa3d44b3c2a41eba777dd778d6b4ec230dd9ce98b5d4e6fa1bd5da87c\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JanakaMarkerEvent\\results\\browser-host\\wasm_terminal_markers\\2026-11-06T02-16-32-586Z-2b40d06c-8eeb-4ee8-80c4-045a5f9440b6\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1958.840500000002,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_terminal_markers::marker_event_is_a_writable_own_property_independent_of_native_disposal",
+        "__wbgt__wasm_terminal_markers::marker_handles_follow_native_trim_and_source_disposal_dispatch",
+        "__wbgt__wasm_terminal_markers::marker_offset_validation_preserves_original_values_hints_and_errors",
+        "__wbgt__wasm_terminal_markers::marker_registration_captures_buffer_before_default_hint_coercion",
+        "__wbgt__wasm_terminal_markers::marker_resources_preserve_live_methods_receiver_errors_and_traversal"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\wasm_terminal_markers.rs:39:5:\nassertion `left == right` failed\n  left: Object {\"error\": String(\"Error: onDispose own data descriptor\\n    at require (http://127.0.0.1:56723/snippets/xterm-web-f147851b6cb0c0ef/tests/browser_marker_cases.js:3:57)\\n    at markerEventPropertyCase (http://127.0.0.1:56723/snippets/xterm-web-f147851b6cb0c0ef/tests/browser_marker_cases.js:134:5)\\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.__wbg_markerEventPropertyCase_a7aef867ae14d518 externref shim (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[35689]:0xb0764b)\\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.wasm_terminal_markers::event_property_case::hbd6ff8c9f6bd441e (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[22824]:0xa3c736)\\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.wasm_terminal_markers::marker_event_is_a_writable_own_property_independent_of_native_disposal::{{closure}}::h88755097517aec1a (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[748]:0x193e34)\\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::he1b4fbb81170b50a (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[5106]:0x6a0029)\\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::hd264db51b1ba57ba (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[16954]:0x980e64)\\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[27108]:0xa9b8d1)\\n    at __wbg_adapter_1354 (http://127.0.0.1:56723/suite.js:632:10)\\n    at cb0 (http://127.0.0.1:56723/suite.js:6783:28)\")}\n right: Object {\"descriptor\": Array [Bool(true), Bool(true), Bool(true)], \"events\": Array [String(\"replacement\"), String(\"first\"), String(\"resource\"), String(\"trim\"), String(\"saved\")], \"gets\": Number(1), \"remaining\": Number(0)}\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:56723/suite.js:6013:21)\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[39126]:0xb1b589)\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[25781]:0xa80c26)\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[8648]:0x7d376c)\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[25782]:0xa80caa)\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[13409]:0x8ec39b)\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[16949]:0x980b5d)\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[47165]:0xb3402d)\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.rust_begin_unwind (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[32254]:0xae946d)\n    at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[32255]:0xae949a)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 5 tests\ntest marker_resources_preserve_live_methods_receiver_errors_and_traversal ... ok\ntest marker_registration_captures_buffer_before_default_hint_coercion ... ok\ntest marker_offset_validation_preserves_original_values_hints_and_errors ... ok\ntest marker_handles_follow_native_trim_and_source_disposal_dispatch ... ok\ntest marker_event_is_a_writable_own_property_independent_of_native_disposal ... FAIL\n\nfailures:\n\n---- marker_event_is_a_writable_own_property_independent_of_native_disposal output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.__rust_start_panic (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[47706]:0xb34da1)\n            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.rust_panic (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[42729]:0xb291a8)\n            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[13409]:0x8ec3c6)\n            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[16949]:0x980b5d)\n            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[47165]:0xb3402d)\n            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.rust_begin_unwind (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[32254]:0xae946d)\n            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[32255]:0xae949a)\n            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[6040]:0x6ff413)\n            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.core::panicking::assert_failed::hac457ed211a351da (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[24210]:0xa5e4e5)\n            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.wasm_terminal_markers::assert_capture::h410d42fbf9832b81 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[2458]:0x50b84a)\n\nfailures:\n\n    marker_event_is_a_writable_own_property_independent_of_native_disposal\n\ntest result: FAILED. 4 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.08s\n\n",
+      "counts": {
+        "passed": 4,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/03d9261aa3d44b3c2a41eba777dd778d6b4ec230dd9ce98b5d4e6fa1bd5da87c/artifact.wasm",
+      "sha256": "03d9261aa3d44b3c2a41eba777dd778d6b4ec230dd9ce98b5d4e6fa1bd5da87c",
+      "bytes": 20173397,
+      "originalPath": "O:/xterm-rust-swarm-16/tmp/worktrees/JanakaMarkerEvent/target\\wasm32-unknown-unknown\\debug\\deps\\wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JanakaMarkerEvent\\results\\browser-host\\wasm_terminal_markers\\2026-11-06T02-16-32-586Z-2b40d06c-8eeb-4ee8-80c4-045a5f9440b6\\artifacts\\suite_bg.wasm",
+      "bytes": 16954656,
+      "sha256": "30fd0d0277eb5b0a221b54aaeffb0e3b78eb5918ccbdaf84e03ac6858771cb47"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\JanakaMarkerEvent\\results\\browser-host\\wasm_terminal_markers\\2026-11-06T02-16-32-586Z-2b40d06c-8eeb-4ee8-80c4-045a5f9440b6\\artifacts\\suite.js",
+      "bytes": 251951,
+      "sha256": "b0ee9e1d932e768f2465a592e755799ff2a9cbc9d8c16c7a2c4dbeaf8ef4aad8"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "a3d16d22248fc17b388ba0c9ebae81f2ed73b416b3c84dba44f0e771609942d0"
+  },
+  "finishedAt": "2026-11-06T02:16:56.957Z"
+}

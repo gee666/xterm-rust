@@ -126,6 +126,67 @@ export function markerResourcesCase(term) {
   } finally { term.dispose(); }
 }
 
+export async function markerEventPropertyCase(term) {
+  try {
+    const marker = term.registerMarker();
+    const original = marker.onDispose;
+    const descriptor = Object.getOwnPropertyDescriptor(marker, 'onDispose');
+    require(descriptor && descriptor.value === original && descriptor.writable &&
+      descriptor.enumerable && descriptor.configurable, 'onDispose own data descriptor');
+    require(Object.keys(marker).includes('onDispose'), 'onDispose enumeration');
+    const events = [];
+    original(() => events.push('first'));
+    for (const value of [undefined, null, false, 7, 'event', Symbol('event'), 1n, {}, () => {}]) {
+      marker.onDispose = value;
+      require(marker.onDispose === value, 'raw event replacement identity');
+    }
+    marker.onDispose = function (value) {
+      require(this === marker && value === 8, 'replacement callable receiver/argument');
+      events.push('replacement');
+      return 9;
+    };
+    require(marker.onDispose(8) === 9, 'replacement callable result');
+    require(delete marker.onDispose && !Object.hasOwn(marker, 'onDispose') &&
+      marker.onDispose === undefined, 'delete must not reveal a prototype getter');
+    const token = {};
+    let gets = 0;
+    Object.defineProperty(marker, 'onDispose', { configurable: true, get() {
+      gets++;
+      throw token;
+    } });
+    marker.register({ dispose() { events.push('resource'); } });
+    marker.dispose();
+    require(gets === 0 && term.markers.length === 0, 'dispose read public event property');
+    try { marker.onDispose; throw new Error('getter error hidden'); }
+    catch (error) { require(error === token, 'getter throw identity'); }
+    Object.defineProperty(marker, 'onDispose', { value: original, writable: true,
+      enumerable: true, configurable: true });
+    const late = marker.onDispose(() => events.push('late'));
+    marker.dispose();
+    late.dispose();
+    const trimmed = term.registerMarker();
+    const trimmedEvent = trimmed.onDispose;
+    trimmedEvent(() => events.push('trim'));
+    trimmed.onDispose = null;
+    await write(term, 'a\r\nb\r\nc\r\nd\r\ne\r\n');
+    require(trimmed.isDisposed && trimmed.onDispose === null && term.markers.length === 0,
+      'trim must retain replacement without replacing native emitter');
+    const same = term.registerMarker();
+    const savedEvent = same.onDispose;
+    same.onDispose = token;
+    require(term.markers[0] === same && term.markers[0].onDispose === token,
+      'lookup rebuilt marker event property');
+    savedEvent(() => events.push('saved'));
+    same.dispose();
+    return { descriptor: [descriptor.writable, descriptor.enumerable, descriptor.configurable],
+      gets, events, remaining: term.markers.length };
+  } catch (error) {
+    // Resolve diagnostic observations so a failed async assertion is reported
+    // by the Rust test, rather than rejecting through JsFuture's transport.
+    return { error: String(error.stack ?? error) };
+  } finally { term.dispose(); }
+}
+
 export async function markerBufferCase(term) {
   try {
     await write(term, 'a\r\nb\r\nc');

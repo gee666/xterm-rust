@@ -1,0 +1,29 @@
+running 5 tests
+test marker_resources_preserve_live_methods_receiver_errors_and_traversal ... ok
+test marker_registration_captures_buffer_before_default_hint_coercion ... ok
+test marker_offset_validation_preserves_original_values_hints_and_errors ... ok
+test marker_handles_follow_native_trim_and_source_disposal_dispatch ... ok
+test marker_event_is_a_writable_own_property_independent_of_native_disposal ... FAIL
+
+failures:
+
+---- marker_event_is_a_writable_own_property_independent_of_native_disposal output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.__rust_start_panic (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[47706]:0xb34da1)
+            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.rust_panic (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[42729]:0xb291a8)
+            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[13409]:0x8ec3c6)
+            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[16949]:0x980b5d)
+            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[47165]:0xb3402d)
+            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.rust_begin_unwind (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[32254]:0xae946d)
+            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[32255]:0xae949a)
+            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[6040]:0x6ff413)
+            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.core::panicking::assert_failed::hac457ed211a351da (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[24210]:0xa5e4e5)
+            at wasm_terminal_markers-bb9aaf2d8f7e76c4.wasm.wasm_terminal_markers::assert_capture::h410d42fbf9832b81 (http://127.0.0.1:56723/suite_bg.wasm:wasm-function[2458]:0x50b84a)
+
+failures:
+
+    marker_event_is_a_writable_own_property_independent_of_native_disposal
+
+test result: FAILED. 4 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.08s
+

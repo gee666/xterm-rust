@@ -22,6 +22,13 @@ export function markerPosition(base, offset) { return base + offset; }
 export function disposeMarkerResource(value) { value.dispose(); }
 export function markerWeakRef(value) { return new WeakRef(value); }
 export function markerDeref(value) { return value.deref(); }
+// Source onDispose is a public data field. Replacing it must not replace the
+// native emitter already subscribed by the buffer's marker-removal listener.
+export function markerEventProperty(marker, event) {
+  Object.defineProperty(marker, 'onDispose', {
+    value: event, writable: true, enumerable: true, configurable: true
+  });
+}
 export function markerList(read) {
   const target = [];
   const sync = () => {
@@ -52,6 +59,8 @@ extern "C" {
     fn deref(value: &JsValue) -> JsValue;
     #[wasm_bindgen(js_name = markerList)]
     fn marker_list(read: JsValue) -> Array;
+    #[wasm_bindgen(js_name = markerEventProperty)]
+    fn marker_event_property(marker: &JsValue, event: &Function);
 }
 
 /// Weak JS references preserve observable identity without retaining disposed
@@ -65,7 +74,12 @@ impl MarkerHandles {
         if let Some((_, weak)) = handles.iter().find(|(native, _)| native.ptr_eq(&marker)) {
             return deref(weak);
         }
-        let value: JsValue = BrowserMarker::new(marker.clone()).into();
+        let event = events::callable(marker.on_dispose(), events::empty);
+        let value: JsValue = BrowserMarker {
+            marker: marker.clone(),
+        }
+        .into();
+        marker_event_property(&value, &event);
         handles.push((marker, weak_ref(&value)));
         value
     }
@@ -108,15 +122,10 @@ impl MarkerLists {
 #[wasm_bindgen(js_name = Marker)]
 pub struct BrowserMarker {
     marker: Marker,
-    on_dispose: Function,
 }
 impl BrowserMarker {
     pub(super) fn native(&self) -> Marker {
         self.marker.clone()
-    }
-    fn new(marker: Marker) -> Self {
-        let on_dispose = events::callable(marker.on_dispose(), events::empty);
-        Self { marker, on_dispose }
     }
 }
 #[wasm_bindgen(js_class = Marker)]
@@ -137,10 +146,6 @@ impl BrowserMarker {
     #[wasm_bindgen(getter, js_name = isDisposed)]
     pub fn is_disposed(&self) -> bool {
         self.marker.is_disposed()
-    }
-    #[wasm_bindgen(getter, js_name = onDispose)]
-    pub fn on_dispose(&self) -> Function {
-        self.on_dispose.clone()
     }
     /// Retain the original raw resource without inspecting it until disposal.
     /// Duplicate and late registrations are intentional source behavior.

@@ -12,7 +12,7 @@ const reference = resolve(process.env.REFERENCE_ROOT ?? resolve(root, 'source_re
 await mkdir(resolve(root, 'tmp'), { recursive: true });
 const temporary = await mkdtemp(resolve(root, 'tmp/terminal-marker-oracle-'));
 const output = resolve(root, process.env.MARKER_ORACLE_REPORT ?? 'results/browser-markers/source.json');
-const report = { status: 'failed', scope: 'Marker registration/handles/resources, not full array/decorations parity',
+const report = { status: 'failed', scope: 'Marker registration/handles/resources/onDispose field, not full array/raw-field/decorations parity',
   platform: process.platform, node: process.version, sources: [], browsers: [] };
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 // Independent expectations also appear in the Rust assertions. Source and Rust
@@ -26,6 +26,8 @@ const expected = [
     hints: ['number', 'number', 'default'] },
   { log: ['event', 'resource', 'resource', 'event-added', 'appended', 'appended', 'changed'],
     gets: 2, errors: [true, true, true, true] },
+  { descriptor: [true, true, true], gets: 1,
+    events: ['replacement', 'first', 'resource', 'trim', 'saved'], remaining: 0 },
 ];
 await mkdir(dirname(output), { recursive: true });
 try {
@@ -60,7 +62,7 @@ try {
           const make = () => new MarkerOracle.Terminal({ rows: 3, scrollback: 2 });
           const run = async () => [MarkerOracle.markerValidationCase(make()),
             await MarkerOracle.markerLifecycleCase(make()), await MarkerOracle.markerBufferCase(make()),
-            MarkerOracle.markerResourcesCase(make())];
+            MarkerOracle.markerResourcesCase(make()), await MarkerOracle.markerEventPropertyCase(make())];
           run().then(captures => { globalThis.markerResult = { captures }; },
             error => { globalThis.markerResult = { error: String(error.stack ?? error) }; });
         });
