@@ -8,10 +8,12 @@ use xterm_web::{search_addon::SearchAddon, terminal::Terminal};
 wasm_bindgen_test_configure!(run_in_browser);
 
 async fn run(body: &str, opened: bool, initial: &str) {
-    let terminal: JsValue = Terminal::new(js_sys::JSON::parse(initial).unwrap())
-        .unwrap()
-        .into();
-    let addon: JsValue = SearchAddon::new(JsValue::UNDEFINED).unwrap().into();
+    try_run(body, opened, initial).await.unwrap();
+}
+
+async fn try_run(body: &str, opened: bool, initial: &str) -> Result<(), JsValue> {
+    let terminal: JsValue = Terminal::new(js_sys::JSON::parse(initial)?)?.into();
+    let addon: JsValue = SearchAddon::new(JsValue::UNDEFINED)?.into();
     let setup = r#"
 term.loadAddon=function(addon){return this._loadAddon(this,addon);};
 const parent=document.createElement('div');parent.style.cssText='width:640px;height:240px;';document.body.appendChild(parent);
@@ -31,11 +33,9 @@ return (async()=>{try{if(opened)term.open(parent);
     arguments.push(&include_str!("../assets/xterm.css").into());
     arguments.push(&opened.into());
     let promise = Function::new_with_args("term,addon,css,opened", &script)
-        .apply(&JsValue::UNDEFINED, &arguments)
-        .unwrap()
-        .dyn_into::<Promise>()
-        .unwrap();
-    JsFuture::from(promise).await.unwrap();
+        .apply(&JsValue::UNDEFINED, &arguments)?
+        .dyn_into::<Promise>()?;
+    JsFuture::from(promise).await.map(|_| ())
 }
 const DEFAULTS: &str = r#"{"cols":20,"rows":5,"scrollback":1000}"#;
 
@@ -49,12 +49,12 @@ async fn highlight_engine_guard_preserves_raw_length_cutoffs_and_exact_errors() 
 }
 
 #[wasm_bindgen_test]
-async fn retired_engine_attempts_timeout_setup_before_matching_errors() {
+async fn retired_engine_attempts_timeout_setup_before_matching_errors() -> Result<(), JsValue> {
     let body = format!(
         "{}\nequal(await checkSearchCallArgs(term,addon,write,equal),56);",
         include_str!("fixtures/search-retired-timeout.js")
     );
-    run(&body, true, r#"{"cols":20,"rows":3,"scrollback":1000}"#).await;
+    try_run(&body, true, r#"{"cols":20,"rows":3,"scrollback":1000}"#).await
 }
 
 #[wasm_bindgen_test]
