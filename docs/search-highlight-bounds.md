@@ -61,3 +61,9 @@ try {
 ```
 
 `inputs.json` pins1909 tracked crate/build inputs. `runtime-pins.json` describes twelve retained runtime files for independent inspection before owned cleanup. Historical raw reports retain paths that will no longer exist after cleanup. Git source and the durable logs remain the evidence, not a promise that removed binaries can still run.
+
+## Independent review and cleanup preflight
+
+Task560 was accepted at e6b5d7c6 with no findings. The isolated reviewer reran all five pinned native executables,106PASS, and verified43 then-current durable pins,1909 input pins,12 runtime pins and both776 reference inventories. No compilers, browsers, servers or file edits were performed by the reviewer. The public-WASM failure and open347/527/322 scope were checked explicitly.
+
+The read-only cleanup preflight found17489 regular files,3014 directories,1772527880 bytes, no links, redirects or owned workers. This is not a cleanup-complete claim. Two final metadata files and this note may change the apply scan counts. All source and evidence are preserved before normal owned worktree removal. The actual apply receipt, after removal, belongs at `.pi/swarm/work/2/john560-cleanup.json`; verify its complete/rootAbsent/unregistered flags and original776/archive-pin checks before treating cleanup as finished.
