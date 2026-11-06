@@ -12,7 +12,7 @@ use wasm_bindgen::JsValue;
 use xterm_addons::image::{
     iip::types::IipOptions,
     kitty::handler::KittyOptions,
-    sixel::{SixelDecoder, SixelHandler},
+    sixel::{DecoderOptions, SixelDecoder, ADDON_PALETTE},
     storage::ImageStorage,
 };
 impl State {
@@ -24,6 +24,8 @@ impl State {
     ) -> Result<(), JsValue> {
         let options = self.options.get();
         if options.sixel_support {
+            // Source evaluates *4 before reading the decoder palette option.
+            let memory_limit = super::super::pixel_limit::memory(&self.pixel_limit)?;
             let palette = self.palette.get();
             let current_palette = self.palette.clone();
             let protocol = BrowserSixelProtocol::new_with_raw_options(
@@ -40,10 +42,12 @@ impl State {
             let _promise = wasm_bindgen_futures::future_to_promise(async move {
                 wasm_bindgen_futures::JsFuture::from(js_sys::Promise::resolve(&JsValue::UNDEFINED))
                     .await?;
-                let decoder = SixelDecoder::new(SixelHandler::decoder_options(
-                    options.pixel_limit,
-                    super::palette::initial(&palette)?,
-                ))
+                let decoder = SixelDecoder::new(DecoderOptions {
+                    memory_limit: Some(memory_limit),
+                    palette: ADDON_PALETTE.to_vec(),
+                    palette_limit: super::palette::initial(&palette)?,
+                    ..DecoderOptions::default()
+                })
                 .map_err(|e| to_js_error(&e))?;
                 loading.complete_loading(decoder);
                 Ok(JsValue::UNDEFINED)
@@ -56,7 +60,7 @@ impl State {
             // afterwards, with no state borrow held across the host callback.
             let encoded_limit = super::options::iip_encoded_limit(&self.iip_size_limit)?;
             let options = self.options.get();
-            let protocol = BrowserIipProtocol::new_with_encoded_limit(
+            let protocol = BrowserIipProtocol::new_with_raw_pixel_limit(
                 terminal,
                 renderer.renderer(),
                 storage.clone(),
@@ -65,6 +69,7 @@ impl State {
                     size_limit: options.iip_size_limit,
                 },
                 encoded_limit,
+                self.pixel_limit.clone(),
             )?;
             self.add_handler(Protocol::Iip(protocol.clone()))?;
             self.cleanups.borrow_mut().push(token(protocol.register()?));
@@ -74,7 +79,7 @@ impl State {
             // constructor. Keep state borrows released across user conversion.
             let encoded_limit = super::options::kitty_encoded_limit(&self.kitty_size_limit)?;
             let options = self.options.get();
-            let protocol = BrowserKittyProtocol::new_with_encoded_limit(
+            let protocol = BrowserKittyProtocol::new_with_raw_pixel_limit(
                 terminal,
                 renderer.renderer(),
                 storage,
@@ -83,6 +88,7 @@ impl State {
                     size_limit: options.kitty_size_limit,
                 },
                 encoded_limit,
+                self.pixel_limit.clone(),
             );
             self.add_handler(Protocol::Kitty(protocol.clone()))?;
             let cleanup: Cleanup = Rc::new({

@@ -1,17 +1,15 @@
 // Copyright (c) 2023 The xterm.js authors. MIT license.
 //! OSC1337 streaming transfer state. Real image decoding is an explicit host effect.
+mod end;
 use super::decoder::IipDecoder;
-use super::geometry::{IipGeometry, SizeRequest};
-use super::reports::cell_size_report;
+use super::geometry::SizeRequest;
 use super::types::{
-    default_header, merge_header, number_truthy, truthy, DisplayRequest, EndPreparation, IipEffect,
-    IipError, IipOptions, PendingEnd, PendingKind,
+    default_header, merge_header, truthy, DisplayRequest, IipEffect, IipError, IipOptions,
 };
 use crate::image::base64::DecodeStatus;
 use crate::image::header::{
     HeaderFields, HeaderParser, HeaderState, HeaderValue, ParseOutcome, SequenceType,
 };
-use crate::image::metrics::{image_type, ImageType};
 use crate::image::NameDecodePolicy;
 
 pub struct IipHandler {
@@ -143,124 +141,6 @@ impl IipHandler {
             }
         }
         Ok(())
-    }
-    /// No effect means the sequence was consumed with no image/reply, as upstream.
-    /// Display effects must finish real host decode/insertion before resolving OSC.
-    pub fn end(
-        &mut self,
-        success: bool,
-        geometry: &IipGeometry,
-    ) -> Result<Vec<IipEffect>, IipError> {
-        match self.prepare_end(success)? {
-            EndPreparation::Complete(effects) => Ok(effects),
-            EndPreparation::Geometry(token) => self.finish_geometry(token, geometry),
-        }
-    }
-    /// Return before any foreign geometry getter. Adapters must release their
-    /// controller borrow, call the fallible host, then complete the owned token.
-    pub fn prepare_end(&mut self, success: bool) -> Result<EndPreparation, IipError> {
-        if self.aborted {
-            return Ok(EndPreparation::Complete(Vec::new()));
-        }
-        if self.parser.state != HeaderState::End && self.parser.end() == ParseOutcome::Rejected {
-            return Ok(EndPreparation::Complete(Vec::new()));
-        }
-        if is_type(&self.parser.fields, SequenceType::FilePart) {
-            return Ok(EndPreparation::Complete(Vec::new()));
-        }
-        if is_type(&self.parser.fields, SequenceType::ReportCellSize) {
-            return Ok(EndPreparation::Geometry(PendingEnd {
-                owner: self.owner.clone(),
-                kind: PendingKind::Report,
-            }));
-        }
-        if is_type(&self.parser.fields, SequenceType::MultipartFile) {
-            self.header = merge_header(&self.parser.fields);
-            self.multipart = true;
-            self.abort_multipart = false;
-            self.decoder.release();
-            self.decoder.init()?;
-            return Ok(EndPreparation::Complete(Vec::new()));
-        }
-        if is_type(&self.parser.fields, SequenceType::FileEnd) {
-            if !self.multipart {
-                return Ok(EndPreparation::Complete(Vec::new()));
-            }
-            self.multipart = false;
-            if self.abort_multipart || !is_type(&self.header, SequenceType::MultipartFile) {
-                return Ok(EndPreparation::Complete(Vec::new()));
-            }
-        }
-        if !success {
-            self.decoder.release();
-            return Ok(EndPreparation::Complete(Vec::new()));
-        }
-        if self.decoder.end()? != DecodeStatus::Ok {
-            return Ok(EndPreparation::Complete(vec![IipEffect::Warning(
-                "IIP: error during BASE64 decoding".to_owned(),
-            )]));
-        }
-        let metrics = image_type(self.decoder.data());
-        if metrics.mime == ImageType::Unsupported {
-            return Ok(EndPreparation::Complete(vec![IipEffect::Warning(
-                "IIP: unsupported image type".to_owned(),
-            )]));
-        }
-        let width = f64::from(metrics.width);
-        let height = f64::from(metrics.height);
-        if !number_truthy(width)
-            || !number_truthy(height)
-            || width * height >= self.options.pixel_limit
-            || self.options.pixel_limit.is_nan()
-        {
-            return Ok(EndPreparation::Complete(vec![IipEffect::Warning(format!(
-                "IIP: image dimension issue {}x{}",
-                metrics.width, metrics.height
-            ))]));
-        }
-        Ok(EndPreparation::Geometry(PendingEnd {
-            owner: self.owner.clone(),
-            kind: PendingKind::Resize(metrics),
-        }))
-    }
-    pub fn finish_geometry(
-        &mut self,
-        token: PendingEnd,
-        geometry: &IipGeometry,
-    ) -> Result<Vec<IipEffect>, IipError> {
-        if !std::rc::Rc::ptr_eq(&token.owner, &self.owner) {
-            return Err(IipError::ForeignEndToken);
-        }
-        let metrics = match token.kind {
-            PendingKind::Report => return Ok(vec![IipEffect::Report(cell_size_report(geometry))]),
-            PendingKind::Resize(metrics) => metrics,
-        };
-        // Reentrant host code may reset or start another transfer. Source reads
-        // current header/decoder data after its geometry getters, not a stale copy.
-        let request = self.size_request()?;
-        let mut target = geometry.resize(
-            f64::from(metrics.width),
-            f64::from(metrics.height),
-            &request,
-        );
-        target.width = target.width.floor();
-        target.height = target.height.floor();
-        if !number_truthy(target.width)
-            || !number_truthy(target.height)
-            || (target.width * target.height).partial_cmp(&self.options.pixel_limit)
-                != Some(std::cmp::Ordering::Less)
-        {
-            self.decoder.release();
-            return Ok(Vec::new());
-        }
-        let mut bytes = Vec::new();
-        bytes.try_reserve_exact(self.decoder.data().len())?;
-        bytes.extend_from_slice(self.decoder.data());
-        Ok(vec![IipEffect::Display(DisplayRequest {
-            bytes,
-            source: metrics,
-            target,
-        })])
     }
     fn size_request(&self) -> Result<SizeRequest, IipError> {
         let text = |field| match self.header.get_ascii(field) {

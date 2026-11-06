@@ -13,6 +13,7 @@ mod kitty_placement;
 mod kitty_protocol;
 mod layers;
 mod lifecycle;
+mod pixel_limit;
 mod placeholder;
 pub mod primitives;
 mod resource;

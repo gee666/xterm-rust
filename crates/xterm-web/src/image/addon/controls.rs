@@ -1,15 +1,8 @@
 // Copyright (c) 2020 The xterm.js authors. All rights reserved. MIT license.
-use super::{
-    super::{js, terminal_host::TerminalCanvasHost, ImageCanvasHost},
-    State,
-};
+use super::{super::js, State};
 use crate::js_error::{callback_error, to_js_error};
-use xterm_addons::image::{
-    policy::{
-        GraphicsGeometry, ImageControlAction, ImageControlEffect, ImageControlPolicy,
-        ImageParameter,
-    },
-    storage::CellSize,
+use xterm_addons::image::policy::{
+    GraphicsGeometry, ImageControlAction, ImageControlEffect, ImageControlPolicy, ImageParameter,
 };
 use xterm_core::parser::{
     handler::{DispatchError, HandlerResult},
@@ -17,8 +10,6 @@ use xterm_core::parser::{
 };
 
 const DEC_SIXEL_DISPLAY: f64 = 80.0;
-const GRAPHICS_SIXEL_GEOMETRY: f64 = 2.0;
-const GRAPHICS_READ: f64 = 1.0;
 
 #[derive(Clone, Copy)]
 pub(super) enum Control {
@@ -50,6 +41,9 @@ impl State {
             if let Some(result) = self.palette_control(&parameters) {
                 return result;
             }
+            if let Some(result) = self.pixel_control(&parameters) {
+                return result;
+            }
         }
         let mut policy = ImageControlPolicy::new(self.defaults);
         policy.options = self.options.get();
@@ -58,26 +52,7 @@ impl State {
             Control::Reset => policy.decrst(&parameters),
             Control::Attributes => policy.primary_device_attributes(&parameters),
             Control::Graphics => {
-                let mut geometry = GraphicsGeometry::default();
-                // Only READ SIXEL_GEO touches live geometry in the source.
-                if parameters.first() == Some(&ImageParameter::Number(GRAPHICS_SIXEL_GEOMETRY))
-                    && parameters.get(1) == Some(&ImageParameter::Number(GRAPHICS_READ))
-                {
-                    if let Some(terminal) = self.terminal.borrow().upgrade() {
-                        geometry.columns =
-                            terminal.native.cols().map_err(|e| to_js_error(&e))? as f64;
-                        geometry.rows = terminal.native.rows().map_err(|e| to_js_error(&e))? as f64;
-                        if let Some(dimensions) =
-                            TerminalCanvasHost(Rc::downgrade(&terminal)).dimensions()?
-                        {
-                            geometry.canvas = Some(CellSize {
-                                width: dimensions.canvas_width,
-                                height: dimensions.canvas_height,
-                            });
-                        }
-                    }
-                }
-                policy.graphics_attributes(&parameters, geometry)
+                policy.graphics_attributes(&parameters, GraphicsGeometry::default())
             }
             Control::SoftReset => policy.reset(),
         };
@@ -123,7 +98,6 @@ impl State {
         Ok(action.handled)
     }
 }
-use std::rc::Rc;
 use wasm_bindgen::JsValue;
 pub(super) fn result(result: Result<bool, JsValue>) -> HandlerResult {
     match result {

@@ -1,6 +1,6 @@
 // Copyright (c) 2023 The xterm.js authors. MIT license.
 //! Streaming OSC1337 execution on the real browser terminal and shared store.
-use super::{js, BrowserImageRenderer, IipDecodedImage, IipImageDecoder};
+use super::{js, pixel_limit::PixelLimit, BrowserImageRenderer, IipDecodedImage, IipImageDecoder};
 use crate::{
     js_error::{callback_error, to_js_error},
     terminal::{Shared, Terminal},
@@ -15,7 +15,10 @@ use xterm_addons::image::{
         geometry::{IipGeometry, RenderMetrics},
         handler::IipHandler,
         storage::IipImageStorage,
-        types::{EndPreparation, GeometryPhase, IipEffect, IipOptions},
+        types::{
+            EndPreparation, GeometryPhase, IipEffect, IipOptions, PixelEndPreparation,
+            PixelResizePreparation,
+        },
     },
     storage::{CellSize, ImageStorage},
     NameDecodePolicy,
@@ -35,6 +38,7 @@ struct State {
     storage: IipImageStorage,
     handler: RefCell<IipHandler>,
     decoder: IipImageDecoder,
+    pixel_limit: PixelLimit,
 }
 fn dispatch(error: JsValue) -> DispatchError {
     DispatchError::Callback(callback_error(error))
@@ -81,18 +85,39 @@ impl State {
         let preparation = self
             .handler
             .borrow_mut()
-            .prepare_end(success)
+            .prepare_end_pixels(success)
             .map_err(|e| to_js_error(&e))?;
+        let preparation = match preparation {
+            PixelEndPreparation::End(end) => end,
+            PixelEndPreparation::Check(check) => {
+                let accepted = self.pixel_limit.below(check.area())?;
+                self.handler
+                    .borrow_mut()
+                    .finish_original_pixels(check, accepted)
+                    .map_err(|e| to_js_error(&e))?
+            }
+        };
         let effects = match preparation {
             EndPreparation::Complete(effects) => effects,
             EndPreparation::Geometry(token) => {
                 // Geometry can call browser code. End the controller borrow first,
                 // then finish against live payload/header state after reentry.
                 let geometry = self.geometry(token.phase())?;
-                self.handler
+                let preparation = self
+                    .handler
                     .borrow_mut()
-                    .finish_geometry(token, &geometry)
-                    .map_err(|e| to_js_error(&e))?
+                    .prepare_resize_pixels(token, &geometry)
+                    .map_err(|e| to_js_error(&e))?;
+                match preparation {
+                    PixelResizePreparation::Complete(effects) => effects,
+                    PixelResizePreparation::Check(check) => {
+                        let accepted = self.pixel_limit.below(check.area())?;
+                        self.handler
+                            .borrow_mut()
+                            .finish_resized_pixels(check, accepted)
+                            .map_err(|e| to_js_error(&e))?
+                    }
+                }
             }
         };
         self.effects(effects.into_iter())
@@ -215,6 +240,23 @@ impl BrowserIipProtocol {
         options: IipOptions,
         encoded_limit: f64,
     ) -> Result<Self, JsValue> {
+        Self::new_with_raw_pixel_limit(
+            terminal,
+            renderer,
+            storage,
+            options,
+            encoded_limit,
+            options.pixel_limit.into(),
+        )
+    }
+    pub(crate) fn new_with_raw_pixel_limit(
+        terminal: &Terminal,
+        renderer: Rc<BrowserImageRenderer>,
+        storage: ImageStorage,
+        options: IipOptions,
+        encoded_limit: f64,
+        pixel_limit: JsValue,
+    ) -> Result<Self, JsValue> {
         Ok(Self(Rc::new(State {
             terminal: Rc::downgrade(&terminal.shared),
             renderer,
@@ -228,6 +270,7 @@ impl BrowserIipProtocol {
                 .map_err(|e| to_js_error(&e))?,
             ),
             decoder: IipImageDecoder::default(),
+            pixel_limit: PixelLimit::new(pixel_limit),
         })))
     }
     /// Register a streaming handler, avoiding the public whole-payload OSC limit.

@@ -1,6 +1,8 @@
 // Copyright (c) 2026 The xterm.js authors. All rights reserved. MIT license.
 // Streaming APC G execution uses the native protocol and actual browser codecs.
-use super::{js, kitty_encoded::BlobFactory, kitty_placement, BrowserImageRenderer};
+use super::{
+    js, kitty_encoded::BlobFactory, kitty_placement, pixel_limit::PixelLimit, BrowserImageRenderer,
+};
 use crate::{
     js_error::to_js_error,
     terminal::{Shared, Terminal},
@@ -62,6 +64,7 @@ impl ApcHandlerTrait for RetainedAdapter {
 struct Host {
     terminal: Weak<Shared>,
     renderer: Rc<BrowserImageRenderer>,
+    pixel_limit: PixelLimit,
 }
 impl KittyGraphicsHost for Host {
     fn send_response(&self, data: &[u16]) -> Result<(), StorageError> {
@@ -79,13 +82,14 @@ impl KittyGraphicsHost for Host {
         let terminal = self.terminal.upgrade();
         let read = data.read();
         let renderer = Rc::clone(&self.renderer);
+        let pixel_limit = self.pixel_limit.clone();
         Box::pin(async move {
             // A pending display retains its terminal/store after unregister,
             // reset or disposal, just like the source async instance method.
             let terminal = terminal.ok_or_else(|| {
                 js::error(js_sys::Error::new("Kitty terminal was dropped").into())
             })?;
-            kitty_placement::display(request, renderer, terminal, read)
+            kitty_placement::display(request, renderer, terminal, read, pixel_limit)
                 .await
                 .map_err(js::error)
         })
@@ -124,10 +128,28 @@ impl BrowserKittyProtocol {
         options: KittyOptions,
         max_encoded: f64,
     ) -> Self {
+        Self::new_with_raw_pixel_limit(
+            terminal,
+            renderer,
+            storage,
+            options,
+            max_encoded,
+            options.pixel_limit.into(),
+        )
+    }
+    pub(crate) fn new_with_raw_pixel_limit(
+        terminal: &Terminal,
+        renderer: Rc<BrowserImageRenderer>,
+        storage: ImageStorage,
+        options: KittyOptions,
+        max_encoded: f64,
+        pixel_limit: JsValue,
+    ) -> Self {
         let storage = Rc::new(KittyImageStorage::new(Rc::new(storage)));
         let host = Rc::new(Host {
             terminal: Rc::downgrade(&terminal.shared),
             renderer,
+            pixel_limit: PixelLimit::new(pixel_limit),
         });
         Self {
             terminal: Rc::downgrade(&terminal.shared),

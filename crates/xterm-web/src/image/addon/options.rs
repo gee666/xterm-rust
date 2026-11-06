@@ -42,6 +42,7 @@ pub(super) struct ConstructorOptions {
     pub current: ImageOptions,
     pub defaults: ImageOptions,
     pub placeholder: JsValue,
+    pub pixel_limit: JsValue,
     pub storage_limit: JsValue,
     pub sixel_size_limit: JsValue,
     pub kitty_size_limit: JsValue,
@@ -88,6 +89,7 @@ pub(super) fn read(options: &JsValue) -> Result<ConstructorOptions, JsValue> {
     let defaults = clone_options(options)?;
     Ok(ConstructorOptions {
         placeholder: js::get(&current, "showPlaceholder")?,
+        pixel_limit: js::get(&current, "pixelLimit")?,
         sixel_size_limit: js::get(&current, "sixelSizeLimit")?,
         kitty_size_limit: js::get(&current, "kittySizeLimit")?,
         iip_size_limit: js::get(&current, "iipSizeLimit")?,
@@ -101,10 +103,11 @@ pub(super) fn read(options: &JsValue) -> Result<ConstructorOptions, JsValue> {
 }
 fn typed(options: &JsValue) -> Result<ImageOptions, JsValue> {
     let boolean = |key| js::get(options, key).map(|v| v.is_truthy());
-    let numeric = |key| number(&js::get(options, key)?);
     Ok(ImageOptions {
         enable_size_reports: boolean("enableSizeReports")?,
-        pixel_limit: numeric("pixelLimit")?,
+        // Browser consumers own the raw value and evaluate their expression
+        // at the source call site. This projection is native policy only.
+        pixel_limit: ImageOptions::default().pixel_limit,
         sixel_support: boolean("sixelSupport")?,
         sixel_scrolling: boolean("sixelScrolling")?,
         sixel_palette_limit: ImageOptions::default().sixel_palette_limit,

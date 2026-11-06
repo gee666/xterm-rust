@@ -2,6 +2,7 @@
 use super::{
     js, kitty_decode,
     kitty_encoded::{await_value, bitmap_call},
+    pixel_limit::PixelLimit,
     primitives::create_canvas,
     BrowserImageRenderer, BrowserImageSurface,
 };
@@ -52,10 +53,11 @@ pub(super) async fn display(
     renderer: Rc<BrowserImageRenderer>,
     terminal: Rc<Shared>,
     read: ByteRead,
+    pixel_limit: PixelLimit,
 ) -> Result<(), JsValue> {
     let decoded = kitty_decode::decode(Rc::clone(&request.image), read).await?;
     let mut bitmap = Some(decoded);
-    let result = place(&request, &renderer, &terminal, &mut bitmap).await;
+    let result = place(&request, &renderer, &terminal, &mut bitmap, &pixel_limit).await;
     if result.is_err() {
         if let Some(bitmap) = bitmap.filter(|value| !js::nullish(value)) {
             js::call(&bitmap, "close", &[])?;
@@ -76,6 +78,7 @@ async fn place(
     renderer: &BrowserImageRenderer,
     terminal: &Shared,
     bitmap: &mut Option<JsValue>,
+    pixel_limit: &PixelLimit,
 ) -> Result<(), JsValue> {
     // Every call here has a live bitmap until ownership transfer below.
     let current = bitmap
@@ -110,8 +113,8 @@ async fn place(
         .as_ref()
         .ok_or_else(|| js_sys::Error::new("Missing Kitty bitmap"))?;
     let actual = size(current)?;
-    let mut layout = geometry::layout(actual, measured, &command(request), request.pixel_limit)
-        .map_err(protocol_error)?;
+    let mut layout = geometry::prepare_layout(actual, measured, &command(request));
+    pixel_limit.check(layout.width, layout.height)?;
     // Source captures the actual buffer object before any scaling await.
     let buffer = terminal
         .native
@@ -153,13 +156,9 @@ async fn place(
         let current = bitmap
             .as_ref()
             .ok_or_else(|| js_sys::Error::new("Missing Kitty bitmap"))?;
-        layout = geometry::complete_offset(
-            size(current)?,
-            layout,
-            &command(request),
-            request.pixel_limit,
-        )
-        .map_err(protocol_error)?;
+        let actual = size(current)?;
+        pixel_limit.check(f64::from(actual.width), f64::from(actual.height))?;
+        layout = geometry::finish_offset(actual, layout, &command(request));
     }
     let current = bitmap
         .as_ref()

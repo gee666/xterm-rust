@@ -77,6 +77,40 @@ pub enum EndPreparation {
     Geometry(PendingEnd),
 }
 
+/// Original image metrics captured before a raw pixel-limit comparison.
+#[derive(Debug)]
+pub struct OriginalPixelCheck {
+    pub(super) owner: std::rc::Rc<()>,
+    pub(super) source: ImageMetrics,
+}
+impl OriginalPixelCheck {
+    pub fn area(&self) -> f64 {
+        f64::from(self.source.width) * f64::from(self.source.height)
+    }
+}
+/// Floored resize dimensions captured before the second comparison.
+#[derive(Debug)]
+pub struct ResizedPixelCheck {
+    pub(super) owner: std::rc::Rc<()>,
+    pub(super) source: ImageMetrics,
+    pub(super) target: CellSize,
+}
+impl ResizedPixelCheck {
+    pub fn area(&self) -> f64 {
+        self.target.width * self.target.height
+    }
+}
+#[derive(Debug)]
+pub enum PixelEndPreparation {
+    End(EndPreparation),
+    Check(OriginalPixelCheck),
+}
+#[derive(Debug)]
+pub enum PixelResizePreparation {
+    Complete(Vec<IipEffect>),
+    Check(ResizedPixelCheck),
+}
+
 #[derive(Debug)]
 pub enum IipError {
     Settings(InvalidSettings),

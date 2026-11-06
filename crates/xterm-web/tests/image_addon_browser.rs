@@ -25,6 +25,12 @@ mod raw_palette_failures;
 mod raw_palette_primitives;
 #[path = "image_addon_support/raw_palette_release.rs"]
 mod raw_palette_release;
+#[path = "image_addon_support/raw_pixel.rs"]
+mod raw_pixel;
+#[path = "image_addon_support/raw_pixel_protocols.rs"]
+mod raw_pixel_protocols;
+#[path = "image_addon_support/raw_pixel_public.rs"]
+mod raw_pixel_public;
 #[path = "image_addon_support/raw_placeholder.rs"]
 mod raw_placeholder;
 #[path = "image_addon_support/raw_sixel_limit.rs"]

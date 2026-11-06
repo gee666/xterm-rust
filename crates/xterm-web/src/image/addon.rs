@@ -12,6 +12,7 @@ mod kitty_inspection;
 mod option_inspection;
 pub(super) mod options;
 mod palette;
+mod pixel_control;
 mod protocols;
 mod storage_limit;
 use super::{
@@ -64,6 +65,7 @@ struct State {
     sixel_size_limit: JsValue,
     kitty_size_limit: JsValue,
     iip_size_limit: JsValue,
+    pixel_limit: JsValue,
     terminal: RefCell<Weak<Shared>>,
     renderer: RefCell<Option<Rc<ImageRendererLifecycle>>>,
     storage: RefCell<Option<ImageStorage>>,

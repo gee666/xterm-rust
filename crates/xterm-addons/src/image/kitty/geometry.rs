@@ -145,6 +145,14 @@ pub fn layout(
     command: &KittyCommand,
     pixel_limit: f64,
 ) -> Result<Layout, PlacementError> {
+    let layout = prepare_layout(size, measured, command);
+    check_pixels(layout.width, layout.height, pixel_limit)?;
+    Ok(layout)
+}
+
+/// Compute placement dimensions before a host-owned raw limit comparison.
+/// No protocol or storage state changes until the caller accepts this layout.
+pub fn prepare_layout(size: BitmapSize, measured: CellSize, command: &KittyCommand) -> Layout {
     let cell = CellSize {
         width: if truthy(measured.width) {
             measured.width
@@ -182,8 +190,7 @@ pub fn layout(
     } else {
         (width, height)
     };
-    check_pixels(target_width, target_height, pixel_limit)?;
-    Ok(Layout {
+    Layout {
         cell,
         columns,
         rows,
@@ -194,7 +201,7 @@ pub fn layout(
         } else {
             ImageLayer::Top
         },
-    })
+    }
 }
 
 /// Compute after the platform's actual resize, not from unconverted float sizes.
@@ -230,20 +237,26 @@ pub fn offset(size: BitmapSize, layout: Layout, command: &KittyCommand) -> Optio
 /// source permits retained pending command objects to change while awaiting.
 pub fn complete_offset(
     size: BitmapSize,
-    mut layout: Layout,
+    layout: Layout,
     command: &KittyCommand,
     pixel_limit: f64,
 ) -> Result<Layout, PlacementError> {
+    check_pixels(f64::from(size.width), f64::from(size.height), pixel_limit)?;
+    Ok(finish_offset(size, layout, command))
+}
+
+/// Call only after accepting the actual offset bitmap's area. The host may
+/// evaluate a raw limit and reenter while the previous layout is retained.
+pub fn finish_offset(size: BitmapSize, mut layout: Layout, command: &KittyCommand) -> Layout {
     layout.width = f64::from(size.width);
     layout.height = f64::from(size.height);
-    check_pixels(layout.width, layout.height, pixel_limit)?;
     if command.columns.is_none() {
         layout.columns = (layout.width / layout.cell.width).ceil();
     }
     if command.rows.is_none() {
         layout.rows = (layout.height / layout.cell.height).ceil();
     }
-    Ok(layout)
+    layout
 }
 
 /// Layer was chosen before resize/offset awaits, but the source reads z-index
