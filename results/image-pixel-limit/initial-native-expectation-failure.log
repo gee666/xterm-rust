@@ -1,0 +1,43 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\BryanImagePixels\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 4.13s
+     Running tests\image_iip.rs (target\debug\deps\image_iip-c4dcba0a2627e085.exe)
+
+running 11 tests
+test dimensions_use_source_width_precedence_and_no_auto_upscale ... ok
+test fixed_three_preserves_source_ties_subnormals_and_special_numbers ... ok
+test original_and_resized_pixel_limit_equalities_reject_display_requests ... ok
+test file_metadata_request_defers_real_decode_and_size_metadata_is_informative ... ok
+test geometry_completion_releases_controller_borrow_and_rejects_foreign_tokens ... ok
+test inline_disabled_failure_and_overflow_recover_at_next_start ... ok
+test multipart_stream_assembles_only_on_file_end_and_file_replaces_pending ... ok
+test fractional_size_limit_rounds_encoded_capacity_before_integer_conversion ... ok
+test report_cell_size_uses_css_canvas_not_the_cell_field_or_success_flag ... ok
+test prepare_end_skips_foreign_geometry_for_early_consumed_paths ... ok
+test reset_retains_source_multipart_flags_but_releases_decoder_bytes ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\image_iip_pixel_phases.rs (target\debug\deps\image_iip_pixel_phases-efca8e308ef51dab.exe)
+
+running 3 tests
+test pixel_tokens_reject_foreign_controllers_before_mutating_payload ... ok
+test rejected_original_keeps_payload_until_warning_but_second_rejection_releases_live_payload ... ok
+test pixel_tokens_capture_dimensions_but_read_live_payload_after_callbacks ... FAILED
+
+failures:
+
+---- pixel_tokens_capture_dimensions_but_read_live_payload_after_callbacks stdout ----
+
+thread 'pixel_tokens_capture_dimensions_but_read_live_payload_after_callbacks' panicked at crates\xterm-addons\tests\image_iip_pixel_phases.rs:64:5:
+assertion `left == right` failed
+  left: []
+ right: [0, 0, 0]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    pixel_tokens_capture_dimensions_but_read_live_payload_after_callbacks
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p xterm-addons --test image_iip_pixel_phases`

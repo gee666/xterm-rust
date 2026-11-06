@@ -1,0 +1,29 @@
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling memchr v2.8.3
+   Compiling equivalent v1.0.3
+   Compiling hashbrown v0.15.5
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling regress v0.10.4
+   Compiling serde_json v1.0.154
+   Compiling ryu-js v1.0.3
+   Compiling adler2 v2.0.1
+   Compiling miniz_oxide v0.8.9
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\BryanImagePixels\crates\xterm-core)
+   Compiling itoa v1.0.18
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\BryanImagePixels\crates\xterm-addons)
+error[E0425]: cannot find function `merge_header` in this scope
+  --> crates\xterm-addons\src\image\iip\handler\end.rs:66:27
+   |
+66 |             self.header = merge_header(&self.parser.fields);
+   |                           ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+3  + use crate::image::iip::types::merge_header;
+   |
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `xterm-addons` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
