@@ -57,7 +57,18 @@ fn clamp_js(value: f64, lower: f64, upper: f64) -> f64 {
     if value.is_nan() || lower.is_nan() || upper.is_nan() {
         f64::NAN
     } else {
-        value.max(lower).min(upper)
+        // Rust min/max may choose either zero sign on a tie. JavaScript max
+        // prefers +0, and min prefers -0, independently of optimization level.
+        let maximum = if value > lower || (value == lower && value.is_sign_positive()) {
+            value
+        } else {
+            lower
+        };
+        if maximum < upper || (maximum == upper && maximum.is_sign_negative()) {
+            maximum
+        } else {
+            upper
+        }
     }
 }
 
