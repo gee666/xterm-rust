@@ -47,7 +47,13 @@ try {
           if(c.outcome.message?.startsWith('Invalid b0')||c.outcome.message?.startsWith('Object ')||c.outcome.message?.startsWith('This is a CFF2 font'))assert.equal(raw.outcome.message,c.outcome.message);
         }
         record.addonRaw=actual.result.addon;
-        const bounds=actual.result.constructors.find(c=>c.outcome.name==='RangeError').outcome;
+        const badCases=fixture.cases.map((c,i)=>({c,i})).filter(({c})=>JSON.stringify(c.data)==='[2,0,5,0,7,29,127,255,255,255,12,36,0,0,0,0]'&&!c.remove&&!c.lexical);
+        assert.equal(badCases.length,4);
+        const bounds=actual.result.constructors[badCases[0].i].outcome;
+        assert.equal(bounds.name,'RangeError');
+        for(const {i}of badCases)assert.deepEqual(actual.result.constructors[i].outcome,bounds);
+        record.addonConstructorCases=badCases.map(({c})=>c.name);
+        record.addonConstructorOutcome=bounds;
         const engineExpected=structuredClone(expected);engineExpected.debug[1]={name:bounds.name,message:bounds.message};
         assert.deepEqual(record.addonRaw,engineExpected);
         record.constructorMessages=Object.fromEntries([...new Set(actual.result.constructors.map(c=>c.outcome.message).filter(Boolean))].map(m=>[m,actual.result.constructors.filter(c=>c.outcome.message===m).length]));
