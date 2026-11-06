@@ -79,11 +79,7 @@ impl DecorationLineCache {
         self.state.scheduled.set(false);
         self.state.sync_requested.dispose();
     }
-    pub fn add(&self, decoration: Decoration) -> Result<(), NonAdvancingDecorationSpan> {
-        let start = decoration.marker().line_value();
-        if !start.rel_lt(&MarkerLine::number(0.0)) {
-            span::validate(&start, decoration.height())?;
-        }
+    pub fn add(&self, decoration: Decoration) -> Result<(), DecorationError> {
         if !self
             .state
             .decorations
@@ -95,8 +91,7 @@ impl DecorationLineCache {
         }
         self.add_to_buckets(&decoration)
     }
-    pub fn remove(&self, decoration: &Decoration) -> Result<(), NonAdvancingDecorationSpan> {
-        span::validate(&decoration.indexed_start(), decoration.height())?;
+    pub fn remove(&self, decoration: &Decoration) -> Result<(), DecorationError> {
         self.state
             .decorations
             .borrow_mut()
@@ -115,13 +110,13 @@ impl DecorationLineCache {
             .find(|(existing, _)| *existing == key)
             .map(|(_, bucket)| Rc::clone(bucket))
     }
-    fn add_to_buckets(&self, decoration: &Decoration) -> Result<(), NonAdvancingDecorationSpan> {
+    fn add_to_buckets(&self, decoration: &Decoration) -> Result<(), DecorationError> {
         let start = decoration.marker().line_value();
         if start.rel_lt(&MarkerLine::number(0.0)) {
             return Ok(());
         }
         decoration.set_indexed_start(start.clone());
-        span::for_each_line(&start, decoration.height(), |line| {
+        span::for_each_line(&start, &decoration.height()?, |line| {
             let bucket = match self.bucket(&line) {
                 Some(bucket) => bucket,
                 None => {
@@ -136,11 +131,8 @@ impl DecorationLineCache {
             bucket.borrow_mut().push(decoration.clone());
         })
     }
-    fn remove_from_buckets(
-        &self,
-        decoration: &Decoration,
-    ) -> Result<(), NonAdvancingDecorationSpan> {
-        span::for_each_line(&decoration.indexed_start(), decoration.height(), |line| {
+    fn remove_from_buckets(&self, decoration: &Decoration) -> Result<(), DecorationError> {
+        span::for_each_line(&decoration.indexed_start(), &decoration.height()?, |line| {
             if let Some(bucket) = self.bucket(&line) {
                 let position = bucket.borrow().iter().position(|d| d.ptr_eq(decoration));
                 if let Some(position) = position {
@@ -246,16 +238,20 @@ impl DecorationLineCache {
     fn insert(&self, event: ListChange) -> Result<(), EmitError> {
         let index = MarkerLine::from(event.index);
         let decorations = self.state.decorations.borrow().clone();
-        let crossers: Vec<_> = decorations
-            .iter()
-            .filter(|d| {
-                let start = d.indexed_start();
-                !d.marker().is_disposed()
-                    && start.rel_lt(&index)
-                    && span::end(&start, d.height()).rel_gt(&index)
-            })
-            .cloned()
-            .collect();
+        let mut crossers = Vec::new();
+        for d in &decorations {
+            if d.marker().is_disposed() {
+                continue;
+            }
+            let start = d.indexed_start();
+            if start.rel_lt(&index)
+                && span::end(&start, &d.height().map_err(EmitError::callback)?)
+                    .map_err(EmitError::callback)?
+                    .rel_gt(&index)
+            {
+                crossers.push(d.clone());
+            }
+        }
         for d in &crossers {
             self.remove_from_buckets(d).map_err(EmitError::callback)?;
         }
@@ -302,7 +298,11 @@ impl DecorationLineCache {
             let start = d.indexed_start();
             if start.rel_ge(&end) {
                 d.set_indexed_start(d.marker().line_value());
-            } else if start.rel_lt(&index) && span::end(&start, d.height()).rel_gt(&end) {
+            } else if start.rel_lt(&index)
+                && span::end(&start, &d.height().map_err(EmitError::callback)?)
+                    .map_err(EmitError::callback)?
+                    .rel_gt(&end)
+            {
                 reindex.push(d);
             }
         }

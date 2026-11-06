@@ -49,6 +49,7 @@ async fn pre_open_cache_sync_and_live_overlay_survive_terminal_transitions() {
     assert!(!service.line_cache().has_pending_sync());
     assert!(service
         .get_decorations_at_cell(0.0, 1, None)
+        .map(Result::unwrap)
         .next()
         .unwrap()
         .ptr_eq(&decoration));
@@ -156,6 +157,7 @@ async fn pre_open_reset_and_disposal_clear_queued_cache_mutations() {
     assert!(
         service
             .get_decorations_at_cell(0.0, 0, None)
+            .map(Result::unwrap)
             .next()
             .unwrap()
             .ptr_eq(&fresh),
@@ -163,6 +165,7 @@ async fn pre_open_reset_and_disposal_clear_queued_cache_mutations() {
     );
     assert!(service
         .get_decorations_at_cell(0.0, 1, None)
+        .map(Result::unwrap)
         .next()
         .is_none());
     insert();

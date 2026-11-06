@@ -1,6 +1,8 @@
 // Copyright (c) 2022 The xterm.js authors. All rights reserved. MIT license.
 use super::*;
 use crate::circular_list::CircularList;
+/// Install host capabilities before registration can invoke option getters.
+pub type DecorationInitializer<'a> = &'a dyn Fn(&Decoration) -> Result<(), EmitError>;
 struct ServiceState {
     decorations: RefCell<DecorationList>,
     cache: DecorationLineCache,
@@ -79,13 +81,41 @@ impl DecorationService {
         &self,
         options: Rc<RefCell<DecorationOptions>>,
     ) -> Result<Option<Decoration>, DecorationError> {
-        if options.borrow().marker.is_disposed() {
+        self.register(options, None, None)
+    }
+    /// Register live host properties while retaining the same native marker,
+    /// cache, render events and disposal authority as typed decorations.
+    pub fn register_decoration_source(
+        &self,
+        options: Rc<RefCell<DecorationOptions>>,
+        source: crate::options::OptionValue,
+        initialize: Option<DecorationInitializer<'_>>,
+    ) -> Result<Option<Decoration>, DecorationError> {
+        self.register(options, Some(source), initialize)
+    }
+    fn register(
+        &self,
+        options: Rc<RefCell<DecorationOptions>>,
+        source: Option<crate::options::OptionValue>,
+        initialize: Option<DecorationInitializer<'_>>,
+    ) -> Result<Option<Decoration>, DecorationError> {
+        // The host public wrapper already checked its live marker before the
+        // constructor's getters. A getter may dispose it after that guard.
+        if source.is_none() && options.borrow().marker.is_disposed() {
             return Ok(None);
         }
-        let decoration = Decoration::new(options);
-        let start = decoration.marker().line_value();
-        if !start.rel_lt(&MarkerLine::number(0.0)) {
-            span::validate(&start, decoration.height())?;
+        let decoration = Decoration::new(options, source);
+        if decoration.state.source.is_none() {
+            // Native precision errors are detected before inserting state. Host
+            // getters instead run at the source cache phase after insertion.
+            let start = decoration.marker().line_value();
+            if !start.rel_lt(&MarkerLine::number(0.0)) {
+                let end = span::end(&start, &decoration.height()?)?;
+                span::validate(&start, &end)?;
+            }
+        }
+        if let Some(initialize) = initialize {
+            initialize(&decoration)?;
         }
         let weak = Rc::downgrade(&decoration.state);
         *decoration.state.marker_listener.borrow_mut() =
@@ -176,9 +206,10 @@ impl DecorationService {
         line: impl Into<MarkerLine>,
         layer: Option<DecorationLayer>,
         mut callback: impl FnMut(Decoration),
-    ) {
+    ) -> Result<(), DecorationError> {
         for decoration in self.get_decorations_at_cell(x, line, layer) {
-            callback(decoration);
+            callback(decoration?);
         }
+        Ok(())
     }
 }

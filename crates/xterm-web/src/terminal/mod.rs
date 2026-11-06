@@ -16,6 +16,7 @@ mod browser_open;
 pub mod browser_services;
 pub mod buffer_api;
 pub mod buffer_cell;
+mod decoration_api;
 mod decoration_services;
 mod event_functions;
 pub(crate) mod events;

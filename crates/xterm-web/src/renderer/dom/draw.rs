@@ -5,7 +5,7 @@ use crate::renderer::{
     row_types::{RowDecoration, RowError, RowOptions},
     width_cache::WidthError,
 };
-use xterm_core::{core_service::CursorStyle, decoration::DecorationLayer};
+use xterm_core::core_service::CursorStyle;
 struct LinkPaint {
     enabled: bool,
     start: usize,
@@ -167,35 +167,41 @@ impl DomRenderer {
             let factory = RowFactory {
                 selection: *self.selection.borrow(),
             };
-            let decorations = |x: f64, row: usize| -> Result<Vec<RowDecoration>, String> {
-                let row = i64::try_from(row)
-                    .map_err(|_| "decoration row exceeds signed bounds".to_owned())?;
-                self.decoration
-                    .get_decorations_at_cell(x, row, None)
-                    .map(|decoration| {
-                        let fallback = |input: &str| {
-                            self.theme
-                                .parse_color(input)
-                                .ok()
-                                .map(|color| color.rgba.to_be_bytes())
-                        };
-                        let background = decoration
-                            .background_color(fallback)
-                            .map_err(|e| e.to_string())?
-                            .map(|color| color.borrow().clone());
-                        let foreground = decoration
-                            .foreground_color(fallback)
-                            .map_err(|e| e.to_string())?
-                            .map(|color| color.borrow().clone());
-                        let top = decoration.options().borrow().layer == Some(DecorationLayer::Top);
-                        Ok(RowDecoration {
-                            foreground,
-                            background,
-                            top,
+            let decorations =
+                |x: f64, row: usize| -> Result<Vec<RowDecoration>, Rc<dyn std::error::Error>> {
+                    let row =
+                        i64::try_from(row).map_err(|e| Rc::new(e) as Rc<dyn std::error::Error>)?;
+                    self.decoration
+                        .get_decorations_at_cell(x, row, None)
+                        .map(|decoration| {
+                            let decoration =
+                                decoration.map_err(|e| Rc::new(e) as Rc<dyn std::error::Error>)?;
+                            let fallback = |input: &str| {
+                                self.theme
+                                    .parse_color(input)
+                                    .ok()
+                                    .map(|color| color.rgba.to_be_bytes())
+                            };
+                            let background = decoration
+                                .background_color(fallback)
+                                .map_err(|e| Rc::new(e) as Rc<dyn std::error::Error>)?
+                                .map(|color| color.borrow().clone());
+                            let foreground = decoration
+                                .foreground_color(fallback)
+                                .map_err(|e| Rc::new(e) as Rc<dyn std::error::Error>)?
+                                .map(|color| color.borrow().clone());
+                            let top = decoration
+                                .property("layer")
+                                .map_err(|e| Rc::new(e) as Rc<dyn std::error::Error>)?
+                                == "top".into();
+                            Ok(RowDecoration {
+                                foreground,
+                                background,
+                                top,
+                            })
                         })
-                    })
-                    .collect()
-            };
+                        .collect()
+                };
             let rendered = factory
                 .create_row_raw(
                     &line,
@@ -244,6 +250,6 @@ fn row_error(error: RowError<JsValue>) -> JsValue {
         RowError::JoinRange(range) => {
             js_sys::RangeError::new(&format!("invalid join range {range:?}")).into()
         }
-        RowError::Decoration(error) => js_sys::Error::new(&error).into(),
+        RowError::Decoration(error) => crate::js_error::to_js_error(error.as_ref()),
     }
 }

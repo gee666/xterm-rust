@@ -23,7 +23,9 @@ fn held_readonly_bucket_observes_removal_without_becoming_a_snapshot() {
 #[test]
 fn cold_cell_iterator_observes_registration_before_first_next() {
     let service = DecorationService::new();
-    let mut iterator = service.get_decorations_at_cell(0.0, 0, None);
+    let mut iterator = service
+        .get_decorations_at_cell(0.0, 0, None)
+        .map(Result::unwrap);
     let decoration = service
         .register_decoration(Rc::new(RefCell::new(DecorationOptions::new(Marker::new(
             0,

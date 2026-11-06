@@ -24,6 +24,7 @@ fn finite_large_line_spans_use_source_end_rounding_and_number_increment() {
             assert_eq!(
                 service
                     .get_decorations_at_cell(0.0, line + offset, None)
+                    .map(Result::unwrap)
                     .count(),
                 expected,
                 "line{line} height{height} offset{offset}"

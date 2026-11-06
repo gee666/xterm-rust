@@ -111,6 +111,9 @@ pub struct BrowserMarker {
     on_dispose: Function,
 }
 impl BrowserMarker {
+    pub(super) fn native(&self) -> Marker {
+        self.marker.clone()
+    }
     fn new(marker: Marker) -> Self {
         let on_dispose = events::callable(marker.on_dispose(), events::empty);
         Self { marker, on_dispose }

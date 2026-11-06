@@ -12,7 +12,7 @@ pub struct RowContext<'a> {
     pub options: &'a RowOptions,
     pub colors: &'a ColorSet,
     pub joined_ranges: &'a [[usize; 2]],
-    pub decorations: &'a dyn Fn(f64, usize) -> Result<Vec<RowDecoration>, String>,
+    pub decorations: &'a dyn Fn(f64, usize) -> RowDecorationResult,
 }
 #[derive(Default, Debug)]
 pub struct RenderedRow {

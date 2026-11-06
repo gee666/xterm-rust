@@ -1,5 +1,5 @@
 use super::*;
-use crate::renderer::color_zone_store::{ColorZone, ColorZonePadding};
+use crate::renderer::color_zone_store::{ColorZone, ColorZoneOptions, ColorZonePadding};
 use xterm_core::decoration::OverviewPosition;
 const BORDER: f64 = 1.0;
 #[derive(Default)]
@@ -102,10 +102,13 @@ impl OverviewRulerRenderer {
             .decorations()
             .map_err(|e| js_sys::Error::new(&e.to_string()))?;
         for decoration in decorations {
+            let options = ColorZoneOptions::from_decoration(&decoration)
+                .map_err(|e| crate::js_error::to_js_error(&e))?;
             self.zones
-                .borrow_mut()
-                .add_decoration(&decoration)
-                .map_err(|e| js_sys::Error::new(&e.to_string()))?;
+                .try_borrow_mut()
+                .map_err(|e| crate::js_error::to_js_error(&e))?
+                .add(decoration.marker().line_number(), options.as_ref())
+                .map_err(|e| crate::js_error::to_js_error(&e))?;
         }
         self.ctx()?.set_line_width(1.0);
         self.render_outline()?;

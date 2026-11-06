@@ -91,7 +91,7 @@ impl DecorationCellIterator {
     }
 }
 impl Iterator for DecorationCellIterator {
-    type Item = Decoration;
+    type Item = Result<Decoration, DecorationError>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.finished {
             return None;
@@ -114,8 +114,13 @@ impl Iterator for DecorationCellIterator {
                 return None;
             };
             self.index += 1;
-            if decoration.matches(self.x, self.layer) {
-                return Some(decoration);
+            match decoration.matches(self.x, self.layer) {
+                Ok(true) => return Some(Ok(decoration)),
+                Ok(false) => {}
+                Err(error) => {
+                    self.finished = true;
+                    return Some(Err(error));
+                }
             }
         }
     }

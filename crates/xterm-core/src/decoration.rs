@@ -20,9 +20,12 @@ pub use cache::{
     DecorationBucket, DecorationBucketIterator, DecorationCellIterator, DecorationLineCache,
 };
 pub use span::NonAdvancingDecorationSpan;
+#[path = "decoration_properties.rs"]
+mod properties;
+pub use properties::nullish;
 #[path = "decoration_service.rs"]
 mod service;
-pub use service::DecorationService;
+pub use service::{DecorationInitializer, DecorationService};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DecorationLayer {
@@ -81,6 +84,9 @@ pub enum DecorationError {
     Dispatch(EmitError),
     Storage(SortedListError),
     NonAdvancingSpan(NonAdvancingDecorationSpan),
+    Host(crate::options::OptionError),
+    Line(crate::buffer::marker_line::MarkerLineError),
+    Color(color::css::UnsupportedCss),
 }
 impl std::fmt::Display for DecorationError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -88,6 +94,9 @@ impl std::fmt::Display for DecorationError {
             Self::Dispatch(e) => e.fmt(f),
             Self::Storage(e) => e.fmt(f),
             Self::NonAdvancingSpan(e) => e.fmt(f),
+            Self::Host(e) => e.fmt(f),
+            Self::Line(e) => e.fmt(f),
+            Self::Color(e) => e.fmt(f),
         }
     }
 }
@@ -97,6 +106,9 @@ impl std::error::Error for DecorationError {
             Self::Dispatch(error) => Some(error),
             Self::Storage(error) => Some(error),
             Self::NonAdvancingSpan(error) => Some(error),
+            Self::Host(error) => Some(error),
+            Self::Line(error) => Some(error),
+            Self::Color(error) => Some(error),
         }
     }
 }
@@ -116,12 +128,31 @@ impl From<SortedListError> for DecorationError {
     }
 }
 
+impl From<crate::options::OptionError> for DecorationError {
+    fn from(error: crate::options::OptionError) -> Self {
+        Self::Host(error)
+    }
+}
+impl From<crate::buffer::marker_line::MarkerLineError> for DecorationError {
+    fn from(error: crate::buffer::marker_line::MarkerLineError) -> Self {
+        Self::Line(error)
+    }
+}
+impl From<color::css::UnsupportedCss> for DecorationError {
+    fn from(error: color::css::UnsupportedCss) -> Self {
+        Self::Color(error)
+    }
+}
+
 type Element = Rc<dyn Any>;
+/// Host ownership cleanup, run only after successful native disposal.
+pub type DecorationHostCleanup = Rc<dyn Fn() -> Result<(), EmitError>>;
 /// Cached IColor object identity is retained across repeated getter calls.
 pub type DecorationColor = Rc<RefCell<Color>>;
 struct DecorationState {
     marker: Marker,
     options: Rc<RefCell<DecorationOptions>>,
+    source: Option<crate::options::OptionValue>,
     indexed_start: RefCell<MarkerLine>,
     disposed: Cell<bool>,
     element: RefCell<Option<Element>>,
@@ -131,6 +162,7 @@ struct DecorationState {
     on_dispose: Emitter<()>,
     marker_listener: RefCell<Option<DisposableHandle>>,
     service_listener: RefCell<Option<DisposableHandle>>,
+    host_cleanup: RefCell<Option<DecorationHostCleanup>>,
 }
 
 impl Drop for DecorationState {
@@ -150,7 +182,10 @@ pub struct Decoration {
     state: Rc<DecorationState>,
 }
 impl Decoration {
-    fn new(options: Rc<RefCell<DecorationOptions>>) -> Self {
+    fn new(
+        options: Rc<RefCell<DecorationOptions>>,
+        source: Option<crate::options::OptionValue>,
+    ) -> Self {
         let marker = options.borrow().marker.clone();
         if let Some(overview) = &mut options.borrow_mut().overview_ruler_options {
             if overview.position.is_none() {
@@ -162,6 +197,7 @@ impl Decoration {
                 indexed_start: RefCell::new(marker.line_value()),
                 marker,
                 options,
+                source,
                 disposed: Cell::new(false),
                 element: RefCell::new(None),
                 background: RefCell::new(None),
@@ -170,6 +206,7 @@ impl Decoration {
                 on_dispose: Emitter::new(),
                 marker_listener: RefCell::new(None),
                 service_listener: RefCell::new(None),
+                host_cleanup: RefCell::new(None),
             }),
         }
     }
@@ -204,13 +241,13 @@ impl Decoration {
     pub fn background_color(
         &self,
         canvas: impl FnOnce(&str) -> Option<[u8; 4]>,
-    ) -> Result<Option<DecorationColor>, color::css::UnsupportedCss> {
+    ) -> Result<Option<DecorationColor>, DecorationError> {
         self.cached_color(&self.state.background, false, canvas)
     }
     pub fn foreground_color(
         &self,
         canvas: impl FnOnce(&str) -> Option<[u8; 4]>,
-    ) -> Result<Option<DecorationColor>, color::css::UnsupportedCss> {
+    ) -> Result<Option<DecorationColor>, DecorationError> {
         self.cached_color(&self.state.foreground, true, canvas)
     }
     fn cached_color(
@@ -218,19 +255,23 @@ impl Decoration {
         cache: &RefCell<Option<Option<DecorationColor>>>,
         foreground: bool,
         canvas: impl FnOnce(&str) -> Option<[u8; 4]>,
-    ) -> Result<Option<DecorationColor>, color::css::UnsupportedCss> {
+    ) -> Result<Option<DecorationColor>, DecorationError> {
         if let Some(value) = cache.borrow().as_ref() {
             return Ok(value.clone());
         }
-        let css = {
-            let options = self.state.options.borrow();
-            if foreground {
-                options.foreground_color.clone()
-            } else {
-                options.background_color.clone()
-            }
+        let key = if foreground {
+            "foregroundColor"
+        } else {
+            "backgroundColor"
         };
-        let parsed = match css.filter(|s| !s.is_empty()) {
+        let css = self.property(key)?;
+        let css = if css.is_truthy() {
+            let value = self.property(key)?.to_utf16()?;
+            Some(String::from_utf16(&value).map_err(|_| color::css::UnsupportedCss)?)
+        } else {
+            None
+        };
+        let parsed = match css {
             Some(css) => Some(Rc::new(RefCell::new(color::css::to_color_with_canvas(
                 &css, canvas,
             )?))),
@@ -239,12 +280,25 @@ impl Decoration {
         *cache.borrow_mut() = Some(parsed.clone());
         Ok(parsed)
     }
+    /// Release a host's listener/ownership table only after a successful source
+    /// disposal. The callback must not strongly own this decoration.
+    pub fn set_host_cleanup(&self, cleanup: DecorationHostCleanup) -> Result<(), EmitError> {
+        if self.is_disposed() {
+            return cleanup();
+        }
+        *self.state.host_cleanup.borrow_mut() = Some(cleanup);
+        Ok(())
+    }
     pub fn dispose(&self) -> Result<(), EmitError> {
         // The source fires before DisposableStore marks the decoration disposed.
         self.state.on_dispose.fire(&())?;
         if !self.state.disposed.replace(true) {
             self.state.on_render.dispose();
             self.state.on_dispose.dispose();
+            let cleanup = self.state.host_cleanup.borrow_mut().take();
+            if let Some(cleanup) = cleanup {
+                cleanup()?;
+            }
         }
         Ok(())
     }
@@ -253,16 +307,6 @@ impl Decoration {
     }
     fn set_indexed_start(&self, start: MarkerLine) {
         *self.state.indexed_start.borrow_mut() = start;
-    }
-    fn height(&self) -> i64 {
-        i64::from(self.state.options.borrow().height.unwrap_or(1))
-    }
-    fn matches(&self, x: f64, layer: Option<DecorationLayer>) -> bool {
-        let options = self.state.options.borrow();
-        let xmin = options.x.unwrap_or(0.0);
-        x >= xmin
-            && x < xmin + options.width.unwrap_or(1.0)
-            && layer.is_none_or(|layer| options.layer.unwrap_or(DecorationLayer::Bottom) == layer)
     }
 }
 

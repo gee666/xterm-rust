@@ -1,4 +1,5 @@
-use crate::buffer::marker_line::MarkerLine;
+use super::DecorationError;
+use crate::{buffer::marker_line::MarkerLine, options::OptionValue};
 use std::fmt;
 /// The original numeric loop cannot finish when Number increment stops advancing.
 /// Native hosts return this error rather than hanging on such a span.
@@ -13,16 +14,15 @@ impl std::error::Error for NonAdvancingDecorationSpan {}
 
 const UNIT_INCREMENT_LIMIT: f64 = 9_007_199_254_740_992.0;
 
-pub(super) fn end(start: &MarkerLine, height: i64) -> MarkerLine {
-    // Both operands are primitives. No host conversion or callback can fail.
-    start
-        .add_number(height as f64)
-        .expect("primitive line plus numeric height cannot fail")
+pub(super) fn end(start: &MarkerLine, height: &OptionValue) -> Result<MarkerLine, DecorationError> {
+    Ok(start.add_value(height)?)
 }
 
-pub(super) fn validate(start: &MarkerLine, height: i64) -> Result<(), NonAdvancingDecorationSpan> {
-    let end = end(start, height);
-    if !start.rel_lt(&end) {
+pub(super) fn validate(
+    start: &MarkerLine,
+    end: &MarkerLine,
+) -> Result<(), NonAdvancingDecorationSpan> {
+    if !start.rel_lt(end) {
         return Ok(());
     }
     // The first comparison may be String/String and its bucket retains that
@@ -46,16 +46,20 @@ pub(super) fn validate(start: &MarkerLine, height: i64) -> Result<(), NonAdvanci
 
 pub(super) fn for_each_line(
     start: &MarkerLine,
-    height: i64,
+    height: &OptionValue,
     mut visit: impl FnMut(MarkerLine),
-) -> Result<(), NonAdvancingDecorationSpan> {
-    validate(start, height)?;
-    let end = end(start, height);
+) -> Result<(), DecorationError> {
     let mut line = start.clone();
-    while line.rel_lt(&end) {
+    loop {
+        // Source repeats start + height for each comparison. An object height
+        // may mutate the terminal or throw on any iteration.
+        let end = end(start, height)?;
+        if !line.rel_lt(&end) {
+            return Ok(());
+        }
+        validate(&line, &end)?;
         let next = line.increment();
         visit(line);
         line = next;
     }
-    Ok(())
 }

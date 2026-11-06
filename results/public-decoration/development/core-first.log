@@ -1,0 +1,76 @@
+   Compiling foldhash v0.1.5
+   Compiling allocator-api2 v0.2.21
+   Compiling equivalent v1.0.3
+   Compiling memchr v2.8.3
+   Compiling hashbrown v0.15.5
+   Compiling regress v0.10.4
+   Compiling ryu-js v1.0.3
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\SarahDecoration\crates\xterm-core)
+error[E0624]: method `matches` is private
+   --> crates\xterm-core\src\decoration_iterator.rs:117:30
+    |
+117 |             match decoration.matches(self.x, self.layer) {
+    |                              ^^^^^^^ private method
+    |
+   ::: crates\xterm-core\src\decoration_properties.rs:45:5
+    |
+45  |     fn matches(&self, x: f64, layer: Option<DecorationLayer>) -> Result<bool, DecorationError> {
+    |     ------------------------------------------------------------------------------------------ private method defined here
+
+error[E0624]: method `height` is private
+   --> crates\xterm-core\src\decoration_cache.rs:119:49
+    |
+119 |         span::for_each_line(&start, &decoration.height()?, |line| {
+    |                                                 ^^^^^^ private method
+    |
+   ::: crates\xterm-core\src\decoration_properties.rs:42:5
+    |
+42  |     fn height(&self) -> Result<Value, DecorationError> {
+    |     -------------------------------------------------- private method defined here
+
+error[E0624]: method `height` is private
+   --> crates\xterm-core\src\decoration_cache.rs:138:70
+    |
+138 |         span::for_each_line(&decoration.indexed_start(), &decoration.height()?, |line| {
+    |                                                                      ^^^^^^ private method
+    |
+   ::: crates\xterm-core\src\decoration_properties.rs:42:5
+    |
+42  |     fn height(&self) -> Result<Value, DecorationError> {
+    |     -------------------------------------------------- private method defined here
+
+error[E0624]: method `height` is private
+   --> crates\xterm-core\src\decoration_cache.rs:248:61
+    |
+248 |             if start.rel_lt(&index) && span::end(&start, &d.height().map_err(EmitError::callback)?)
+    |                                                             ^^^^^^ private method
+    |
+   ::: crates\xterm-core\src\decoration_properties.rs:42:5
+    |
+42  |     fn height(&self) -> Result<Value, DecorationError> {
+    |     -------------------------------------------------- private method defined here
+
+error[E0624]: method `height` is private
+   --> crates\xterm-core\src\decoration_cache.rs:300:41
+    |
+300 |                 && span::end(&start, &d.height().map_err(EmitError::callback)?)
+    |                                         ^^^^^^ private method
+    |
+   ::: crates\xterm-core\src\decoration_properties.rs:42:5
+    |
+42  |     fn height(&self) -> Result<Value, DecorationError> {
+    |     -------------------------------------------------- private method defined here
+
+error[E0624]: method `height` is private
+   --> crates\xterm-core\src\decoration_service.rs:107:57
+    |
+107 |                 let end = span::end(&start, &decoration.height()?)?;
+    |                                                         ^^^^^^ private method
+    |
+   ::: crates\xterm-core\src\decoration_properties.rs:42:5
+    |
+42  |     fn height(&self) -> Result<Value, DecorationError> {
+    |     -------------------------------------------------- private method defined here
+
+For more information about this error, try `rustc --explain E0624`.
+error: could not compile `xterm-core` (lib) due to 6 previous errors

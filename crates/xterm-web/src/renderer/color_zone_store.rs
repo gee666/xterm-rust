@@ -4,7 +4,10 @@ use std::{
     cell::{BorrowError, BorrowMutError, RefCell},
     rc::Rc,
 };
-use xterm_core::decoration::{Decoration, OverviewPosition};
+use xterm_core::{
+    decoration::{Decoration, DecorationError, OverviewPosition},
+    options::OptionValue,
+};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ColorZone {
@@ -17,6 +20,39 @@ pub struct ColorZone {
 pub struct ColorZoneOptions {
     pub color: Vec<u16>,
     pub position: Option<OverviewPosition>,
+}
+impl ColorZoneOptions {
+    /// Read live options before borrowing the drawing store. A getter can
+    /// synchronously dispose or register decorations and must not see that lock.
+    pub fn from_decoration(decoration: &Decoration) -> Result<Option<Self>, ColorZoneError> {
+        if !decoration.property("overviewRulerOptions")?.is_truthy() {
+            return Ok(None);
+        }
+        let color = decoration
+            .property("overviewRulerOptions")?
+            .get_property("color")
+            .map_err(DecorationError::from)?
+            .to_utf16()
+            .map_err(DecorationError::from)?;
+        let raw = decoration
+            .property("overviewRulerOptions")?
+            .get_property("position")
+            .map_err(DecorationError::from)?;
+        let position = if raw == "full".into() {
+            Some(OverviewPosition::Full)
+        } else if raw == "left".into() {
+            Some(OverviewPosition::Left)
+        } else if raw == "center".into() {
+            Some(OverviewPosition::Center)
+        } else if raw == "right".into() {
+            Some(OverviewPosition::Right)
+        } else if matches!(raw, OptionValue::Undefined) {
+            None
+        } else {
+            return Err(ColorZoneError::InvalidOverviewPosition);
+        };
+        Ok(Some(Self { color, position }))
+    }
 }
 /// Missing padding properties behave like JS undefined, disabling adjacency.
 #[derive(Clone, Debug)]
@@ -59,16 +95,34 @@ impl ColorZonePadding {
 pub enum ColorZoneError {
     Read(BorrowError),
     Write(BorrowMutError),
+    Decoration(DecorationError),
+    InvalidOverviewPosition,
 }
 impl std::fmt::Display for ColorZoneError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Read(e) => e.fmt(f),
             Self::Write(e) => e.fmt(f),
+            Self::Decoration(e) => e.fmt(f),
+            Self::InvalidOverviewPosition => {
+                f.write_str("overview position must be full, left, center or right")
+            }
         }
     }
 }
-impl std::error::Error for ColorZoneError {}
+impl std::error::Error for ColorZoneError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Decoration(e) => Some(e),
+            _ => None,
+        }
+    }
+}
+impl From<DecorationError> for ColorZoneError {
+    fn from(error: DecorationError) -> Self {
+        Self::Decoration(error)
+    }
+}
 impl From<BorrowError> for ColorZoneError {
     fn from(e: BorrowError) -> Self {
         Self::Read(e)
@@ -118,16 +172,8 @@ impl ColorZoneStore {
         self.padding = padding;
     }
     pub fn add_decoration(&mut self, decoration: &Decoration) -> Result<(), ColorZoneError> {
-        let options = decoration.options();
-        let options = options.try_borrow()?;
-        let overview = options
-            .overview_ruler_options
-            .as_ref()
-            .map(|overview| ColorZoneOptions {
-                color: overview.color.encode_utf16().collect(),
-                position: overview.position,
-            });
-        self.add(decoration.marker().line_number(), overview.as_ref())
+        let options = ColorZoneOptions::from_decoration(decoration)?;
+        self.add(decoration.marker().line_number(), options.as_ref())
     }
     /// `None` is a decoration without overviewRulerOptions, not a default-color zone.
     pub fn add(

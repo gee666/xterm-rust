@@ -257,6 +257,7 @@ async fn real_microtask_cache_sync_is_independent_of_renderer_lifetime() {
     assert!(fixture
         .decorations
         .get_decorations_at_cell(0.0, 11, None)
+        .map(Result::unwrap)
         .next()
         .unwrap()
         .ptr_eq(&decoration));

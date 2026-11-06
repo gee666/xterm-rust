@@ -52,13 +52,21 @@ fn disposed_marker_rejection_defaults_and_layer_boundaries() {
     assert_eq!(
         service
             .get_decorations_at_cell(0.0, 3, Some(DecorationLayer::Bottom))
+            .map(Result::unwrap)
             .count(),
         1
     );
-    assert_eq!(service.get_decorations_at_cell(1.0, 3, None).count(), 0);
+    assert_eq!(
+        service
+            .get_decorations_at_cell(1.0, 3, None)
+            .map(Result::unwrap)
+            .count(),
+        0
+    );
     assert_eq!(
         service
             .get_decorations_at_cell(0.0, 3, Some(DecorationLayer::Top))
+            .map(Result::unwrap)
             .count(),
         0
     );
@@ -66,6 +74,7 @@ fn disposed_marker_rejection_defaults_and_layer_boundaries() {
     assert_eq!(
         service
             .get_decorations_at_cell(0.0, 3, Some(DecorationLayer::Top))
+            .map(Result::unwrap)
             .count(),
         1
     );
@@ -85,7 +94,10 @@ fn disposal_event_order_and_marker_invalidation() {
         assert!(!d.is_disposed());
         assert_eq!(d.marker().line_number(), -1.0);
         assert_eq!(
-            weak_service.get_decorations_at_cell(0.0, 3, None).count(),
+            weak_service
+                .get_decorations_at_cell(0.0, 3, None)
+                .map(Result::unwrap)
+                .count(),
             0
         );
         output.borrow_mut().push("removed");
@@ -141,13 +153,16 @@ fn lookup_traverses_live_bucket_while_service_iterator_is_a_snapshot() {
     let first = register(&service, DecorationOptions::new(Marker::new(0)));
     let second = register(&service, DecorationOptions::new(Marker::new(0)));
     let snapshot = service.decorations().unwrap();
-    let mut live = service.get_decorations_at_cell(0.0, 0, None);
+    let mut live = service
+        .get_decorations_at_cell(0.0, 0, None)
+        .map(Result::unwrap);
     assert!(live.next().unwrap().ptr_eq(&first));
     first.dispose().unwrap();
     assert!(live.next().is_none()); // Removing index zero shifts second below the cursor.
     assert_eq!(snapshot.count(), 2);
     assert!(service
         .get_decorations_at_cell(0.0, 0, None)
+        .map(Result::unwrap)
         .next()
         .unwrap()
         .ptr_eq(&second));
@@ -253,12 +268,16 @@ fn live_buffer_activation_replaces_cache_subscriptions() {
 fn completed_cell_iterator_stays_done_when_bucket_later_grows() {
     let service = DecorationService::new();
     register(&service, DecorationOptions::new(Marker::new(0)));
-    let mut iterator = service.get_decorations_at_cell(0.0, 0, None);
+    let mut iterator = service
+        .get_decorations_at_cell(0.0, 0, None)
+        .map(Result::unwrap);
     assert!(iterator.next().is_some());
     assert!(iterator.next().is_none());
     register(&service, DecorationOptions::new(Marker::new(0)));
     assert!(iterator.next().is_none());
-    let mut empty = service.get_decorations_at_cell(0.0, 1, None);
+    let mut empty = service
+        .get_decorations_at_cell(0.0, 1, None)
+        .map(Result::unwrap);
     assert!(empty.next().is_none());
     register(&service, DecorationOptions::new(Marker::new(1)));
     assert!(empty.next().is_none());
@@ -279,5 +298,11 @@ fn render_handle_identity_and_listener_errors_propagate() {
         .try_subscribe(|_| Err(EmitError::ListenerArrayCleared));
     assert!(d.dispose().is_err());
     assert!(!d.is_disposed());
-    assert_eq!(service.get_decorations_at_cell(0.0, 0, None).count(), 0);
+    assert_eq!(
+        service
+            .get_decorations_at_cell(0.0, 0, None)
+            .map(Result::unwrap)
+            .count(),
+        0
+    );
 }

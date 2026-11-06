@@ -26,6 +26,8 @@ pub struct RowDecoration {
     pub background: Option<Color>,
     pub top: bool,
 }
+/// Preserve a host exception through row construction without stringifying it.
+pub type RowDecorationResult = Result<Vec<RowDecoration>, std::rc::Rc<dyn std::error::Error>>;
 #[derive(Clone, Debug)]
 pub struct RowOptions {
     pub row: usize,
@@ -122,7 +124,7 @@ pub enum RowError<E> {
     Palette(i32),
     JoinRange([usize; 2]),
     NonProgressingColumn(f64),
-    Decoration(String),
+    Decoration(std::rc::Rc<dyn std::error::Error>),
     #[cfg(target_arch = "wasm32")]
     Browser(wasm_bindgen::JsValue),
 }

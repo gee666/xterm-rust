@@ -1,6 +1,21 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. MIT license.
 use super::*;
-use xterm_core::decoration::{DecorationAnchor, DecorationLayer};
+use xterm_core::{decoration::nullish, options::OptionValue};
+fn property(decoration: &Decoration, key: &str) -> Result<OptionValue, JsValue> {
+    decoration
+        .property(key)
+        .map_err(|e| js_error::to_js_error(&e))
+}
+fn number(value: &OptionValue) -> Result<f64, JsValue> {
+    value.to_number().map_err(|e| js_error::to_js_error(&e))
+}
+fn or_one(value: OptionValue) -> OptionValue {
+    if value.is_truthy() {
+        value
+    } else {
+        1.0.into()
+    }
+}
 impl BufferDecorationRenderer {
     fn viewport(&self) -> Result<(f64, usize, usize), JsValue> {
         let active = self.host.buffers.active();
@@ -15,16 +30,13 @@ impl BufferDecorationRenderer {
     fn create_element(&self, decoration: &Decoration) -> Result<HtmlElement, JsValue> {
         let element: HtmlElement = self.host.document.create_element("div")?.dyn_into()?;
         element.class_list().add_1("xterm-decoration")?;
-        let layer = decoration.options().borrow().layer;
-        element.class_list().toggle_with_force(
-            "xterm-decoration-top-layer",
-            layer == Some(DecorationLayer::Top),
-        )?;
-        let (ydisp, _, cols) = self.viewport()?;
-        let line = decoration.marker().line_number() - ydisp;
-        self.update_size(decoration, &element, line)?;
-        let x = decoration.options().borrow().x.unwrap_or(0.0);
-        if truthy(x) && x > cols as f64 {
+        let layer = property(decoration, "layer")?;
+        element
+            .class_list()
+            .toggle_with_force("xterm-decoration-top-layer", layer == "top".into())?;
+        self.update_size(decoration, &element, None)?;
+        let x = nullish(property(decoration, "x")?, 0.0.into());
+        if x.is_truthy() && number(&x)? > self.viewport()?.2 as f64 {
             element.style().set_property("display", "none")?;
         }
         self.refresh_x(decoration, Some(&element))?;
@@ -80,7 +92,7 @@ impl BufferDecorationRenderer {
             .style()
             .set_property("display", if alternate { "none" } else { "block" })?;
         if !alternate {
-            self.update_size(decoration, &entry.element, line)?;
+            self.update_size(decoration, &entry.element, Some(line))?;
         }
         decoration
             .fire_render(entry.handle)
@@ -90,23 +102,25 @@ impl BufferDecorationRenderer {
         &self,
         decoration: &Decoration,
         element: &HtmlElement,
-        line: f64,
+        line: Option<f64>,
     ) -> Result<(), JsValue> {
-        let (width, height) = {
-            let options = decoration.options();
-            let options = options.borrow();
-            (
-                options.width.filter(|value| truthy(*value)).unwrap_or(1.0),
-                options.height.filter(|value| *value != 0).unwrap_or(1),
-            )
-        };
-        let dimensions = (self.host.dimensions)()?;
-        let cell = dimensions.css.cell;
         let style = element.style();
-        style.set_property("width", &px(round(width * cell.width)))?;
-        style.set_property("height", &px(f64::from(height) * cell.height))?;
-        style.set_property("top", &px(line * cell.height))?;
-        style.set_property("line-height", &px(cell.height))
+        let width = or_one(property(decoration, "width")?);
+        let cell_width = (self.host.dimensions)()?.css.cell.width;
+        style.set_property("width", &px(round(number(&width)? * cell_width)))?;
+        let height = or_one(property(decoration, "height")?);
+        let cell_height = (self.host.dimensions)()?.css.cell.height;
+        style.set_property("height", &px(number(&height)? * cell_height))?;
+        let line = match line {
+            Some(line) => line,
+            None => decoration.marker().line_number() - self.viewport()?.0,
+        };
+        let cell_height = (self.host.dimensions)()?.css.cell.height;
+        style.set_property("top", &px(line * cell_height))?;
+        style.set_property(
+            "line-height",
+            &px((self.host.dimensions)()?.css.cell.height),
+        )
     }
     pub(super) fn refresh_x(
         &self,
@@ -120,37 +134,30 @@ impl BufferDecorationRenderer {
                 None => return Ok(()),
             },
         };
-        let (x, anchor) = {
-            let options = decoration.options();
-            let options = options.borrow();
-            (
-                options.x.unwrap_or(0.0),
-                options.anchor.unwrap_or(DecorationAnchor::Left),
-            )
+        let x = nullish(property(decoration, "x")?, 0.0.into());
+        let anchor = property(decoration, "anchor")?;
+        let side = if anchor == "right".into() {
+            "right"
+        } else {
+            "left"
         };
-        let value = if truthy(x) {
-            px(x * (self.host.dimensions)()?.css.cell.width)
+        let value = if x.is_truthy() {
+            let width = (self.host.dimensions)()?.css.cell.width;
+            px(number(&x)? * width)
         } else {
             String::new()
         };
-        element.style().set_property(
-            if anchor == DecorationAnchor::Right {
-                "right"
-            } else {
-                "left"
-            },
-            &value,
-        )
+        element.style().set_property(side, &value)
     }
 }
 fn html(handle: &Rc<dyn std::any::Any>) -> Result<HtmlElement, JsValue> {
-    handle
-        .downcast_ref::<HtmlElement>()
-        .cloned()
-        .ok_or_else(|| js_sys::TypeError::new("Decoration element is not an HTMLElement").into())
-}
-fn truthy(value: f64) -> bool {
-    value != 0.0 && !value.is_nan()
+    if let Some(element) = handle.downcast_ref::<HtmlElement>() {
+        return Ok(element.clone());
+    }
+    if let Some(value) = handle.downcast_ref::<JsValue>() {
+        return value.clone().dyn_into();
+    }
+    Err(js_sys::TypeError::new("Decoration element is not an HTMLElement").into())
 }
 fn round(value: f64) -> f64 {
     let floor = value.floor();

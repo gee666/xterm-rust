@@ -79,6 +79,7 @@ fn snapshot(
         .map(|query| {
             service
                 .get_decorations_at_cell(0.0, query.clone(), None)
+                .map(Result::unwrap)
                 .count()
                 .to_string()
         })
@@ -184,19 +185,61 @@ fn first_string_bucket_is_not_its_numeric_projection() {
         assert_eq!(bucket.len(), 1);
         assert!(bucket.get(0).unwrap().ptr_eq(expected));
     }
-    assert_eq!(service.get_decorations_at_cell(0.0, "3", None).count(), 0);
+    assert_eq!(
+        service
+            .get_decorations_at_cell(0.0, "3", None)
+            .map(Result::unwrap)
+            .count(),
+        0
+    );
 }
 #[test]
 fn string_zero_height_still_indexes_its_concatenated_span() {
     let service = DecorationService::new();
     let decoration = register(&service, "2", 0);
-    assert_eq!(service.get_decorations_at_cell(0.0, "2", None).count(), 1);
-    assert_eq!(service.get_decorations_at_cell(0.0, 2, None).count(), 0);
-    assert_eq!(service.get_decorations_at_cell(0.0, 19, None).count(), 1);
-    assert_eq!(service.get_decorations_at_cell(0.0, 20, None).count(), 0);
+    assert_eq!(
+        service
+            .get_decorations_at_cell(0.0, "2", None)
+            .map(Result::unwrap)
+            .count(),
+        1
+    );
+    assert_eq!(
+        service
+            .get_decorations_at_cell(0.0, 2, None)
+            .map(Result::unwrap)
+            .count(),
+        0
+    );
+    assert_eq!(
+        service
+            .get_decorations_at_cell(0.0, 19, None)
+            .map(Result::unwrap)
+            .count(),
+        1
+    );
+    assert_eq!(
+        service
+            .get_decorations_at_cell(0.0, 20, None)
+            .map(Result::unwrap)
+            .count(),
+        0
+    );
     decoration.dispose().unwrap();
-    assert_eq!(service.get_decorations_at_cell(0.0, "2", None).count(), 0);
-    assert_eq!(service.get_decorations_at_cell(0.0, 19, None).count(), 0);
+    assert_eq!(
+        service
+            .get_decorations_at_cell(0.0, "2", None)
+            .map(Result::unwrap)
+            .count(),
+        0
+    );
+    assert_eq!(
+        service
+            .get_decorations_at_cell(0.0, 19, None)
+            .map(Result::unwrap)
+            .count(),
+        0
+    );
 }
 #[test]
 fn trim_merges_invalid_string_keys_into_one_persistent_nan_bucket() {
@@ -223,8 +266,20 @@ fn trim_merges_invalid_string_keys_into_one_persistent_nan_bucket() {
         assert_eq!(bucket.len(), 2);
         assert!(bucket.get(0).unwrap().ptr_eq(&decorations[0]));
         assert!(bucket.get(1).unwrap().ptr_eq(&decorations[1]));
-        assert_eq!(service.get_decorations_at_cell(0.0, "a", None).count(), 0);
-        assert_eq!(service.get_decorations_at_cell(0.0, "b", None).count(), 0);
+        assert_eq!(
+            service
+                .get_decorations_at_cell(0.0, "a", None)
+                .map(Result::unwrap)
+                .count(),
+            0
+        );
+        assert_eq!(
+            service
+                .get_decorations_at_cell(0.0, "b", None)
+                .map(Result::unwrap)
+                .count(),
+            0
+        );
     }
 }
 #[test]

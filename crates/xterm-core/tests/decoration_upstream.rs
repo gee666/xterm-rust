@@ -40,7 +40,9 @@ fn register(
 }
 fn hits(service: &DecorationService, x: f64, line: i64) -> Vec<Decoration> {
     let mut found = Vec::new();
-    service.for_each_decoration_at_cell(x, line, None, |d| found.push(d));
+    service
+        .for_each_decoration_at_cell(x, line, None, |d| found.push(d))
+        .unwrap();
     found
 }
 #[test]
@@ -90,9 +92,21 @@ fn should_find_height_on_subsequent_lines_iterator() {
     let (mut buffer, service) = setup();
     register(&mut buffer, &service, 5, None, Some(10.0), Some(3));
     for line in [5, 6, 7] {
-        assert_eq!(service.get_decorations_at_cell(0.0, line, None).count(), 1);
+        assert_eq!(
+            service
+                .get_decorations_at_cell(0.0, line, None)
+                .map(Result::unwrap)
+                .count(),
+            1
+        );
     }
-    assert_eq!(service.get_decorations_at_cell(0.0, 8, None).count(), 0);
+    assert_eq!(
+        service
+            .get_decorations_at_cell(0.0, 8, None)
+            .map(Result::unwrap)
+            .count(),
+        0
+    );
 }
 #[test]
 fn should_return_absence_for_lines_without_indexed_decorations() {

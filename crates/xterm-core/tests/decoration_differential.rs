@@ -44,7 +44,12 @@ fn snapshot(service: &DecorationService, all: &[Decoration]) -> String {
                 Some(DecorationLayer::Bottom),
                 Some(DecorationLayer::Top),
             ] {
-                lookups.push(ids(service.get_decorations_at_cell(x, line, layer), all));
+                lookups.push(ids(
+                    service
+                        .get_decorations_at_cell(x, line, layer)
+                        .map(Result::unwrap),
+                    all,
+                ));
             }
         }
     }
