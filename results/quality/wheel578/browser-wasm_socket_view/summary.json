@@ -1,0 +1,262 @@
+{
+  "target": "wasm_socket_view",
+  "sourceBefore": {
+    "sha256": "6b17bbdc1894182a793372ac0aa0919dd10eef7c6ca96b20205aeb9d679d396f",
+    "files": 2457,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-addons/src/image/iip/decoder.rs",
+        "line": 13,
+        "text": "// negative limits. Their unsafe memory/decoder paths are not emulated."
+      },
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/image/iip_decode.rs",
+        "line": 86,
+        "text": "// Snapshot before browser calls, without unsafe WASM memory views or"
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 6,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      },
+      {
+        "path": "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+        "line": 79,
+        "text": "// Copy, rather than unsafe views into WASM memory. WebGL owns its upload."
+      }
+    ]
+  },
+  "runtimeHelperPins": [
+    {
+      "path": "tmp/wheel578-job/windows-owned-job.cs",
+      "sha256": "77fbe64feefaaf33e898deb756707f7bc2fbdb4e67567396138a55c7049b22e6",
+      "origin": "archive/Damaris562-complete:scripts/windows-owned-job.cs"
+    },
+    {
+      "path": "tmp/wheel578-job/windows-owned-job.ps1",
+      "sha256": "c4121772ab8258bcf6c6be1dc86027b17b37c04af1886cc6b4f6a4f187de2d44",
+      "origin": "archive/Damaris562-complete:scripts/windows-owned-job.ps1"
+    }
+  ],
+  "latestBefore": null,
+  "command": [
+    "C:\\nvm4w\\nodejs\\node.exe",
+    "scripts/utility-addon-browser-check.mjs"
+  ],
+  "result": {
+    "command": [
+      "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Damaris563\\tmp\\wheel578-job\\windows-owned-job.ps1"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 11431.104400000002,
+    "status": "passed"
+  },
+  "browser": {
+    "package": "xterm-web",
+    "testName": "wasm_socket_view",
+    "testTimeoutMs": 60000,
+    "features": [
+      "acceptance-hooks"
+    ],
+    "platform": "win32",
+    "node": "v24.15.0",
+    "date": "2026-11-06T04:12:10.666Z",
+    "componentOnly": true,
+    "status": "passed",
+    "commands": [
+      {
+        "command": [
+          "cargo",
+          "test",
+          "-p",
+          "xterm-web",
+          "--target",
+          "wasm32-unknown-unknown",
+          "--test",
+          "wasm_socket_view",
+          "--features",
+          "acceptance-hooks",
+          "--no-run",
+          "--message-format=json"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "aborted": false,
+        "abortError": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 638.5705999999999,
+        "status": "passed"
+      },
+      {
+        "command": [
+          "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+          "--version"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "aborted": false,
+        "abortError": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 8.596599999999967,
+        "status": "passed"
+      },
+      {
+        "command": [
+          "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+          "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Damaris563\\results\\acceptance-artifacts\\a5252e38f1409d3018473d39aa432873776245a2bd7efaf7953db790ca8d67f2\\artifact.wasm",
+          "--target",
+          "web",
+          "--out-dir",
+          "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Damaris563\\results\\browser-host\\wasm_socket_view\\2026-11-06T04-12-10-664Z-79112a36-08ad-4126-a358-7655cc357ce2\\artifacts",
+          "--out-name",
+          "suite"
+        ],
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "aborted": false,
+        "abortError": null,
+        "timedOut": false,
+        "terminationError": null,
+        "resourceError": null,
+        "elapsedMs": 1102.7685000000001,
+        "status": "passed"
+      }
+    ],
+    "browsers": [
+      {
+        "name": "chromium",
+        "status": "passed",
+        "tests": [
+          "__wbgt__wasm_socket_view::later_message_listener_mutation_is_visible_when_rust_queue_parses"
+        ],
+        "errors": [],
+        "console": [],
+        "version": "148.0.7778.96",
+        "output": "running 1 test\ntest later_message_listener_mutation_is_visible_when_rust_queue_parses ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.06s\n\n",
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "filtered": 0
+        }
+      },
+      {
+        "name": "firefox",
+        "status": "passed",
+        "tests": [
+          "__wbgt__wasm_socket_view::later_message_listener_mutation_is_visible_when_rust_queue_parses"
+        ],
+        "errors": [],
+        "console": [],
+        "version": "150.0.2",
+        "output": "running 1 test\ntest later_message_listener_mutation_is_visible_when_rust_queue_parses ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.02s\n\n",
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "filtered": 0
+        }
+      },
+      {
+        "name": "webkit",
+        "status": "passed",
+        "tests": [
+          "__wbgt__wasm_socket_view::later_message_listener_mutation_is_visible_when_rust_queue_parses"
+        ],
+        "errors": [],
+        "console": [],
+        "version": "26.4",
+        "output": "running 1 test\ntest later_message_listener_mutation_is_visible_when_rust_queue_parses ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.09s\n\n",
+        "counts": {
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0,
+          "filtered": 0
+        }
+      }
+    ],
+    "artifacts": {
+      "compiler": {
+        "path": "results/acceptance-artifacts/a5252e38f1409d3018473d39aa432873776245a2bd7efaf7953db790ca8d67f2/artifact.wasm",
+        "sha256": "a5252e38f1409d3018473d39aa432873776245a2bd7efaf7953db790ca8d67f2",
+        "bytes": 20318575,
+        "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Damaris563\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_socket_view-b4597eef54ae4be5.wasm"
+      },
+      "wasm": {
+        "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Damaris563\\results\\browser-host\\wasm_socket_view\\2026-11-06T04-12-10-664Z-79112a36-08ad-4126-a358-7655cc357ce2\\artifacts\\suite_bg.wasm",
+        "bytes": 17086067,
+        "sha256": "9a1ffb0e62fb4a8ea2f76f7ee8bf745a790bcdf552729c158381f68bc3260361"
+      },
+      "bindings": {
+        "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\Damaris563\\results\\browser-host\\wasm_socket_view\\2026-11-06T04-12-10-664Z-79112a36-08ad-4126-a358-7655cc357ce2\\artifacts\\suite.js",
+        "bytes": 258095,
+        "sha256": "08327ed8c590618587b4d59599d9ce77876b8b8b2346b6138aa2ef734bd3760b"
+      },
+      "css": {
+        "path": "crates/xterm-web/assets/xterm.css",
+        "bytes": 8154,
+        "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+      },
+      "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+      "testSourceSha256": "5a44d087a3be640e5ff6586f94d582cb28f208e73968cf5ea9426611355bd133"
+    },
+    "finishedAt": "2026-11-06T04:12:19.441Z"
+  },
+  "sourceAfter": {
+    "sha256": "6b17bbdc1894182a793372ac0aa0919dd10eef7c6ca96b20205aeb9d679d396f",
+    "files": 2457,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-addons/src/image/iip/decoder.rs",
+        "line": 13,
+        "text": "// negative limits. Their unsafe memory/decoder paths are not emulated."
+      },
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/image/iip_decode.rs",
+        "line": 86,
+        "text": "// Snapshot before browser calls, without unsafe WASM memory views or"
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 6,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      },
+      {
+        "path": "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+        "line": 79,
+        "text": "// Copy, rather than unsafe views into WASM memory. WebGL owns its upload."
+      }
+    ]
+  },
+  "latestRestored": true
+}

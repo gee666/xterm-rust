@@ -1,0 +1,187 @@
+{
+  "head": "14139449bae2792afb019f42e8438b074938cfe7",
+  "observedAt": "2026-11-06T03:24:34.023Z",
+  "platform": "win32",
+  "os": "Windows 11 Home",
+  "release": "10.0.26300",
+  "architecture": "x64",
+  "node": "v24.15.0",
+  "sourceBefore": {
+    "sha256": "9469d9f09d20d8c8d4453f18e1a4670e9beb8b30b422597923421c9cf2bcc794",
+    "files": 2447,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-addons/src/image/iip/decoder.rs",
+        "line": 13,
+        "text": "// negative limits. Their unsafe memory/decoder paths are not emulated."
+      },
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/image/iip_decode.rs",
+        "line": 86,
+        "text": "// Snapshot before browser calls, without unsafe WASM memory views or"
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 6,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      },
+      {
+        "path": "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+        "line": 79,
+        "text": "// Copy, rather than unsafe views into WASM memory. WebGL owns its upload."
+      }
+    ]
+  },
+  "sourceAfter": {
+    "sha256": "9469d9f09d20d8c8d4453f18e1a4670e9beb8b30b422597923421c9cf2bcc794",
+    "files": 2447,
+    "unsafeCandidates": [
+      {
+        "path": "crates/xterm-addons/src/image/iip/decoder.rs",
+        "line": 13,
+        "text": "// negative limits. Their unsafe memory/decoder paths are not emulated."
+      },
+      {
+        "path": "crates/xterm-core/src/instantiation.rs",
+        "line": 3,
+        "text": "//! Shared service values and constructor argument resolution without unsafe code."
+      },
+      {
+        "path": "crates/xterm-web/src/image/iip_decode.rs",
+        "line": 86,
+        "text": "// Snapshot before browser calls, without unsafe WASM memory views or"
+      },
+      {
+        "path": "crates/xterm-web/src/status_addons/coercion.rs",
+        "line": 6,
+        "text": "//! Static wasm-bindgen snippets avoid requiring eval or unsafe-eval CSP rules."
+      },
+      {
+        "path": "crates/xterm-web/src/webgl/rectangle_gpu.rs",
+        "line": 79,
+        "text": "// Copy, rather than unsafe views into WASM memory. WebGL owns its upload."
+      }
+    ]
+  },
+  "formatModel": {
+    "physicalRoot": "D:/a/q",
+    "nonFileArgumentReserve": 512,
+    "limit": 32767,
+    "groups": [
+      {
+        "edition": "2021",
+        "roots": 540,
+        "quotedFileArguments": 32231
+      }
+    ]
+  },
+  "packages": [
+    {
+      "name": "xterm-core",
+      "rustVersion": "1.85",
+      "features": {
+        "default": []
+      }
+    },
+    {
+      "name": "xterm-web",
+      "rustVersion": "1.85",
+      "features": {
+        "acceptance-hooks": [
+          "dep:serde_json"
+        ],
+        "default": []
+      }
+    },
+    {
+      "name": "xterm-addons",
+      "rustVersion": "1.85",
+      "features": {}
+    },
+    {
+      "name": "xterm-wasm-support",
+      "rustVersion": "1.85",
+      "features": {}
+    },
+    {
+      "name": "xterm-font-addons",
+      "rustVersion": "1.85",
+      "features": {}
+    }
+  ],
+  "github": {
+    "latest": {
+      "id": 42090157228,
+      "sha": "3aa04692a409bc147670d7c61a9e2ac37b5ea9f8",
+      "branch": "ci/saadia444-3aa04692",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/gee666/xterm-rust/actions/runs/42090157228"
+    },
+    "active": []
+  },
+  "references": [
+    {
+      "base": "source_repo",
+      "files": 776,
+      "mismatches": []
+    },
+    {
+      "base": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo",
+      "files": 776,
+      "mismatches": []
+    }
+  ],
+  "receipts": [
+    {
+      "name": "revision",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "status": 0,
+      "error": null
+    },
+    {
+      "name": "tracked",
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=no"
+      ],
+      "status": 0,
+      "error": null
+    },
+    {
+      "name": "metadata",
+      "command": [
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--locked",
+        "--format-version",
+        "1"
+      ],
+      "status": 0,
+      "error": null
+    },
+    {
+      "name": "github-read-only-runs",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/github-quality.mjs",
+        "runs"
+      ],
+      "status": 0,
+      "error": null
+    }
+  ],
+  "scope": "Read-only preparation, no Rust compiler/browser/CI/remote mutation; modeled budget is not hosted execution"
+}

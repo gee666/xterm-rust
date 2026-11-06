@@ -1,0 +1,113 @@
+[
+  {
+    "name": "fixture-integrity",
+    "command": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "results/quality/wheel578/audit-fixture-assertions.mjs",
+      "--write"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 62.99409999999989,
+    "status": "passed"
+  },
+  {
+    "name": "focused-fmt",
+    "command": [
+      "rustfmt",
+      "--edition",
+      "2021",
+      "--check",
+      "crates/xterm-web/tests/wasm_terminal_wheel.rs",
+      "crates/xterm-web/tests/wasm_utility_bindings.rs",
+      "crates/xterm-web/tests/wasm_socket_view.rs"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 48.66319999999996,
+    "status": "passed"
+  },
+  {
+    "name": "wasm-all-target-check",
+    "command": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--locked",
+      "--all-targets",
+      "--all-features",
+      "--target",
+      "wasm32-unknown-unknown",
+      "-j2"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 77270.5933,
+    "status": "passed"
+  },
+  {
+    "name": "wasm-all-target-clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--workspace",
+      "--locked",
+      "--all-targets",
+      "--all-features",
+      "--target",
+      "wasm32-unknown-unknown",
+      "-j2",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 107560.2995,
+    "status": "passed"
+  },
+  {
+    "name": "full-fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "exitCode": 1,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 207.97940000001108,
+    "status": "failed"
+  }
+]
