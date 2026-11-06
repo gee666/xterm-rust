@@ -62,10 +62,15 @@ if(process.argv.includes('--record')) {
     'crates/xterm-web/src/webgl/browser_frame_lifecycle.rs','crates/xterm-web/src/webgl/mod.rs',
     'crates/xterm-web/tests/wasm_webgl_frame.rs','crates/xterm-web/tests/support/webgl_frame.rs',
     'scripts/webgl-frame-oracle.mjs','scripts/webgl-frame-negative.mjs','scripts/webgl-frame-audit.mjs',
-    'scripts/support/webgl-frame-source.ts','docs/webgl-browser-frame.md','.pi/swarm/skills/webgl-frame-check/SKILL.md'];
+    'scripts/support/webgl-frame-source.ts','docs/webgl-browser-frame.md','docs/handoffs/rebecca550.md','.pi/swarm/skills/webgl-frame-check/SKILL.md'];
   const receipts=[];await tree(dir,receipts);
-  const runtime=new Set([oracle.output.path]);
-  for(const file of receipts.filter(f=>/browser-.+\.json$/.test(f))) {
+  const afterCleanup=process.argv.includes('--after-cleanup');
+  const previous=afterCleanup?await json(verification):null;
+  const runtime=new Set(afterCleanup?previous.runtime.map(p=>p.path):[oracle.output.path]);
+  if(afterCleanup)for(const file of runtime) {
+    await assert.rejects(readFile(path.resolve(root,file)),{code:'ENOENT'},file);
+  }
+  for(const file of receipts.filter(f=>!afterCleanup&&/browser-.+\.json$/.test(f))) {
     const report=await json(file);if(!report.artifacts)continue;
     for(const k of ['compiler','wasm','bindings']) {await verify(report.artifacts[k]);runtime.add(path.resolve(root,report.artifacts[k].path));}
     const files=[];await tree(path.dirname(report.artifacts.bindings.path),files);
@@ -73,7 +78,8 @@ if(process.argv.includes('--record')) {
   }
   const snapshot={referenceHashes:reference.length,sourceInputs:oracle.inputs.length,
     durable:await Promise.all([...inputs,...receipts.filter(f=>path.resolve(f)!==path.resolve(verification))].sort().map(pin)),
-    runtime:await Promise.all([...runtime].sort().map(pin)),
+    runtime:afterCleanup?previous.runtime:await Promise.all([...runtime].sort().map(pin)),
+    runtimeRemoved:afterCleanup,
     scope:'Typed actual frame component only. 9 unchanged-source scenarios/16 framebuffer+model comparisons, 2 Rust lifecycle groups, 11 functions each3engines. Rawhost/fullconstructor/Addon/Root/full suites and context540 initial burstGC stay306. Equivalence NOT PROVEN.'};
   await writeFile(verification,JSON.stringify(snapshot,null,2)+'\n');
 }
