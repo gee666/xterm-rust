@@ -9,6 +9,7 @@ struct TimerHost {
     base: Rc<search_support::Host>,
     failure: RefCell<Option<Rc<dyn Error>>>,
     trace: Trace,
+    clock_reads: Cell<usize>,
 }
 impl SearchHost for TimerHost {
     fn terminal(&self) -> Rc<xterm_core::headless::Terminal> {
@@ -34,6 +35,8 @@ impl SearchHost for TimerHost {
         self.base.style_decoration(element, border)
     }
     fn now_ms(&self) -> u64 {
+        self.clock_reads.set(self.clock_reads.get() + 1);
+        self.base.clock.now.set(self.base.clock.now.get() + 1);
         self.base.now_ms()
     }
     fn timeout(
@@ -42,7 +45,7 @@ impl SearchHost for TimerHost {
         callback: TimeoutCallback,
     ) -> Result<DisposableHandle, SearchAddonError> {
         self.trace.borrow_mut().push("timeout");
-        assert_eq!(delay, 15000);
+        assert_eq!(delay, xterm_core::search::CACHE_TTL_MS);
         if let Some(error) = self.failure.borrow().clone() {
             return Err(SearchAddonError::Host(error));
         }
@@ -107,6 +110,7 @@ fn retired_cache_setup_preserves_timer_errors_and_successful_setup_matching_orde
                         base: old.host.clone(),
                         failure: RefCell::default(),
                         trace: trace.clone(),
+                        clock_reads: Cell::new(0),
                     });
                     old.addon.activate(host.clone()).unwrap();
                     if warm {
@@ -172,6 +176,10 @@ fn retired_cache_setup_preserves_timer_errors_and_successful_setup_matching_orde
                         };
                         assert_eq!(*trace.borrow(), expected);
                     }
+                    assert_eq!(
+                        host.clock_reads.get(),
+                        usize::from(warm) + usize::from(mode != "empty")
+                    );
                     assert_eq!(
                         old.host.clock.pending(),
                         0,

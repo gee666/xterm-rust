@@ -36,7 +36,7 @@ impl EngineContext {
         // Propagate setup failures before matching, then cancel a returned job
         // because Rust must retain an owner. Orphan job liveness is still a gap.
         if self.disposed.get() {
-            return self.schedule_timeout();
+            return self.schedule_timeout(xterm_core::search::CACHE_TTL_MS);
         }
         if self.listener.borrow().is_none() {
             let weak = Rc::downgrade(self);
@@ -56,34 +56,33 @@ impl EngineContext {
             *self.listener.borrow_mut() = Some(listener);
         }
         if self.timeout.borrow().is_none() {
-            self.schedule_timeout()?;
+            self.schedule_timeout(xterm_core::search::CACHE_TTL_MS)?;
         }
         Ok(())
     }
-    fn schedule_timeout(self: &Rc<Self>) -> Result<(), SearchAddonError> {
-        let deadline = self.cache.borrow().deadline_ms();
-        if let Some(deadline) = deadline {
-            let weak = Rc::downgrade(self);
-            let timer = self.host.timeout(
-                deadline.saturating_sub(self.host.now_ms()),
-                Rc::new(move || {
-                    if let Some(engine) = weak.upgrade() {
-                        SearchAddon::cancel(&engine.timeout);
-                        engine.cache.borrow_mut().expire(engine.host.now_ms());
-                        if engine.cache.borrow().deadline_ms().is_none() {
-                            engine.invalidate();
-                        } else {
-                            engine.schedule_timeout()?;
-                        }
+    fn schedule_timeout(self: &Rc<Self>, delay: u64) -> Result<(), SearchAddonError> {
+        let weak = Rc::downgrade(self);
+        let timer = self.host.timeout(
+            delay,
+            Rc::new(move || {
+                if let Some(engine) = weak.upgrade() {
+                    SearchAddon::cancel(&engine.timeout);
+                    let now = engine.host.now_ms();
+                    engine.cache.borrow_mut().expire(now);
+                    let deadline = engine.cache.borrow().deadline_ms();
+                    if let Some(deadline) = deadline {
+                        engine.schedule_timeout(deadline.saturating_sub(now))?;
+                    } else {
+                        engine.invalidate();
                     }
-                    Ok(())
-                }),
-            )?;
-            if self.disposed.get() {
-                timer.dispose();
-            } else {
-                *self.timeout.borrow_mut() = Some(timer);
-            }
+                }
+                Ok(())
+            }),
+        )?;
+        if self.disposed.get() {
+            timer.dispose();
+        } else {
+            *self.timeout.borrow_mut() = Some(timer);
         }
         Ok(())
     }
