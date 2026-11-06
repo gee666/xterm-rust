@@ -72,4 +72,28 @@ pub fn assert_corpus() {
 pub fn assert_previous() {
     previous::assert_corpus();
     previous::assert_previous();
+    // Add strict complete-constructor assertions for519's eight previously
+    // presence-only inputs, without changing any predecessor assertion.
+    let fixture = previous::fixture();
+    let mut closed = 0;
+    for case in fixture["cases"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|c| c["presenceOnly"] == true)
+    {
+        assert_eq!(
+            case["outcome"]["message"],
+            "Offset is outside the bounds of the DataView"
+        );
+        let actual = Font::load_buffer(&construct(case, &fixture), FontOptions::default()).err();
+        assert_eq!(
+            actual,
+            Some(FontError::Bounds),
+            "519 full constructor {}",
+            case["name"]
+        );
+        closed += 1;
+    }
+    assert_eq!(closed, 8);
 }
