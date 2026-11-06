@@ -1,0 +1,30 @@
+    Checking foldhash v0.1.5
+    Checking allocator-api2 v0.2.21
+    Checking equivalent v1.0.3
+    Checking memchr v2.8.3
+    Checking hashbrown v0.15.5
+    Checking adler2 v2.0.1
+    Checking ryu-js v1.0.3
+    Checking miniz_oxide v0.8.9
+    Checking regress v0.10.4
+    Checking zmij v1.0.23
+    Checking serde_core v1.0.229
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\LukeniCffIndex\crates\xterm-core)
+    Checking itoa v1.0.18
+    Checking serde_json v1.0.154
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\LukeniCffIndex\crates\xterm-addons)
+error: manual `!RangeInclusive::contains` implementation
+  --> crates\xterm-addons\src\ligatures\font_cff_address.rs:45:12
+   |
+45 |           || integer < 0.0
+   |  ____________^
+46 | |         || integer > 9_007_199_254_740_991.0
+   | |____________________________________________^ help: use: `!(0.0..=9_007_199_254_740_991.0).contains(&integer)`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#manual_range_contains
+   = note: `-D clippy::manual-range-contains` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::manual_range_contains)]`
+
+error: could not compile `xterm-addons` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `xterm-addons` (lib test) due to 1 previous error

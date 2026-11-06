@@ -1,0 +1,85 @@
+
+running 32 tests
+test image::base64::tests::validation_is_deferred_and_codepoints_truncate_like_uint8array ... ok
+test image::base64::tests::invalid_settings_and_zero_initial_size_are_explicit_safe_boundaries ... ok
+test image::sixel::tests::active_inverse_background_and_missing_theme ... ok
+test ligatures::font::font_cff_header::index::dict::tests::duplicate_coercion_and_deferred_lexical_errors ... ok
+test ligatures::font::font_cff_header::index::dict::tests::all_single_byte_operands_and_operators ... ok
+test image::sixel::storage::tests::fallback_rounding_and_non_scrolling_match_source ... ok
+test image::sixel::storage::tests::fractional_metrics_and_callback_errors_preserve_order ... ok
+test ligatures::font::font_cff_header::index::dict::tests::escaped_operator_and_real_terminators_are_not_operands ... ok
+test ligatures::font::font_cff_header::index::dict::tests::real_numeric_prefixes ... ok
+test ligatures::font::font_cff_header::index::dict::tests::fd_array_presence_uses_js_truthiness_after_dictionary_errors ... ok
+test ligatures::font::font_cff_header::index::tests::data_view_to_index_preserves_fractional_and_nan_boundaries ... ok
+test ligatures::font::font_cff_header::index::tests::empty_reversed_and_forward_numeric_index_ranges ... ok
+test image::kitty::command::tests::empty_nan_signed_zero_and_utf16_strings_remain_distinct ... ok
+test image::sixel::tests::palette_persists_and_hls_preserves_wasm_arithmetic ... ok
+test ligatures::font::graph_tests::every_original_range_merge_assertion_matches ... ok
+test image::sixel::tests::readiness_stale_p2_abort_and_height_only_end ... ok
+test ligatures::font::tests::malformed_containers_return_errors_without_panicking ... ok
+test image::sixel::tests::staged_put_commits_size_before_host_failure_and_uses_live_decoder ... ok
+test image::sixel::tests::dynamic_ragged_bands_and_overdraw ... ok
+test image::sixel::tests::fractional_nan_and_zero_limits_follow_source ... ok
+test ligatures::font::graph_tests::every_original_merge_graph_preserves_input_mutation_and_object_aliases ... ok
+test image::sixel::tests::raster_modes_and_source_numeric_edges ... ok
+test ligatures::font::tests::woff_compressed_tables_match_actual_javascript_font_outputs ... ok
+test image::sixel::tests::native_pixels_and_chunk_boundaries ... ok
+test ligatures::font::graph_tests::directed_overlap_flatten_cycles_and_walk_priorities_match_source ... ok
+test image::kitty::command::tests::all_original_and_seeded_commands_match_complete_javascript_fields ... ok
+test image::base64::tests::strict_payload_traces_match_original_decoder_status_and_every_byte ... ok
+test ligatures::font::font_deflate::tests::source_output_windows_preserve_backreferences_and_declared_output_limits ... ok
+test ligatures::font::font_cff_header::index::tests::unchanged_source_fdarray_index_phase_outcomes ... ok
+test ligatures::font::tests::cached_results_preserve_external_mutation_and_uncached_array_alias ... ok
+test image::sixel::oracle_tests::actual_dependency_pixels_properties_and_palette_match ... ok
+test ligatures::font::tests::all_original_and_seeded_font_outputs_ranges_and_cache_handles_match ... ok
+
+test result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.48s
+
+
+running 2 tests
+test source_fdarray_guard_corpus ... ok
+test predecessor_dictionary_and_header_regressions ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.65s
+
+
+running 2 tests
+test source_complete_fdarray_index_rejections ... FAILED
+test retained_dictionary_and_header_assertions ... ok
+
+failures:
+
+---- source_complete_fdarray_index_rejections stdout ----
+
+thread 'source_complete_fdarray_index_rejections' panicked at crates\xterm-addons\tests\support\font_cff2_index_assertions.rs:59:13:
+assertion `left == right` failed: source phase/constructor "index22"
+  left: Object {"message": String("Offset is outside the bounds of the DataView"), "name": String("RangeError"), "status": String("error")}
+ right: Object {"message": String("Cannot read properties of undefined (reading 'compression')"), "name": String("TypeError"), "status": String("error")}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    source_complete_fdarray_index_rejections
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.70s
+
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling equivalent v1.0.3
+   Compiling memchr v2.8.3
+   Compiling hashbrown v0.15.5
+   Compiling zmij v1.0.23
+   Compiling serde_core v1.0.229
+   Compiling regress v0.10.4
+   Compiling serde_json v1.0.154
+   Compiling adler2 v2.0.1
+   Compiling ryu-js v1.0.3
+   Compiling miniz_oxide v0.8.9
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\LukeniCffIndex\crates\xterm-core)
+   Compiling itoa v1.0.18
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\LukeniCffIndex\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 15.32s
+     Running unittests src\lib.rs (target\debug\deps\xterm_addons-106652af16702f7f.exe)
+     Running tests\font_cff2_fdarray.rs (target\debug\deps\font_cff2_fdarray-b1146bc43c01a964.exe)
+     Running tests\font_cff2_index.rs (target\debug\deps\font_cff2_index-57efd4af7f58b8e1.exe)
+error: test failed, to rerun pass `-p xterm-addons --test font_cff2_index`

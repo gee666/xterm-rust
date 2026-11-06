@@ -1,0 +1,98 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+... Skipped lines
+
+  {
+    cached: {
+      reads: 1,
+      refreshes: 0
+    },
+...
+      {
++       message: 'offset is outside the bounds of the DataView',
+-       message: 'invalid or out-of-range index',
+        name: 'RangeError'
+      }
+    ],
+    final: {
+      loading: [
+
+    at file:///O:/xterm-rust-swarm-16/tmp/worktrees/LukeniCffIndex/scripts/font-cff2-index-browser-source.mjs:52:16
+    at async withArtifactServer (file:///O:/xterm-rust-swarm-16/tmp/worktrees/LukeniCffIndex/scripts/browser-artifact-server.mjs:28:12)
+    at async file:///O:/xterm-rust-swarm-16/tmp/worktrees/LukeniCffIndex/scripts/font-cff2-index-browser-source.mjs:35:3 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: {
+    first: {
+      loading: [ [ 1, 4 ] ],
+      ranges: [ [ 1, 4 ] ],
+      reads: 1,
+      refreshes: 0
+    },
+    cached: { reads: 1, refreshes: 0 },
+    recovery: {
+      loading: [ [ 1, 4 ] ],
+      ranges: [ [ 1, 4 ] ],
+      reads: 2,
+      refreshes: 1
+    },
+    second: {
+      loading: [ [ 1, 4 ] ],
+      ranges: [ [ 1, 4 ] ],
+      reads: 3,
+      refreshes: 1
+    },
+    final: {
+      loading: [ [ 1, 4 ] ],
+      ranges: [ [ 1, 4 ] ],
+      reads: 4,
+      refreshes: 2
+    },
+    debug: [
+      null,
+      {
+        name: 'RangeError',
+        message: 'offset is outside the bounds of the DataView'
+      }
+    ]
+  },
+  expected: {
+    first: {
+      loading: [ [ 1, 4 ] ],
+      ranges: [ [ 1, 4 ] ],
+      reads: 1,
+      refreshes: 0
+    },
+    cached: { reads: 1, refreshes: 0 },
+    recovery: {
+      loading: [ [ 1, 4 ] ],
+      ranges: [ [ 1, 4 ] ],
+      reads: 2,
+      refreshes: 1
+    },
+    second: {
+      loading: [ [ 1, 4 ] ],
+      ranges: [ [ 1, 4 ] ],
+      reads: 3,
+      refreshes: 1
+    },
+    final: {
+      loading: [ [ 1, 4 ] ],
+      ranges: [ [ 1, 4 ] ],
+      reads: 4,
+      refreshes: 2
+    },
+    debug: [
+      null,
+      { name: 'RangeError', message: 'invalid or out-of-range index' }
+    ]
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0
