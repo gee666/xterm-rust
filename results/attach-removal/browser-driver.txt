@@ -1,0 +1,67 @@
+import { readFile, writeFile, mkdir, statfs } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { freemem } from 'node:os';
+import { resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { runCommand } from '../scripts/quality-process.mjs';
+const root=process.cwd(), out=resolve(root,'results/attach-removal');
+await mkdir(out,{recursive:true});
+const env={...process.env,CARGO_BUILD_JOBS:'2',CARGO_TARGET_DIR:resolve(root,'target'),TEMP:resolve(root,'tmp'),TMP:resolve(root,'tmp'),TMPDIR:resolve(root,'tmp'),
+ WASM_BINDGEN:'P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe',
+ PLAYWRIGHT_MODULE:'P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules/playwright/index.mjs',
+ NODE_PATH:'P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules'};
+const report={status:'running',env:Object.fromEntries(['CARGO_BUILD_JOBS','CARGO_TARGET_DIR','TEMP','TMP','TMPDIR','WASM_BINDGEN','PLAYWRIGHT_MODULE','NODE_PATH'].map(k=>[k,env[k]])),commands:[],controls:[]};
+const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+async function guard(){const d=await statfs(root);if(freemem()<8*2**30||Number(d.bavail)*Number(d.bsize)<10*2**30)throw Error('8GiB RAM/10GiB disk guard');}
+async function persist(){await writeFile(resolve(out,'browser-commands.json'),JSON.stringify(report,null,2)+'\n');}
+async function run(label,test,{browsers='chromium,firefox,webkit',negative=false,peer=false}={}){
+ await guard();
+ const args=[peer?'scripts/utility-addon-browser-check.mjs':'scripts/browser-host-check.mjs'];
+ const r=await runCommand(process.execPath,args,{cwd:root,env:{...env,WASM_TEST:test,BROWSERS:browsers},log:resolve(out,label+'.log'),timeoutMs:240000,resourceCheck:guard});
+ const latest=JSON.parse(await readFile(resolve(root,'results/browser-host',test+'-results.json'),'utf8'));
+ await writeFile(resolve(out,label+'.json'),JSON.stringify(latest,null,2)+'\n');
+ report.commands.push({label,test,...r});await persist();console.log(label,r.status,r.elapsedMs);
+ if(negative){
+   const b=latest.browsers;
+   const diagnostic=b.length===1?JSON.stringify({output:b[0].output,console:b[0].console,errors:b[0].errors}):'';
+   if(r.exitCode!==1||r.error||r.timedOut||b.length!==1||b[0].counts?.passed!==0||b[0].counts?.failed!==1||!/(repeated removal calls differ|lost thrown identity|valid built-in WebSocket listener removal)/.test(diagnostic))throw Error('exact old control failure mismatch');
+ }else if(r.status!=='passed'||latest.status!=='passed')throw Error(label+' failed');
+ return latest;
+}
+try {
+ await guard();
+ const lint=await runCommand('cargo',['clippy','--locked','-j2','-p','xterm-web','--target','wasm32-unknown-unknown','--lib','--test','wasm_attach_removal','--test','wasm_attach_listener_lifetime','--','-D','warnings'],{cwd:root,env,log:resolve(out,'wasm-clippy-current.log'),timeoutMs:240000,resourceCheck:guard});
+ report.commands.push({label:'wasm-clippy-current',...lint});await persist();
+ if(lint.status!=='passed')throw Error('current WASM Clippy failed');
+ const initial=await run('browser-initial','wasm_attach_removal');
+ await run('lifetime-initial','wasm_attach_listener_lifetime');
+ const paths=['crates/xterm-addons/src/attach.rs','crates/xterm-web/src/utility_addons/socket.rs','crates/xterm-web/src/utility_addons/bindings.rs'];
+ const fixed=new Map();
+ try {
+  for(const path of paths){
+   const file=resolve(root,path),bytes=await readFile(file);fixed.set(path,bytes);
+   const old=spawnSync('git',['show','f1303695:'+path],{cwd:root,encoding:null,timeout:30000,maxBuffer:1024*1024});
+   if(old.error||old.status!==0)throw Error('Cannot read exact535 production '+path);
+   report.controls.push({path,oldRef:'f1303695',fixedSha256:sha(bytes),oldSha256:sha(old.stdout)});
+   await writeFile(file,old.stdout);
+  }
+  await persist();
+  const old=await run('browser-exact-old-control','wasm_attach_removal',{browsers:'chromium',negative:true});
+  if(old.artifacts.wasm.sha256===initial.artifacts.wasm.sha256)throw Error('old/fixed WASM did not change');
+ }finally{
+  const restoration=await Promise.allSettled([...fixed].map(async ([path,bytes])=>{
+   await writeFile(resolve(root,path),bytes);
+   if(sha(await readFile(resolve(root,path)))!==sha(bytes))throw Error('source restoration failed '+path);
+  }));
+  report.restored=paths.every(path=>fixed.has(path))&&restoration.every(r=>r.status==='fulfilled');
+  await persist();
+  if(!report.restored)throw Error('exact source restoration incomplete: '+JSON.stringify(restoration));
+ }
+ const final=await run('browser-final','wasm_attach_removal');
+ if(final.artifacts.wasm.sha256!==initial.artifacts.wasm.sha256)throw Error('fixed initial/final WASM differ');
+ await run('lifetime-final','wasm_attach_listener_lifetime');
+ await run('retained535','wasm_attach_disposal_reentry');
+ await run('retained404','wasm_attach_reentry',{peer:true});
+ report.status='passed';
+}catch(error){report.status='failed';report.error=String(error.stack??error);process.exitCode=1;}
+finally{report.finishedAt=new Date().toISOString();await persist();}

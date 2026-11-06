@@ -1,0 +1,194 @@
+{
+  "status": "passed",
+  "env": {
+    "CARGO_BUILD_JOBS": "2",
+    "CARGO_TARGET_DIR": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\LopamudraAttachRemoval\\target",
+    "TEMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\LopamudraAttachRemoval\\tmp",
+    "TMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\LopamudraAttachRemoval\\tmp",
+    "TMPDIR": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\LopamudraAttachRemoval\\tmp",
+    "WASM_BINDGEN": "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+    "PLAYWRIGHT_MODULE": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules/playwright/index.mjs",
+    "NODE_PATH": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo/node_modules"
+  },
+  "commands": [
+    {
+      "label": "wasm-clippy-current",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--lib",
+        "--test",
+        "wasm_attach_removal",
+        "--test",
+        "wasm_attach_listener_lifetime",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 352.9965,
+      "status": "passed"
+    },
+    {
+      "label": "browser-initial",
+      "test": "wasm_attach_removal",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11248.2549,
+      "status": "passed"
+    },
+    {
+      "label": "lifetime-initial",
+      "test": "wasm_attach_listener_lifetime",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 8294.876499999998,
+      "status": "passed"
+    },
+    {
+      "label": "browser-exact-old-control",
+      "test": "wasm_attach_removal",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 18925.002999999997,
+      "status": "failed"
+    },
+    {
+      "label": "browser-final",
+      "test": "wasm_attach_removal",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 27038.001999999993,
+      "status": "passed"
+    },
+    {
+      "label": "lifetime-final",
+      "test": "wasm_attach_listener_lifetime",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11949.166299999997,
+      "status": "passed"
+    },
+    {
+      "label": "retained535",
+      "test": "wasm_attach_disposal_reentry",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 9885.299499999994,
+      "status": "passed"
+    },
+    {
+      "label": "retained404",
+      "test": "wasm_attach_reentry",
+      "command": [
+        "C:\\nvm4w\\nodejs\\node.exe",
+        "scripts/utility-addon-browser-check.mjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 9910.516100000008,
+      "status": "passed"
+    }
+  ],
+  "controls": [
+    {
+      "path": "crates/xterm-addons/src/attach.rs",
+      "oldRef": "f1303695",
+      "fixedSha256": "81286a7370a6304a609dedda68a01cbf67309e9894e239c8f227e96d82b2f36d",
+      "oldSha256": "da7a292447d7afa76f4170ba3fc4d6e6bccb868197f76569c33cbb1343b96509"
+    },
+    {
+      "path": "crates/xterm-web/src/utility_addons/socket.rs",
+      "oldRef": "f1303695",
+      "fixedSha256": "2fcceea88de41ab7292281835b26eb11c9b0de389b1bee32bd7a2b71c9a8663a",
+      "oldSha256": "eaa9328bededd00b86144d28fafdd0317b039a9161a307ec2ebb9f808ae054e6"
+    },
+    {
+      "path": "crates/xterm-web/src/utility_addons/bindings.rs",
+      "oldRef": "f1303695",
+      "fixedSha256": "bdd89e48760cadb1b9359be9cf5415fcc3a7861a5229161d3f7ce1fad8ec6997",
+      "oldSha256": "f7b6969fda0da8fbe05128ab4dcafa1a3065455ee72b8b0550bce1bedb7ceb3b"
+    }
+  ],
+  "restored": true,
+  "finishedAt": "2026-11-06T01:30:00.994Z"
+}

@@ -1,0 +1,125 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_attach_removal",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-06T01:28:43.335Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_attach_removal",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 16994.1895,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.629700000001321,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\LopamudraAttachRemoval\\results\\acceptance-artifacts\\d64923f60fd76602ba9e2b967e7775194480f1b822f2b1488fd40ba91759a6f4\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\LopamudraAttachRemoval\\results\\browser-host\\wasm_attach_removal\\2026-11-06T01-28-43-333Z-951a8860-0c2b-4429-8956-e77390bbdaa6\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1101.0504,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_attach_removal::socket_removal_errors_repeat_calls_and_retained_callbacks_match_source"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "Error: repeated removal calls differ: message,close,error\n    at attachRepeatedSuccess (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:59944/suite.js:6041:21), <anonymous>:95:13)\n    at eval (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:59944/suite.js:6041:21), <anonymous>:213:9)\n    at eval (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:59944/suite.js:6041:21), <anonymous>:1161:3)\n    at http://127.0.0.1:59944/suite.js:4947:26\n    at handleError (http://127.0.0.1:59944/suite.js:179:18)\n    at imports.wbg.__wbg_call_833bed5770ea2041 (http://127.0.0.1:59944/suite.js:4946:67)\n    at wasm_attach_removal-7af61d4596d74a70.wasm.__wbg_call_833bed5770ea2041 externref shim (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[33067]:0xaadc74)\n    at wasm_attach_removal-7af61d4596d74a70.wasm.js_sys::Function::call2::h70cffd328f4620cb (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[7160]:0x73d661)\n    at wasm_attach_removal-7af61d4596d74a70.wasm.wasm_attach_removal::socket_removal_errors_repeat_calls_and_retained_callbacks_match_source::{{closure}}::{{closure}}::hb7fafcb70ffbd6c5 (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[1574]:0x3f7202)\n    at wasm_attach_removal-7af61d4596d74a70.wasm.wasm_attach_removal::socket_removal_errors_repeat_calls_and_retained_callbacks_match_source::{{closure}}::h848978da4c3e36fb (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[1233]:0x34fb72)"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 1 test\ntest socket_removal_errors_repeat_calls_and_retained_callbacks_match_source ... FAIL\n\nfailures:\n\n---- socket_removal_errors_repeat_calls_and_retained_callbacks_match_source output ----\n    JS exception that was thrown:\n        Error: JsValue(Error: repeated removal calls differ: message,close,error\n        Error: repeated removal calls differ: message,close,error\n            at attachRepeatedSuccess (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:59944/suite.js:6041:21), <anonymous>:95:13)\n            at eval (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:59944/suite.js:6041:21), <anonymous>:213:9)\n            at eval (eval at imports.wbg.__wbg_newwithargs_ab6ffe8cd6c19c04 (http://127.0.0.1:59944/suite.js:6041:21), <anonymous>:1161:3)\n            at http://127.0.0.1:59944/suite.js:4947:26\n            at handleError (http://127.0.0.1:59944/suite.js:179:18)\n            at imports.wbg.__wbg_call_833bed5770ea2041 (http://127.0.0.1:59944/suite.js:4946:67)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.__wbg_call_833bed5770ea2041 externref shim (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[33067]:0xaadc74)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.js_sys::Function::call2::h70cffd328f4620cb (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[7160]:0x73d661)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.wasm_attach_removal::socket_removal_errors_repeat_calls_and_retained_callbacks_match_source::{{closure}}::{{closure}}::hb7fafcb70ffbd6c5 (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[1574]:0x3f7202)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.wasm_attach_removal::socket_removal_errors_repeat_calls_and_retained_callbacks_match_source::{{closure}}::h848978da4c3e36fb (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[1233]:0x34fb72))\n            at imports.wbg.__wbindgen_error_new (http://127.0.0.1:59944/suite.js:7014:21)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.__wbindgen_error_new externref shim (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[36953]:0xac8226)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.wasm_bindgen::JsError::new::h1f4885b76b68e0de (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[33318]:0xaafcf1)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::{{closure}}::h0c806f4792284161 (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[6196]:0x6eb3b5)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.core::result::Result<T,E>::map_err::h6cd1cfc2c325ec30 (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[17786]:0x96b92e)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.<core::result::Result<(),E> as wasm_bindgen_test::__rt::Termination>::into_js_result::hd334620b1f495d23 (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[24138]:0xa21e99)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.wasm_bindgen_test::__rt::Context::execute_async::{{closure}}::heaf55785f0c0ec70 (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[2959]:0x55da33)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.<wasm_bindgen_test::__rt::TestFuture<F> as core::future::future::Future>::poll::{{closure}}::{{closure}}::h419683e4636d9202 (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[16520]:0x93d69a)\n            at wasm_attach_removal-7af61d4596d74a70.wasm.wasm_bindgen::convert::closures::invoke0_mut::h6ccbabcefd85a5b8 (http://127.0.0.1:59944/suite_bg.wasm:wasm-function[26455]:0xa520b4)\n            at __wbg_adapter_1342 (http://127.0.0.1:59944/suite.js:628:10)\n\nfailures:\n\n    socket_removal_errors_repeat_calls_and_retained_callbacks_match_source\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 filtered out; finished in 0.05s\n\n",
+      "counts": {
+        "passed": 0,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/d64923f60fd76602ba9e2b967e7775194480f1b822f2b1488fd40ba91759a6f4/artifact.wasm",
+      "sha256": "d64923f60fd76602ba9e2b967e7775194480f1b822f2b1488fd40ba91759a6f4",
+      "bytes": 19681188,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\LopamudraAttachRemoval\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_attach_removal-7af61d4596d74a70.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\LopamudraAttachRemoval\\results\\browser-host\\wasm_attach_removal\\2026-11-06T01-28-43-333Z-951a8860-0c2b-4429-8956-e77390bbdaa6\\artifacts\\suite_bg.wasm",
+      "bytes": 16516665,
+      "sha256": "987e21f2a8ffe1a7e3f49ad7fef954e545d1151910e8ef172777d602096e1dc9"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\LopamudraAttachRemoval\\results\\browser-host\\wasm_attach_removal\\2026-11-06T01-28-43-333Z-951a8860-0c2b-4429-8956-e77390bbdaa6\\artifacts\\suite.js",
+      "bytes": 250953,
+      "sha256": "9ca0148f7d32e32f55bbf0e351bec077bfc13cfea2a30d3981d5ab56892c1e4e"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "f6985978c6f130bba8cfa0f7f88a659c41e0f32253853cf158b30efe07691873"
+  },
+  "finishedAt": "2026-11-06T01:29:02.172Z"
+}
