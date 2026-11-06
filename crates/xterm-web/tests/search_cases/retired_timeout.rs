@@ -117,6 +117,7 @@ fn retired_cache_setup_preserves_timer_errors_and_successful_setup_matching_orde
                         assert!(old.addon.find_next(&term("a"), None).unwrap());
                     }
                     trace.borrow_mut().clear();
+                    let prior_clock_reads = host.clock_reads.get();
                     let timer_error: Rc<dyn Error> = Rc::new(std::io::Error::other("timer"));
                     let matching_error: Rc<dyn Error> = Rc::new(std::io::Error::other("matching"));
                     if mode == "throw" {
@@ -178,7 +179,7 @@ fn retired_cache_setup_preserves_timer_errors_and_successful_setup_matching_orde
                     }
                     assert_eq!(
                         host.clock_reads.get(),
-                        usize::from(warm) + usize::from(mode != "empty")
+                        prior_clock_reads + usize::from(mode != "empty")
                     );
                     assert_eq!(
                         old.host.clock.pending(),
