@@ -1,21 +1,20 @@
 // CFF dictionary reads follow opentype.js. See licenses/opentype-js-MIT.txt.
-use super::FontError;
+use super::{address::IndexOffset, FontError};
 
 const ESCAPED_OPERATOR: u16 = 1200;
 const KEY_COUNT: usize = ESCAPED_OPERATOR as usize + 256;
 const FD_ARRAY: u16 = 1236;
 const MISSING_FD_ARRAY: &str = "This is a CFF2 font, but FDArray information is missing";
 
-pub(super) fn validate(bytes: &[u8]) -> Result<(), FontError> {
-    if !dictionary(bytes)? {
-        return Err(FontError::Invalid(MISSING_FD_ARRAY));
-    }
-    Ok(())
+pub(super) fn validate(bytes: &[u8]) -> Result<IndexOffset, FontError> {
+    dictionary(bytes)?
+        .filter(IndexOffset::truthy)
+        .ok_or(FontError::Invalid(MISSING_FD_ARRAY))
 }
 
 /// Operand reads finish before entriesToObject can report a duplicate key.
-/// Return FDArray truthiness only after these earlier dictionary phases succeed.
-fn dictionary(bytes: &[u8]) -> Result<bool, FontError> {
+/// Return FDArray operands only after these earlier dictionary phases succeed.
+fn dictionary(bytes: &[u8]) -> Result<Option<IndexOffset>, FontError> {
     let mut position = 0;
     let mut operands = Vec::new();
     // Each operand needs at least one byte. This bound also covers blend reuse.
@@ -23,7 +22,7 @@ fn dictionary(bytes: &[u8]) -> Result<bool, FontError> {
     let mut keys = [None; KEY_COUNT];
     let mut duplicate = None;
     let mut negative_blend = false;
-    let mut fd_array = false;
+    let mut fd_array = None;
     while position < bytes.len() {
         let byte = read(bytes, &mut position)?;
         match byte {
@@ -60,10 +59,7 @@ fn dictionary(bytes: &[u8]) -> Result<bool, FontError> {
                 if key == FD_ARRAY {
                     // entriesToObject unwraps one operand to a number, but keeps
                     // zero or multiple operands as arrays. Even [] is truthy.
-                    fd_array = match operands.as_slice() {
-                        [value] => *value != 0.0 && !value.is_nan(),
-                        _ => true,
-                    };
+                    fd_array = Some(IndexOffset::operands(&operands)?);
                 }
                 operands.clear();
             }
@@ -178,25 +174,28 @@ mod tests {
     fn fd_array_presence_uses_js_truthiness_after_dictionary_errors() {
         for bytes in [&[][..], &[139, 12, 36], &[30, 0xff, 12, 36]] {
             assert_eq!(
-                super::validate(bytes),
+                super::validate(bytes).map(|_| ()),
                 Err(FontError::Invalid(MISSING_FD_ARRAY))
             );
         }
         for bytes in [&[12, 36][..], &[139, 140, 12, 36], &[138, 12, 36]] {
-            assert_eq!(super::validate(bytes), Ok(()));
+            assert_eq!(super::validate(bytes).map(|_| ()), Ok(()));
         }
         assert_eq!(
-            super::validate(&[139, 12, 36, 0, 0]),
+            super::validate(&[139, 12, 36, 0, 0]).map(|_| ()),
             Err(FontError::CffDuplicate(0))
         );
         assert_eq!(
-            super::validate(&[139, 12, 36, 0, 0, 31]),
+            super::validate(&[139, 12, 36, 0, 0, 31]).map(|_| ()),
             Err(FontError::CffOperand(31))
         );
         // A NaN previous value permits a replacement, including replacement by0.
-        assert_eq!(super::validate(&[30, 0xff, 12, 36, 140, 12, 36]), Ok(()));
         assert_eq!(
-            super::validate(&[30, 0xff, 12, 36, 139, 12, 36]),
+            super::validate(&[30, 0xff, 12, 36, 140, 12, 36]).map(|_| ()),
+            Ok(())
+        );
+        assert_eq!(
+            super::validate(&[30, 0xff, 12, 36, 139, 12, 36]).map(|_| ()),
             Err(FontError::Invalid(MISSING_FD_ARRAY))
         );
     }
