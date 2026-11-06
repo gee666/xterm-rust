@@ -44,13 +44,17 @@ impl SelectionHost for WeakBrowserServices {
                 mac_option_click_forces_selection: flag("macOptionClickForcesSelection")?,
                 mouse_events_active: mouse.are_mouse_events_active(),
             },
-            word_separator: options
-                .get("wordSeparator")
-                .and_then(|value| value.to_utf16())
-                .map_err(|error| to_js_error(&error))?,
             alt_click_moves_cursor: flag("altClickMovesCursor")?,
             application_cursor_keys,
         })
+    }
+    fn word_separator(&self) -> Result<Vec<u16>, JsValue> {
+        self.upgrade()?
+            .native
+            .options()
+            .get("wordSeparator")
+            .and_then(|value| value.to_utf16())
+            .map_err(|error| to_js_error(&error))
     }
     fn current_link(&self) -> Result<Option<LinkSelection>, JsValue> {
         let services = self.upgrade()?;

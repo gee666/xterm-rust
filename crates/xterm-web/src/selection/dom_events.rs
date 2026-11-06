@@ -75,7 +75,7 @@ fn mouse_down(state: &Rc<State>, event: &MouseEvent) -> Result<(), JsValue> {
                 )
                 .map_err(selection_error)?,
             2 => {
-                if select_word(state, event, true, &options)? {
+                if select_word(state, event, true)? {
                     state.selection.set_mode(SelectionMode::Word);
                 }
             }
@@ -107,7 +107,6 @@ fn select_word(
     state: &Rc<State>,
     event: &MouseEvent,
     allow_whitespace: bool,
-    options: &SelectionDomOptions,
 ) -> Result<bool, JsValue> {
     if let Some(link) = state.host.current_link()? {
         state.selection.update_model(|model| {
@@ -120,6 +119,7 @@ fn select_word(
     let Some(position) = state.buffer_coords(event, true, false)? else {
         return Ok(false);
     };
+    let separators = state.host.word_separator()?;
     let active = state.buffers.buffer();
     let buffer = active.try_borrow().map_err(error)?;
     state
@@ -128,7 +128,7 @@ fn select_word(
             &buffer,
             state.dimensions()?,
             position,
-            &options.word_separator,
+            &separators,
             allow_whitespace,
         )
         .map_err(selection_error)?;
@@ -142,8 +142,12 @@ pub(super) fn mouse_move(state: &Rc<State>, event: &MouseEvent) -> Result<(), Js
     if state.selection.model().selection_start.is_none() {
         return Ok(());
     }
-    let options = state.host.options()?;
     let position = state.buffer_coords(event, true, false)?;
+    let separators = if position.is_some() && state.selection.mode() == SelectionMode::Word {
+        state.host.word_separator()?
+    } else {
+        Vec::new()
+    };
     let amount = if position.is_some() {
         let geometry = (state.geometry)()?;
         let rect = state.screen.get_bounding_client_rect();
@@ -161,7 +165,7 @@ pub(super) fn mouse_move(state: &Rc<State>, event: &MouseEvent) -> Result<(), Js
             state.dimensions()?,
             position,
             amount,
-            &options.word_separator,
+            &separators,
         )
         .map_err(selection_error)
 }
@@ -217,7 +221,7 @@ pub(super) fn right_click(state: &Rc<State>, event: &MouseEvent) -> Result<(), J
         None => false,
     };
     if !inside {
-        if select_word(state, event, false, &state.host.options()?)? {
+        if select_word(state, event, false)? {
             state
                 .selection
                 .refresh(&state.buffers, dimensions, true)

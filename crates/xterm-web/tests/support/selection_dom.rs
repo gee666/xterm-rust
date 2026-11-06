@@ -28,6 +28,8 @@ use xterm_web::{
 pub(super) struct Host {
     pub(super) buffers: Rc<BufferService>,
     pub(super) options: RefCell<SelectionDomOptions>,
+    pub(super) word_separator: RefCell<Result<Vec<u16>, JsValue>>,
+    pub(super) separator_reads: Cell<u32>,
     pub(super) link: Cell<Option<LinkSelection>>,
     pub(super) user_input: Emitter<()>,
     pub(super) redraws: RefCell<Vec<RedrawRequest>>,
@@ -41,6 +43,10 @@ pub(super) struct Host {
 impl SelectionHost for Host {
     fn options(&self) -> Result<SelectionDomOptions, JsValue> {
         Ok(self.options.borrow().clone())
+    }
+    fn word_separator(&self) -> Result<Vec<u16>, JsValue> {
+        self.separator_reads.set(self.separator_reads.get() + 1);
+        self.word_separator.borrow().clone()
     }
     fn current_link(&self) -> Result<Option<LinkSelection>, JsValue> {
         Ok(self.link.get())
@@ -130,10 +136,11 @@ impl Setup {
                     ..SelectionPlatform::default()
                 },
                 mouse: SelectionMouseOptions::default(),
-                word_separator: " ".encode_utf16().collect(),
                 alt_click_moves_cursor: true,
                 application_cursor_keys: true,
             }),
+            word_separator: RefCell::new(Ok(" ".encode_utf16().collect())),
+            separator_reads: Cell::new(0),
             link: Cell::new(None),
             user_input: Emitter::new(),
             redraws: RefCell::new(Vec::new()),

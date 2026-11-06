@@ -28,7 +28,6 @@ type Geometry = dyn Fn() -> Result<MouseGeometry, JsValue>;
 pub struct SelectionDomOptions {
     pub platform: SelectionPlatform,
     pub mouse: SelectionMouseOptions,
-    pub word_separator: Vec<u16>,
     pub alt_click_moves_cursor: bool,
     pub application_cursor_keys: bool,
 }
@@ -41,6 +40,8 @@ pub struct LinkSelection {
 /// It must not strongly own SelectionDom, or that would form an ownership cycle.
 pub trait SelectionHost {
     fn options(&self) -> Result<SelectionDomOptions, JsValue>;
+    /// Read only when word lookup is needed, after the current-link shortcut.
+    fn word_separator(&self) -> Result<Vec<u16>, JsValue>;
     fn current_link(&self) -> Result<Option<LinkSelection>, JsValue>;
     fn on_user_input(&self) -> Result<Event<()>, JsValue>;
     fn scroll_lines(&self, amount: i64, suppress_scroll_event: bool) -> Result<(), JsValue>;
