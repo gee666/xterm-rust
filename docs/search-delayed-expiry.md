@@ -28,6 +28,14 @@ Scoped native and WASM library/test Clippy passed with `-D warnings`. All five c
 
 Raw commands, logs, reports, restoration receipts and manifests are under `results/search-delayed-expiry/`. The native allocation was released at coordination post 409/comment 4734. The later browser/compiler/server allocation was released at 409/4749. No 544 gates, cleanup or private prerequisite commits were replayed.
 
+## Independent review and cleanup
+
+Task 552 was accepted at `ab269c12e53abf1f93f266efdd6e81b52e315fd8` with no findings. The isolated reviewer independently reran all five pinned native executables, 106 passes with no failures, ignored or filtered tests. It verified all 55 then-current durable pins, 1,910 build inputs, 11 runtime pins, both 776-file reference roots, actual source/WASM reports and embedded shared fixture identity. It made no changes and launched no compiler or browser.
+
+A read-only owned-cleanup preflight found 17,538 regular files, 3,019 directories and 1,779,710,831 bytes, with no links, redirected directories or owned workers. The count precedes final review/cleanup receipt metadata. Reviewed source and evidence will remain in the branch/archive. Runtime binaries are temporary and will be removed only after final pin checks, followed by normal worktree removal. Final root-absent/unregistered and original-reference-after results belong to the separate cleanup receipt, not this preflight.
+
+The post-review receipt changes documentation and evidence metadata only. No production or test source changed after acceptance. Full 527/347/322 and the broader verification gaps above remain open.
+
 ## Reproduce
 
 Use an owned O: worktree/target and literal O: TEMP/TMP/TMPDIR, the current coordinated resource grant, Cargo `-j2`, Node 24.15, Rust 1.85.1 and wasm-bindgen CLI 0.2.100. Set SOURCE_DEPENDENCIES and PLAYWRIGHT_MODULE to the existing source dependency tree. Never restore the retired build queue.
