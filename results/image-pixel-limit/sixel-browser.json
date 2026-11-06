@@ -1,0 +1,201 @@
+{
+  "package": "xterm-web",
+  "testName": "image_sixel_terminal_browser",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-06T01:41:11.338Z",
+  "componentOnly": true,
+  "status": "passed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "image_sixel_terminal_browser",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1652.9984,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 11.971399999999903,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BryanImagePixels\\results\\acceptance-artifacts\\fe0d67b26f8482a1ecdf5a38bce8ff6add7f45ed902e0761b7afba967384bb36\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BryanImagePixels\\results\\browser-host\\image_sixel_terminal_browser\\2026-11-06T01-41-11-336Z-61842ccc-ff50-446b-bb15-fe6dcb79bfa7\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1451.0065,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "passed",
+      "tests": [
+        "__wbgt__image_sixel_terminal_browser::active_background_default_rgb_palette_inverse_and_before_open_match_source",
+        "__wbgt__image_sixel_terminal_browser::empty_width_raster_scroll_policy_and_fallback_metrics_match_source",
+        "__wbgt__image_sixel_terminal_browser::failures::canvas_method_and_constructor_getters_keep_source_evaluation_order",
+        "__wbgt__image_sixel_terminal_browser::failures::decoding_warning_and_throwing_warning_preserve_source_state",
+        "__wbgt__image_sixel_terminal_browser::failures::memory_and_indirect_call_traps_use_actual_browser_diagnostics",
+        "__wbgt__image_sixel_terminal_browser::failures::put_image_data_reset_reentry_uses_live_decoder_and_keeps_uploaded_pixels",
+        "__wbgt__image_sixel_terminal_browser::failures::storage_callback_error_is_synchronous_and_retains_inserted_image",
+        "__wbgt__image_sixel_terminal_browser::failures::synchronous_canvas_and_image_data_failures_keep_error_identity_and_tail",
+        "__wbgt__image_sixel_terminal_browser::large_image_then_palette_reuse_matches_source",
+        "__wbgt__image_sixel_terminal_browser::null_canvas_context_still_inserts_blank_image",
+        "__wbgt__image_sixel_terminal_browser::pending_calls_are_discarded_and_mid_sequence_loading_is_not_replayed",
+        "__wbgt__image_sixel_terminal_browser::real_parser_raster_cells_palette_and_rendered_pixels_match_source",
+        "__wbgt__image_sixel_terminal_browser::seeded_chunks_palette_persistence_and_cancelled_sequences_match_source",
+        "__wbgt__image_sixel_terminal_browser::unregister_reregister_and_real_browser_queued_write_execute_sixel",
+        "__wbgt__image_sixel_terminal_browser::warnings_limits_palette_reset_and_bytewise_st_match_source"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "warning",
+          "text": "Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true. See: https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 15 tests\ntest warnings_limits_palette_reset_and_bytewise_st_match_source ... ok\ntest unregister_reregister_and_real_browser_queued_write_execute_sixel ... ok\ntest seeded_chunks_palette_persistence_and_cancelled_sequences_match_source ... ok\ntest real_parser_raster_cells_palette_and_rendered_pixels_match_source ... ok\ntest pending_calls_are_discarded_and_mid_sequence_loading_is_not_replayed ... ok\ntest null_canvas_context_still_inserts_blank_image ... ok\ntest large_image_then_palette_reuse_matches_source ... ok\ntest failures::synchronous_canvas_and_image_data_failures_keep_error_identity_and_tail ... ok\ntest failures::storage_callback_error_is_synchronous_and_retains_inserted_image ... ok\ntest failures::put_image_data_reset_reentry_uses_live_decoder_and_keeps_uploaded_pixels ... ok\ntest failures::memory_and_indirect_call_traps_use_actual_browser_diagnostics ... ok\ntest failures::decoding_warning_and_throwing_warning_preserve_source_state ... ok\ntest failures::canvas_method_and_constructor_getters_keep_source_evaluation_order ... ok\ntest empty_width_raster_scroll_policy_and_fallback_metrics_match_source ... ok\ntest active_background_default_rgb_palette_inverse_and_before_open_match_source ... ok\n\ntest result: ok. 15 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.62s\n\n",
+      "counts": {
+        "passed": 15,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "passed",
+      "tests": [
+        "__wbgt__image_sixel_terminal_browser::active_background_default_rgb_palette_inverse_and_before_open_match_source",
+        "__wbgt__image_sixel_terminal_browser::empty_width_raster_scroll_policy_and_fallback_metrics_match_source",
+        "__wbgt__image_sixel_terminal_browser::failures::canvas_method_and_constructor_getters_keep_source_evaluation_order",
+        "__wbgt__image_sixel_terminal_browser::failures::decoding_warning_and_throwing_warning_preserve_source_state",
+        "__wbgt__image_sixel_terminal_browser::failures::memory_and_indirect_call_traps_use_actual_browser_diagnostics",
+        "__wbgt__image_sixel_terminal_browser::failures::put_image_data_reset_reentry_uses_live_decoder_and_keeps_uploaded_pixels",
+        "__wbgt__image_sixel_terminal_browser::failures::storage_callback_error_is_synchronous_and_retains_inserted_image",
+        "__wbgt__image_sixel_terminal_browser::failures::synchronous_canvas_and_image_data_failures_keep_error_identity_and_tail",
+        "__wbgt__image_sixel_terminal_browser::large_image_then_palette_reuse_matches_source",
+        "__wbgt__image_sixel_terminal_browser::null_canvas_context_still_inserts_blank_image",
+        "__wbgt__image_sixel_terminal_browser::pending_calls_are_discarded_and_mid_sequence_loading_is_not_replayed",
+        "__wbgt__image_sixel_terminal_browser::real_parser_raster_cells_palette_and_rendered_pixels_match_source",
+        "__wbgt__image_sixel_terminal_browser::seeded_chunks_palette_persistence_and_cancelled_sequences_match_source",
+        "__wbgt__image_sixel_terminal_browser::unregister_reregister_and_real_browser_queued_write_execute_sixel",
+        "__wbgt__image_sixel_terminal_browser::warnings_limits_palette_reset_and_bytewise_st_match_source"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "150.0.2",
+      "output": "running 15 tests\ntest warnings_limits_palette_reset_and_bytewise_st_match_source ... ok\ntest unregister_reregister_and_real_browser_queued_write_execute_sixel ... ok\ntest seeded_chunks_palette_persistence_and_cancelled_sequences_match_source ... ok\ntest real_parser_raster_cells_palette_and_rendered_pixels_match_source ... ok\ntest pending_calls_are_discarded_and_mid_sequence_loading_is_not_replayed ... ok\ntest null_canvas_context_still_inserts_blank_image ... ok\ntest large_image_then_palette_reuse_matches_source ... ok\ntest failures::synchronous_canvas_and_image_data_failures_keep_error_identity_and_tail ... ok\ntest failures::storage_callback_error_is_synchronous_and_retains_inserted_image ... ok\ntest failures::put_image_data_reset_reentry_uses_live_decoder_and_keeps_uploaded_pixels ... ok\ntest failures::memory_and_indirect_call_traps_use_actual_browser_diagnostics ... ok\ntest failures::decoding_warning_and_throwing_warning_preserve_source_state ... ok\ntest failures::canvas_method_and_constructor_getters_keep_source_evaluation_order ... ok\ntest empty_width_raster_scroll_policy_and_fallback_metrics_match_source ... ok\ntest active_background_default_rgb_palette_inverse_and_before_open_match_source ... ok\n\ntest result: ok. 15 passed; 0 failed; 0 ignored; 0 filtered out; finished in 2.15s\n\n",
+      "counts": {
+        "passed": 15,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "tests": [
+        "__wbgt__image_sixel_terminal_browser::active_background_default_rgb_palette_inverse_and_before_open_match_source",
+        "__wbgt__image_sixel_terminal_browser::empty_width_raster_scroll_policy_and_fallback_metrics_match_source",
+        "__wbgt__image_sixel_terminal_browser::failures::canvas_method_and_constructor_getters_keep_source_evaluation_order",
+        "__wbgt__image_sixel_terminal_browser::failures::decoding_warning_and_throwing_warning_preserve_source_state",
+        "__wbgt__image_sixel_terminal_browser::failures::memory_and_indirect_call_traps_use_actual_browser_diagnostics",
+        "__wbgt__image_sixel_terminal_browser::failures::put_image_data_reset_reentry_uses_live_decoder_and_keeps_uploaded_pixels",
+        "__wbgt__image_sixel_terminal_browser::failures::storage_callback_error_is_synchronous_and_retains_inserted_image",
+        "__wbgt__image_sixel_terminal_browser::failures::synchronous_canvas_and_image_data_failures_keep_error_identity_and_tail",
+        "__wbgt__image_sixel_terminal_browser::large_image_then_palette_reuse_matches_source",
+        "__wbgt__image_sixel_terminal_browser::null_canvas_context_still_inserts_blank_image",
+        "__wbgt__image_sixel_terminal_browser::pending_calls_are_discarded_and_mid_sequence_loading_is_not_replayed",
+        "__wbgt__image_sixel_terminal_browser::real_parser_raster_cells_palette_and_rendered_pixels_match_source",
+        "__wbgt__image_sixel_terminal_browser::seeded_chunks_palette_persistence_and_cancelled_sequences_match_source",
+        "__wbgt__image_sixel_terminal_browser::unregister_reregister_and_real_browser_queued_write_execute_sixel",
+        "__wbgt__image_sixel_terminal_browser::warnings_limits_palette_reset_and_bytewise_st_match_source"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "26.4",
+      "output": "running 15 tests\ntest warnings_limits_palette_reset_and_bytewise_st_match_source ... ok\ntest unregister_reregister_and_real_browser_queued_write_execute_sixel ... ok\ntest seeded_chunks_palette_persistence_and_cancelled_sequences_match_source ... ok\ntest real_parser_raster_cells_palette_and_rendered_pixels_match_source ... ok\ntest pending_calls_are_discarded_and_mid_sequence_loading_is_not_replayed ... ok\ntest null_canvas_context_still_inserts_blank_image ... ok\ntest large_image_then_palette_reuse_matches_source ... ok\ntest failures::synchronous_canvas_and_image_data_failures_keep_error_identity_and_tail ... ok\ntest failures::storage_callback_error_is_synchronous_and_retains_inserted_image ... ok\ntest failures::put_image_data_reset_reentry_uses_live_decoder_and_keeps_uploaded_pixels ... ok\ntest failures::memory_and_indirect_call_traps_use_actual_browser_diagnostics ... ok\ntest failures::decoding_warning_and_throwing_warning_preserve_source_state ... ok\ntest failures::canvas_method_and_constructor_getters_keep_source_evaluation_order ... ok\ntest empty_width_raster_scroll_policy_and_fallback_metrics_match_source ... ok\ntest active_background_default_rgb_palette_inverse_and_before_open_match_source ... ok\n\ntest result: ok. 15 passed; 0 failed; 0 ignored; 0 filtered out; finished in 1.91s\n\n",
+      "counts": {
+        "passed": 15,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/fe0d67b26f8482a1ecdf5a38bce8ff6add7f45ed902e0761b7afba967384bb36/artifact.wasm",
+      "sha256": "fe0d67b26f8482a1ecdf5a38bce8ff6add7f45ed902e0761b7afba967384bb36",
+      "bytes": 20009594,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BryanImagePixels\\target\\wasm32-unknown-unknown\\debug\\deps\\image_sixel_terminal_browser-7460450427fce7da.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BryanImagePixels\\results\\browser-host\\image_sixel_terminal_browser\\2026-11-06T01-41-11-336Z-61842ccc-ff50-446b-bb15-fe6dcb79bfa7\\artifacts\\suite_bg.wasm",
+      "bytes": 16814475,
+      "sha256": "5c7056c8ba77bedde0bd767e864e6c7ea521a648b80575d14ff0605bedace4d0"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\BryanImagePixels\\results\\browser-host\\image_sixel_terminal_browser\\2026-11-06T01-41-11-336Z-61842ccc-ff50-446b-bb15-fe6dcb79bfa7\\artifacts\\suite.js",
+      "bytes": 252380,
+      "sha256": "9a3809a8355a2fc26748486aeacc07535caeeb0e59bd10c1387cd313d0a9b991"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "1936c6a9f20cdf82138967bfb9943d9a4f53789b77568806a204251176c2a636"
+  },
+  "finishedAt": "2026-11-06T01:41:34.208Z"
+}

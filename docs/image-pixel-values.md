@@ -15,12 +15,37 @@ Rust owns decoding, geometry, storage, parser dispatch and resource cleanup. Sma
 
 The source producer is based directly on main `0442e357`, without private prerequisites or a copy of528. Future integration with528 must preserve its palette conversion after the synchronous pixel multiplication and before asynchronous initialization. Complete writable private option/prototype state, full original image639/img01..48 and GC remain311/324, not claimed by this task.
 
-## Current verification
+## Verification
 
-The first native checkpoint passes16 phase tests, including three new ownership/reentry tests, eleven retained IIP tests and two Kitty geometry tests. Full native addon execution passes213 functions in51 result summaries. Native addon all-target/all-feature Clippy and actual WASM library/image-addon-test Clippy pass with warnings denied at that checkpoint. Later source review added late Kitty layer sampling after the raw comparison and a native mutation test, plus live renderer/storage capture for later protocol constructors after nested activation. The current checkpoint passes17 focused tests and214 full-addon functions, with strict native and actual WASM library/addon-test Clippy passing. Browser runtime proof is still pending.
+The final source is9a694fe0, based directly on0442 without private prerequisites. There are thirteen new browser functions and all64 inherited functions remain intact.
 
-The first native compile failed for a missing import after splitting the cohesive end module. The next execution caught an incorrect new-test assumption about nested BASE64 payload visibility. An experiment with the unchanged dependency confirmed `data8` is empty until that nested decoder calls `end`. The test now checks that the outer continuation does not finalize the nested transfer. Both failures and the source observation are retained.
+- Initial and restored-final addon matrices pass77/77 in each Chromium148.0.7778.96, Firefox150.0.2 and WebKit26.4. All have zero page errors, ignored or filtered functions.
+- The exact two-file87ab821d context control passes76 functions and fails only the new nested-activation case with the intended current-storage mismatch. Both fixed files are restored by SHA in finally.
+- The exact fourteen-file0442 production control passes all64 inherited functions and fails exactly the thirteen new functions. New modules remain unlinked under the baseline's module declarations. All fourteen fixed files are restored by SHA in finally.
+- Unchanged typed producer suites pass IIP12, SIXEL15 and Kitty19 functions in each of the three engines, with zero page errors, ignored or filtered functions.
+- Current native focused execution passes17 functions, including four new ownership, payload and layer-phase tests. Full native addon execution passes214 functions across51 result summaries, with no failures, ignored, measured or filtered tests.
+- Native addon all-target/all-feature Clippy and actual WASM library plus all four image-test-target Clippy pass with warnings denied.
+- All five whole-member formatting checks pass. Exact aggregate formatting fails Windows OS206 and remains a failure, not a waiver.
 
-All five whole-member formatting checks pass. Exact aggregate formatting fails Windows OS206 and remains a failure, not a waiver. Browser execution and negative-control evidence are pending the resource allocation. The thirteen new browser functions preserve all64 inherited assertions and compare constructor identity, graphics, protocol checks, exact errors, callbacks and real pixels. No browser pass is claimed here yet.
+The first native compile failed for a missing import after splitting the cohesive end module. The next execution caught an incorrect new-test assumption about nested BASE64 visibility. An experiment with the unchanged dependency confirmed `data8` is empty until that nested decoder calls `end`. The test now checks that the outer continuation does not finalize the nested transfer. Both failures and the source observation are retained. There were no failed runtime launches or retries in the scoped final browser work.
 
-Run `node results/image-pixel-limit/run.mjs native`, `format`, `initial`, `final`, `iip`, `sixel` and `kitty` only in an owned O: worktree with current resource allocation and existing reference Node/Playwright/bindgen tools. `negative-control.mjs` swaps only this worktree's modified production files to exact0442 originals and restores every fixed byte in finally. New production modules stay unlinked under that baseline. Complete Windows/Linux/macOS quality and browser/demo matrices remain open. Overall equivalence is NOT PROVEN.
+The read-only audit verifies2298 source files,785 phase-specific Rust input pins,879 comparator input pins, both776-file reference manifests, seven actual fresh=false compiler records, seven compiler/WASM/binding artifact sets and three native executables. Initial and restored-final compiler hashes are identical. Exact comparator entries and source bundles are retained per phase. These bundles are generated upstream comparator fixtures, retained verbatim for identity checks rather than split into350-line modules or shipped as the Rust implementation. The context control is a real misplaced-image regression, not a missing-method failure.
+
+The direct and shipped bindings both exercise retained constructor identities, completing public write paths, real IIP/Kitty pixels and graphics replies. Small BigInt geometry exceptions use the synchronous parser comparison because the original asynchronous write callback does not run after that throw. They are not converted into successful public-write cases.
+
+Re-run on this producer revision in an owned O: worktree with a private target and current resource allocation:
+
+```sh
+node results/image-pixel-limit/run.mjs native
+node results/image-pixel-limit/run.mjs initial
+node results/image-pixel-limit/negative-control.mjs context
+node results/image-pixel-limit/negative-control.mjs baseline
+node results/image-pixel-limit/run.mjs final
+node results/image-pixel-limit/run.mjs iip
+node results/image-pixel-limit/run.mjs sixel
+node results/image-pixel-limit/run.mjs kitty
+node results/image-pixel-limit/run.mjs format
+node results/image-pixel-limit/audit.mjs
+```
+
+Set existing `REFERENCE_NODE_MODULES`, `PLAYWRIGHT_MODULE` and matching0.2.100 `WASM_BINDGEN`; keep TEMP/TMP/TMPDIR and Cargo target under owned O:. The audit's retained runtime paths identify historical artifacts and must not be mistaken for reusable builds after cleanup. Full original639/img01..48, complete private/default/prototype records, GC and native Windows/Linux/macOS final matrices remain311/324/304/327. Overall equivalence is NOT PROVEN.

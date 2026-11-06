@@ -33,7 +33,7 @@ if(process.argv[2]==='--write'){
  if(JSON.stringify(before.native)!==JSON.stringify(native))throw Error('Native executable identities changed since pin');
 }
 const browsers=[];
-for(const name of ['initial','final','control','iip','sixel','kitty']){
+for(const name of ['initial','final','control','context-control','iip','sixel','kitty']){
  let report;try{report=JSON.parse(await readFile(resolve(out,name+'-browser.json'),'utf8'));}catch(e){if(e.code==='ENOENT')continue;throw e;}
  if(!report.artifacts)throw Error('Missing runtime artifact identities '+name);
  for(const key of ['wasm','bindings']){
@@ -42,8 +42,39 @@ for(const name of ['initial','final','control','iip','sixel','kitty']){
  for(const key of ['compiler']){
   const p=report.artifacts[key];if(hash(await readFile(resolve(root,p.path)))!==p.sha256)throw Error('Compiler artifact mismatch '+name);
  }
- browsers.push({name,status:report.status,browsers:report.browsers.map(b=>({name:b.name,version:b.version,status:b.status,counts:b.counts,pageErrors:b.errors.length})),artifacts:report.artifacts});
+ const verification=JSON.parse(await readFile(resolve(out,name+'-verification.json'),'utf8'));
+ const baseline=new Map();
+ if(['control','context-control'].includes(name)){
+  const restore=JSON.parse(await readFile(resolve(out,name+'-restore.json'),'utf8'));
+  for(const item of restore.pins){
+   if(hash(git('show',restore.base+':'+item.file))!==item.baseSHA ||
+      hash(await readFile(item.file))!==item.fixedSHA || !item.restored)
+    throw Error('Invalid immutable control/restore identity '+name+' '+item.file);
+   baseline.set(item.file,item.baseSHA);
+  }
+ }
+ for(const pin of verification.rustInputs){
+  const expected=baseline.get(pin.path)??hash(await readFile(pin.path));
+  if(pin.sha256!==expected)throw Error('Runtime Rust input mismatch '+name+' '+pin.path);
+ }
+ for(const pin of verification.sourceInputs){
+  const path=pin.path===resolve('tmp/image-canvas/image-comparators.ts')?resolve(out,name+'-comparators.ts'):pin.path;
+  if(hash(await readFile(path))!==pin.sha256)throw Error('Comparator source input mismatch '+name+' '+path);
+ }
+ const log=resolve(out,name+'-build.log');
+ const messages=(await readFile(log,'utf8')).split(/\r?\n/).filter(l=>l.startsWith('{')).map(l=>JSON.parse(l));
+ const compiled=messages.find(m=>m.reason==='compiler-artifact'&&m.target.name===report.testName&&m.profile.test);
+ if(!compiled || compiled.fresh!==false)throw Error('Missing actual fresh=false compile '+name);
+ const prelude=resolve(out,name+'-source-renderer.js');
+ browsers.push({name,status:report.status,rustPins:verification.rustInputs.length,comparatorPins:verification.sourceInputs.length,
+  fresh:compiled.fresh,buildLog:{path:log,sha256:hash(await readFile(log))},prelude:{path:prelude,sha256:hash(await readFile(prelude))},
+  browsers:report.browsers.map(b=>({name:b.name,version:b.version,status:b.status,counts:b.counts,pageErrors:b.errors.length})),artifacts:report.artifacts});
 }
 const result={sources:pins.length,references,browsers};
-await writeFile(resolve(out,'identity-audit.json'),JSON.stringify(result,null,2)+'\n');
+if(['--write','--report'].includes(process.argv[2])) {
+ await writeFile(resolve(out,'identity-audit.json'),JSON.stringify(result,null,2)+'\n');
+} else {
+ const saved=JSON.parse(await readFile(resolve(out,'identity-audit.json'),'utf8'));
+ if(JSON.stringify(saved)!==JSON.stringify(result))throw Error('Retained identity report differs from current inputs');
+}
 console.log(JSON.stringify({sources:result.sources,references,browserPhases:browsers.length}));
