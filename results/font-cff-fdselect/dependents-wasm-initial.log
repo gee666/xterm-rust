@@ -1,0 +1,25 @@
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JulieFdSelect\crates\xterm-core)
+   Compiling serde_json v1.0.154
+    Checking web-sys v0.3.77
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JulieFdSelect\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\JulieFdSelect\crates\xterm-wasm-support)
+error[E0425]: cannot find function `assert_previous` in module `assertions`
+  --> crates\xterm-addons\tests\font_cff2_fonts.rs:10:17
+   |
+10 |     assertions::assert_previous();
+   |                 ^^^^^^^^^^^^^^^ not found in `assertions`
+   |
+note: found an item that was configured out
+  --> crates\xterm-addons\tests\support\font_cff2_fonts_assertions.rs:65:8
+   |
+65 | pub fn assert_previous() {
+   |        ^^^^^^^^^^^^^^^
+note: the item is gated here
+  --> crates\xterm-addons\tests\support\font_cff2_fonts_assertions.rs:64:1
+   |
+64 | #[cfg(not(target_arch = "wasm32"))]
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `xterm-addons` (test "font_cff2_fonts") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
