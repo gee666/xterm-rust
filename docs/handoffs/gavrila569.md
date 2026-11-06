@@ -12,7 +12,7 @@ Base224d1b339a43eddf899c2944d9dad734d8c44234. Own commits before this receipt:
 - 23a89b253fb987f9318b91e8f2fc608c7af21f4e adds nonempty underline/OSC8 source assertions and explicit scope documentation. No implementation change.
 - 41e2090d277e4c79e1aec2d629976a08a6c3ff09 exact evidence. No implementation change.
 
-This final receipt adds only review, handoff and cleanup preflight metadata. No prerequisites or private copies were taken. Sydney309/576 owns integration. If576 is already frozen, leave569 for the next batch rather than appending it.
+Final receipts add only review, handoff, cleanup preflight and archive-input metadata. Archive verification matched1913 input files exactly; two inherited files materialize CRLF under core.autocrlf=true. Their physical/blob hashes and exact newline-only checks are retained in results/image-core/archive-inputs.json. No runtime or durable hashes were normalized. No prerequisites or private copies were taken. Sydney309/576 owns integration. If576 is already frozen, leave569 for the next batch rather than appending it.
 
 The new wrappers use existing native parser registries, attribute identity, pending dirty range, retained rows and browser/theme services. They are not source-JS engine delegation or fixture presence objects. DCS/OSC/APC operate on actual streams, LF/reset notifications are real, and native tests prove dirty marks affect actual emitted render ranges. Packed/extended/Params/color data are explicitly read-only projections. Writable private fields, raw numeric policy, full method/descriptor identity and GC remain open.
 
