@@ -92,6 +92,23 @@ fn text_index(data: &Data<'_>, start: String) -> Result<(), FontError> {
     }
     Ok(())
 }
+fn text_range(data: &Data<'_>, mut first: String, last: String) -> Result<(), FontError> {
+    while first < last {
+        let value = number(&first);
+        data.bytes(value, 1)?;
+        if value.is_nan() {
+            // Source appends "1" forever while repeatedly reading byte0 here.
+            // Do not hang on an untrusted malformed font.
+            return Err(FontError::Invalid(
+                "CFF2 string INDEX range does not terminate",
+            ));
+        }
+        first.try_reserve(1)?;
+        first.push('1');
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -142,20 +159,4 @@ mod tests {
             ))
         );
     }
-}
-fn text_range(data: &Data<'_>, mut first: String, last: String) -> Result<(), FontError> {
-    while first < last {
-        let value = number(&first);
-        if value.is_nan() {
-            // Source appends "1" forever while repeatedly reading byte0 here.
-            // Do not hang on an untrusted malformed font.
-            return Err(FontError::Invalid(
-                "CFF2 string INDEX range does not terminate",
-            ));
-        }
-        data.bytes(value, 1)?;
-        first.try_reserve(1)?;
-        first.push('1');
-    }
-    Ok(())
 }
