@@ -105,11 +105,12 @@ if (mode === 'components') {
     {test:'render_service_browser', count:6, command:'scripts/browser-host-check.mjs'},
     {test:'wasm_webgl_browser_cache', count:9, command:'scripts/browser-host-check.mjs',
       prepare:'scripts/browser-atlas-cache-oracle.mjs', prelude:join(root,'tmp/browser-atlas-cache/source.js')},
-    {test:'wasm_link_mouse_path', count:1, command:'scripts/public-link-provider-source.mjs', args:['--mouse-path']}
+    {test:'wasm_link_mouse_path', count:1, command:'scripts/browser-host-check.mjs',
+      prepare:'scripts/public-link-provider-source.mjs', prepareArgs:['--mouse-path']}
   ];
   for (const entry of runs) {
     process.env.WASM_TEST = entry.test;
-    if (entry.prepare) assert.equal((await run(entry.test+'-source',process.execPath,[entry.prepare])).status,'passed');
+    if (entry.prepare) assert.equal((await run(entry.test+'-source',process.execPath,[entry.prepare,...(entry.prepareArgs??[])])).status,'passed');
     if (entry.prelude) process.env.WASM_PRELUDE = entry.prelude;
     else delete process.env.WASM_PRELUDE;
     assert.equal((await run(entry.test,process.execPath,[entry.command,...(entry.args??[])],600000)).status,'passed');
