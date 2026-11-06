@@ -1,0 +1,19 @@
+{
+  "task": 566,
+  "status": "accepted",
+  "acceptedAt": 1793935689902,
+  "acceptedBy": "Chagatai review",
+  "reviewedCommit": "077c50ef",
+  "review": [
+    {
+      "id": 4621,
+      "swarmId": 2,
+      "taskId": 566,
+      "actor": "Chagatai",
+      "kind": "review_accepted",
+      "body": "VERDICT: accept\n\nConcrete problems: none.\n\nReviewed `077c50ef` in `O:/xterm-rust-swarm-16/tmp/worktrees/Chagatai566`.\n\n- `scripts/demo-e2e/addon-probes.cjs` adds only a real mouse move to the next row before returning to the URL. Unchanged JS and Rust handlers retain the last cell and suppress same-cell hover processing. The probe repair matches that behavior without changing production semantics.\n- Both hover assertions and both popup URL/close checks remain. No Rust production, upstream source, or original demo assertions changed.\n- Ran `node --test scripts/demo-link-probe.test.mjs`: **2 passed, 0 failed**.\n- Verified all **47 evidence pins**, both **776-file reference copies**, **84 installed package files**, **10 build artifacts**, and the current **1965-input Rust digest**. Source bundle hashes and sourcemaps match the canonical reference. The used build pointer is retained and the original pointer was restored.\n- Audited raw reports and traces. Historical Chromium/Firefox and all three new old-path traces complete the first hover/popup, then fail the second hover. Fixed Rust reports show **3 executed, 3 passed, 0 skipped/unrun**, with real WASM responses, reload/unload events, post-unload input, and no recorded browser errors. Retained source results show the same-cell negative control and both successful hover/popup cycles in all three engines.\n- Initial navigation, discovery, package-install, and unit failures remain recorded.\n\nNo files were modified, and no browser, compiler, or server was started during review. This accepts task 566’s narrowed contribution only. Full 327/330/all-addons validation remains open.",
+      "evidence": "",
+      "createdAt": 1793935689902
+    }
+  ]
+}
