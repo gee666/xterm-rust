@@ -30,13 +30,14 @@ jobs:
           toolchain: ${{ matrix.toolchain }}
           components: rustfmt, clippy
       # cargo-fmt canonicalizes every target path before spawning rustfmt. A
-      # drive alias does not shorten that command line on Windows.
+      # drive alias does not shorten that command line on Windows. The sibling
+      # of RUNNER_TEMP avoids another six characters per target root.
       - name: Create a short physical Windows quality worktree
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $short = Join-Path $env:RUNNER_TEMP 'q'
+          $short = [IO.Path]::GetFullPath((Join-Path $env:RUNNER_TEMP '../q'))
           if (Test-Path -LiteralPath $short) { throw "Refusing existing path $short" }
           "XTERM_OWNED_QUALITY_ROOT=$short" >> $env:GITHUB_ENV
           git worktree add --detach $short $env:GITHUB_SHA
@@ -86,7 +87,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           if ($env:XTERM_OWNED_QUALITY_ROOT) {
-            $short = Join-Path $env:RUNNER_TEMP 'q'
+            $short = [IO.Path]::GetFullPath((Join-Path $env:RUNNER_TEMP '../q'))
             if ($env:XTERM_OWNED_QUALITY_ROOT -ne $short) { throw 'Unexpected owned quality path' }
             if (Test-Path -LiteralPath $short) {
               $root = Get-Item -LiteralPath $short -Force

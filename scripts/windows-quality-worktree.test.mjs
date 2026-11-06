@@ -25,12 +25,38 @@ test('native gates and artifacts use the selected physical root without changing
   assert.ok(workflow.indexOf('Preserve command logs and native provenance') < workflow.indexOf('Remove only the owned short Windows worktree'));
 });
 
+test('the current target inventory fits the shortened hosted Windows command line', () => {
+  const expression = "[IO.Path]::GetFullPath((Join-Path $env:RUNNER_TEMP '../q'))";
+  assert.ok(setup.includes(expression));
+  assert.ok(cleanup.includes(expression));
+  const result = spawnSync('cargo', ['metadata', '--no-deps', '--format-version', '1', '--locked'], {
+    cwd: root, encoding: 'utf8', timeout: 30000
+  });
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 0, result.stderr);
+  const metadata = JSON.parse(result.stdout);
+  const packages = metadata.packages.filter(pkg => metadata.workspace_members.includes(pkg.id));
+  const groups = Object.groupBy(packages.flatMap(pkg => pkg.targets), target => target.edition);
+  const hostedRoot = 'D:/a/q';
+  const windowsCommandLineLimit = 32767;
+  // Reserve the executable, --edition, --check and other non-file arguments.
+  const nonFileArgumentReserve = 512;
+  for (const [edition, targets] of Object.entries(groups)) {
+    const characters = targets.reduce((total, target) => {
+      const relative = path.relative(root, target.src_path);
+      return total + hostedRoot.length + 1 + relative.length + 7;
+    }, 0);
+    assert.ok(characters <= windowsCommandLineLimit - nonFileArgumentReserve,
+      `edition ${edition}: ${targets.length} roots need ${characters} file-argument characters`);
+  }
+});
+
 test('Windows setup and cleanup preserve ownership, source identity and linked data', {skip: process.platform !== 'win32'}, async t => {
   mkdirSync(path.join(root, 'tmp'), {recursive: true});
   const fixture = mkdtempSync(path.join(root, 'tmp', 'windows-quality-'));
   const repo = path.join(fixture, 'repo');
   const temporary = path.join(fixture, 'runner-temp');
-  const short = path.join(temporary, 'q');
+  const short = path.join(fixture, 'q');
   const environment = path.join(fixture, 'github-env');
   const setupPath = path.join(fixture, 'setup.ps1');
   const cleanupPath = path.join(fixture, 'cleanup.ps1');
@@ -58,6 +84,7 @@ test('Windows setup and cleanup preserve ownership, source identity and linked d
   try {
     mkdirSync(repo);
     mkdirSync(temporary);
+    writeFileSync(path.join(temporary, 'keep.txt'), 'runner temporary data\n');
     writeFileSync(setupPath, setup);
     writeFileSync(cleanupPath, cleanup);
     writeFileSync(budgetPath, budget);
@@ -79,6 +106,15 @@ test('Windows setup and cleanup preserve ownership, source identity and linked d
       const published = readFileSync(environment, 'utf16le');
       assert.ok(published.includes(`XTERM_OWNED_QUALITY_ROOT=${short}`));
       assert.ok(published.includes(`XTERM_QUALITY_ROOT=${short}`));
+    });
+    await t.test('a trailing runner-temp separator resolves to the same protected checkout', () => {
+      env.RUNNER_TEMP = temporary + path.sep;
+      try {
+        const result = ps(setupPath);
+        assert.notEqual(result.status, 0);
+        assert.match(result.stderr, /Refusing existing path/);
+        assert.equal(git(['rev-parse', 'HEAD'], short), env.GITHUB_SHA);
+      } finally { env.RUNNER_TEMP = temporary; }
     });
     await t.test('budget records the actual physical root and all metadata targets', () => {
       const result = ps(budgetPath, short, short);
@@ -123,6 +159,7 @@ test('Windows setup and cleanup preserve ownership, source identity and linked d
       assert.equal(existsSync(short), false);
       assert.equal(git(['status', '--porcelain']), '');
       assert.equal(git(['worktree', 'list', '--porcelain']).includes(short.replaceAll('\\', '/')), false);
+      assert.equal(readFileSync(path.join(temporary, 'keep.txt'), 'utf8'), 'runner temporary data\n');
     });
     await t.test('cleanup refuses a root junction before inspecting descendants', () => {
       symlinkSync(path.join(fixture, 'sentinel'), short, 'junction');

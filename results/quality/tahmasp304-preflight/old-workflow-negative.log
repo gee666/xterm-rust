@@ -1,0 +1,268 @@
+✔ native gates and artifacts use the selected physical root without changing gate commands (0.6163ms)
+▶ Windows setup and cleanup preserve ownership, source identity and linked data
+  ✖ setup checks out the requested SHA and publishes only the owned root (423.0954ms)
+  ✖ budget records the actual physical root and all metadata targets (0.6213ms)
+  ✖ an existing path is preserved and setup fails visibly (298.6694ms)
+  ✖ cleanup rejects an unexpected ownership marker (317.0041ms)
+  ✖ cleanup refuses a child junction and preserves its target (97.4352ms)
+  ✖ cleanup removes owned generated files after an earlier failed step (0.1869ms)
+  ✖ cleanup refuses a root junction before inspecting descendants (306.6254ms)
+  ✖ a failed checkout remains failed and cleanup preserves the source repository (302.8604ms)
+✖ Windows setup and cleanup preserve ownership, source identity and linked data (2334.9134ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 1
+ℹ fail 9
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2404.6978
+
+✖ failing tests:
+
+test at scripts\windows-quality-worktree.test.mjs:76:13
+✖ setup checks out the requested SHA and publishes only the owned root (423.0954ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + Error: spawnSync git ENOENT
+  +     at Object.spawnSync (node:internal/child_process:1143:20)
+  +     at spawnSync (node:child_process:911:24)
+  +     at git (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:42:20)
+  +     at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:78:20)
+  +     at Test.runInAsyncScope (node:async_hooks:227:14)
+  +     at Test.run (node:internal/test_runner/test:1201:25)
+  +     at Test.start (node:internal/test_runner/test:1096:17)
+  +     at TestContext.test (node:internal/test_runner/test:377:20)
+  +     at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:76:13)
+  +     at Test.runInAsyncScope (node:async_hooks:227:14) {
+  +   code: 'ENOENT',
+  +   errno: -4058,
+  +   path: 'git',
+  +   spawnargs: [
+  +     'rev-parse',
+  +     'HEAD'
+  +   ],
+  +   syscall: 'spawnSync git'
+  + }
+  - undefined
+  
+      at git (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:43:12)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:78:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at TestContext.test (node:internal/test_runner/test:377:20)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:76:13)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: spawnSync git ENOENT
+        at Object.spawnSync (node:internal/child_process:1143:20)
+        at spawnSync (node:child_process:911:24)
+        at git (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:42:20)
+        at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:78:20)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1201:25)
+        at Test.start (node:internal/test_runner/test:1096:17)
+        at TestContext.test (node:internal/test_runner/test:377:20)
+        at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:76:13)
+        at Test.runInAsyncScope (node:async_hooks:227:14),
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\windows-quality-worktree.test.mjs:83:13
+✖ budget records the actual physical root and all metadata targets (0.6213ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + Error: spawnSync C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe ENOENT
+  +     at Object.spawnSync (node:internal/child_process:1143:20)
+  +     at spawnSync (node:child_process:911:24)
+  +     at ps (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:50:12)
+  +     at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:84:22)
+  +     at Test.runInAsyncScope (node:async_hooks:227:14)
+  +     at Test.run (node:internal/test_runner/test:1201:25)
+  +     at Test.start (node:internal/test_runner/test:1096:17)
+  +     at TestContext.test (node:internal/test_runner/test:377:20)
+  +     at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:83:13)
+  +     at async Test.run (node:internal/test_runner/test:1208:7) {
+  +   code: 'ENOENT',
+  +   errno: -4058,
+  +   path: 'C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe',
+  +   spawnargs: [
+  +     '-NoProfile',
+  +     '-NonInteractive',
+  +     '-ExecutionPolicy',
+  +     'Bypass',
+  +     '-File',
+  +     'O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\budget.ps1'
+  +   ],
+  +   syscall: 'spawnSync C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe'
+  + }
+  - undefined
+  
+      at succeeded (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:55:12)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:85:7)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at TestContext.test (node:internal/test_runner/test:377:20)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:83:13)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: spawnSync C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe ENOENT
+        at Object.spawnSync (node:internal/child_process:1143:20)
+        at spawnSync (node:child_process:911:24)
+        at ps (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:50:12)
+        at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:84:22)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1201:25)
+        at Test.start (node:internal/test_runner/test:1096:17)
+        at TestContext.test (node:internal/test_runner/test:377:20)
+        at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:83:13)
+        at async Test.run (node:internal/test_runner/test:1208:7),
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\windows-quality-worktree.test.mjs:93:13
+✖ an existing path is preserved and setup fails visibly (298.6694ms)
+  Error: ENOENT: no such file or directory, open 'O:\xterm-rust-swarm-16\tmp\Tahmasp304\tmp\windows-quality-37X5Gr\q\source.txt'
+      at readFileSync (node:fs:441:20)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:97:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at TestContext.test (node:internal/test_runner/test:377:20)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:93:13)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\q\\source.txt'
+  }
+
+test at scripts\windows-quality-worktree.test.mjs:99:13
+✖ cleanup rejects an unexpected ownership marker (317.0041ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(existsSync(short))
+  
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:103:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at TestContext.test (node:internal/test_runner/test:377:20)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:99:13)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts\windows-quality-worktree.test.mjs:105:13
+✖ cleanup refuses a child junction and preserves its target (97.4352ms)
+  Error: ENOENT: no such file or directory, symlink 'O:\xterm-rust-swarm-16\tmp\Tahmasp304\tmp\windows-quality-37X5Gr\sentinel' -> 'O:\xterm-rust-swarm-16\tmp\Tahmasp304\tmp\windows-quality-37X5Gr\q\linked-data'
+      at symlinkSync (node:fs:1869:11)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:110:7)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at TestContext.test (node:internal/test_runner/test:377:20)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:105:13)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'symlink',
+    path: 'O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\sentinel',
+    dest: 'O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\q\\linked-data'
+  }
+
+test at scripts\windows-quality-worktree.test.mjs:119:13
+✖ cleanup removes owned generated files after an earlier failed step (0.1869ms)
+  Error: ENOENT: no such file or directory, mkdir 'O:\xterm-rust-swarm-16\tmp\Tahmasp304\tmp\windows-quality-37X5Gr\q\target'
+      at mkdirSync (node:fs:1350:26)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:120:7)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at TestContext.test (node:internal/test_runner/test:377:20)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:119:13)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'mkdir',
+    path: 'O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\q\\target'
+  }
+
+test at scripts\windows-quality-worktree.test.mjs:127:13
+✖ cleanup refuses a root junction before inspecting descendants (306.6254ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Refusing non-directory or linked quality root/. Input:
+  
+  'Unexpected owned quality path\r\n' +
+    'At O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\cleanup.ps1:4 char:51\r\n' +
+    "+ ... ED_QUALITY_ROOT -ne $short) { throw 'Unexpected owned quality path' }\r\n" +
+    '+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n' +
+    '    + CategoryInfo          : OperationStopped: (Unexpected owned quality path:String) [], RuntimeException\r\n' +
+    '    + FullyQualifiedErrorId : Unexpected owned quality path\r\n' +
+    ' \r\n'
+  
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:132:16)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at TestContext.test (node:internal/test_runner/test:377:20)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:127:13)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: "Unexpected owned quality path\r\nAt O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\cleanup.ps1:4 char:51\r\n+ ... ED_QUALITY_ROOT -ne $short) { throw 'Unexpected owned quality path' }\r\n+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (Unexpected owned quality path:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : Unexpected owned quality path\r\n \r\n",
+    expected: /Refusing non-directory or linked quality root/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\windows-quality-worktree.test.mjs:136:13
+✖ a failed checkout remains failed and cleanup preserves the source repository (302.8604ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Cannot create the short quality worktree/. Input:
+  
+  'Refusing existing path O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\runner-temp\\q\r\n' +
+    'At O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\setup.ps1:3 char:38\r\n' +
+    '+ ... t-Path -LiteralPath $short) { throw "Refusing existing path $short" }\r\n' +
+    '+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n' +
+    '    + CategoryInfo          : OperationStopped: (Refusing existi...r\\runner-temp\\q:String) [], RuntimeException\r\n' +
+    '    + FullyQualifiedErrorId : Refusing existing path O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\ \r\n' +
+    '   runner-temp\\q\r\n' +
+    ' \r\n'
+  
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:140:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at TestContext.test (node:internal/test_runner/test:377:20)
+      at TestContext.<anonymous> (file:///O:/xterm-rust-swarm-16/tmp/Tahmasp304/scripts/windows-quality-worktree.test.mjs:136:13)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Refusing existing path O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\runner-temp\\q\r\nAt O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\setup.ps1:3 char:38\r\n+ ... t-Path -LiteralPath $short) { throw "Refusing existing path $short" }\r\n+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (Refusing existi...r\\runner-temp\\q:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : Refusing existing path O:\\xterm-rust-swarm-16\\tmp\\Tahmasp304\\tmp\\windows-quality-37X5Gr\\ \r\n   runner-temp\\q\r\n \r\n',
+    expected: /Cannot create the short quality worktree/,
+    operator: 'match',
+    diff: 'simple'
+  }
