@@ -3,10 +3,13 @@ use crate::{js_error::to_js_error, terminal::options::from_js, utility_addons::j
 use wasm_bindgen::prelude::*;
 use xterm_core::{options::OptionValue, serialize::LineRange};
 
-#[wasm_bindgen(
-    inline_js = "export function checkSerializeArrayLength(length) { new Array(length); }"
-)]
+#[wasm_bindgen(inline_js = "
+export function serializeRowDifference(end, start) { return end - start; }
+export function checkSerializeArrayLength(length) { new Array(length); }
+")]
 extern "C" {
+    #[wasm_bindgen(catch, js_name = serializeRowDifference)]
+    fn row_difference(end: &JsValue, start: &JsValue) -> Result<JsValue, JsValue>;
     #[wasm_bindgen(catch, js_name = checkSerializeArrayLength)]
     fn check_array_length(length: f64) -> Result<(), JsValue>;
 }
@@ -43,10 +46,15 @@ pub(super) fn marker(range: &JsValue, key: &str) -> Result<JsValue, JsValue> {
     }
 }
 pub(super) fn line_range(start: JsValue, end: JsValue) -> Result<LineRange, JsValue> {
-    if let (Some(start), Some(end)) = (start.as_f64(), end.as_f64()) {
-        let count = end - start;
+    // Subtraction precedes allocation and index conversion in the source.
+    // Keep the raw operands: end coerces first, and either conversion may
+    // reenter the terminal or throw its original JavaScript value.
+    let difference = match (start.as_f64(), end.as_f64()) {
+        (Some(start), Some(end)) => JsValue::from_f64(end - start),
+        _ => row_difference(&end, &start)?,
+    };
+    if let Some(count) = difference.as_f64() {
         if !count.is_finite() || count < 0.0 || count.fract() != 0.0 || count > u32::MAX as f64 {
-            // Source allocates its row array only after reading both markers.
             // Let the browser create its own RangeError, including engine-specific
             // text. The invalid count cannot allocate a large valid array here.
             check_array_length(count)?;

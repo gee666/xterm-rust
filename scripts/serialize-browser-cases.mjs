@@ -779,6 +779,75 @@ export async function serializationCases() {
     }
     return results;
   });
+  await run('ansi-raw-marker-invalid-allocation', async (term, addon) => {
+    await write(term, '\x1b[31moriginal\r\nsecond');
+    const values = [];
+    for (const [startValue, endValue] of [[0, NaN], [0, Infinity], [0, -Infinity], [0, 0.5], [2, 1],
+      [0, 2 ** 32], [-1, 2 ** 32 - 1]]) {
+      for (const boxed of ['start', 'end', 'both']) {
+        const log = [];
+        const raw = (key, number) => boxed === key || boxed === 'both'
+          ? { [Symbol.toPrimitive](hint) { log.push(`${key}:${hint}`); return number; } } : number;
+        const coordinate = (key, number) => ({ get line() { log.push(`${key}.line`); return raw(key, number); } });
+        const range = { get start() { log.push('start'); return coordinate('start', startValue); },
+          get end() { log.push('end'); return coordinate('end', endValue); } };
+        const options = { get range() { log.push('range'); return range; },
+          get excludeAltBuffer() { log.push('alt'); return true; }, get excludeModes() { log.push('modes'); return true; } };
+        values.push({ start: String(startValue), end: String(endValue), boxed,
+          result: capture(() => addon.serialize(options)), log });
+      }
+    }
+    return { values, state: snapshot(term) };
+  });
+  await run('ansi-raw-marker-coercion-throws', async (term, addon) => {
+    await write(term, 'original');
+    const values = [];
+    for (const phase of ['end-get', 'end-call', 'start-get', 'start-call', 'end-symbol', 'start-symbol',
+      'end-bigint', 'start-bigint', 'end-nonprimitive', 'start-nonprimitive']) {
+      const log = [], sentinel = {}, raw = key => ({ get [Symbol.toPrimitive]() {
+        log.push(`${key}.primitive`); if (phase === `${key}-get`) throw sentinel;
+        return hint => {
+          log.push(`${key}:${hint}`); if (phase === `${key}-call`) throw sentinel;
+          if (phase === `${key}-symbol`) return Symbol('row');
+          if (phase === `${key}-bigint`) return 0n;
+          if (phase === `${key}-nonprimitive`) return {};
+          return 0;
+        };
+      } });
+      const range = { get start() { log.push('start'); return { get line() { log.push('start.line'); return raw('start'); } }; },
+        get end() { log.push('end'); return { get line() { log.push('end.line'); return raw('end'); } }; } };
+      let same = false;
+      const result = capture(() => { try { return addon.serialize({ range }); }
+        catch (error) { same = error === sentinel; throw error; } });
+      values.push({ phase, result, same, log });
+    }
+    return { values, state: snapshot(term) };
+  });
+  await run('ansi-raw-marker-allocation-reentry', async (term, addon) => {
+    const values = [];
+    for (const phase of ['reset', 'throw-after-reset', 'nested', 'mutate-start']) {
+      term.reset(); term.resize(12, 4); await write(term, '\x1b[34moriginal\r\nsecond');
+      const log = [], sentinel = {}; let startValue = 0, nested, same = false;
+      const start = { [Symbol.toPrimitive](hint) {
+        log.push(`start:${hint}`); if (phase === 'throw-after-reset') throw sentinel; return startValue;
+      } };
+      const end = { [Symbol.toPrimitive](hint) {
+        log.push(`end:${hint}`);
+        if (phase === 'nested') nested = addon.serialize({ range: { start: 0, end: 0 }, excludeAltBuffer: true, excludeModes: true });
+        if (phase === 'mutate-start') startValue = 2;
+        else { term.reset(); term.resize(6, 2); }
+        return phase === 'mutate-start' ? 1 : NaN;
+      } };
+      const range = { get start() { log.push('start'); return { get line() { log.push('start.line'); return start; } }; },
+        get end() { log.push('end'); return { get line() { log.push('end.line'); return end; } }; } };
+      const options = { get range() { log.push('range'); return range; },
+        get excludeAltBuffer() { log.push('alt'); throw sentinel; }, get excludeModes() { log.push('modes'); throw sentinel; } };
+      const result = capture(() => { try { return addon.serialize(options); }
+        catch (error) { same = error === sentinel; throw error; } });
+      values.push({ phase, result, nested, same, log, state: snapshot(term) });
+    }
+    return values;
+  });
   // Retain known unsupported numeric results. The comparison report separates
   // these from the supported binding regressions instead of hiding differences.
   await run('raw-numeric-boundaries', async (term, addon) => {
