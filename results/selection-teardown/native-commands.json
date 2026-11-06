@@ -1,0 +1,123 @@
+{
+  "env": {
+    "TEMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ValeriaSelection\\tmp\\runtime",
+    "TMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ValeriaSelection\\tmp\\runtime",
+    "TMPDIR": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ValeriaSelection\\tmp\\runtime",
+    "CARGO_TARGET_DIR": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ValeriaSelection\\target",
+    "CARGO_BUILD_JOBS": "2"
+  },
+  "commands": [
+    {
+      "label": "native-initial",
+      "executable": "C:/Users/user/.cargo/bin/cargo.exe",
+      "args": [
+        "test",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--all-features",
+        "--test",
+        "selection_teardown",
+        "--test",
+        "selection_model",
+        "--test",
+        "selection_service",
+        "--test",
+        "selection_service_differential"
+      ],
+      "exit": 0,
+      "seconds": 14.669,
+      "expectedFailure": false,
+      "log": "native-initial.log",
+      "ram": 31555174400,
+      "free": 2675475902464
+    },
+    {
+      "label": "native-all",
+      "executable": "C:/Users/user/.cargo/bin/cargo.exe",
+      "args": [
+        "test",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--all-targets",
+        "--all-features"
+      ],
+      "exit": 0,
+      "seconds": 54.872,
+      "expectedFailure": false,
+      "log": "native-all.log",
+      "ram": 32402509824,
+      "free": 2675398754304
+    },
+    {
+      "label": "native-clippy",
+      "executable": "C:/Users/user/.cargo/bin/cargo.exe",
+      "args": [
+        "clippy",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "seconds": 15.733,
+      "expectedFailure": false,
+      "log": "native-clippy.log",
+      "ram": 30581309440,
+      "free": 2674592600064
+    },
+    {
+      "label": "native-old-control",
+      "executable": "C:/Users/user/.cargo/bin/cargo.exe",
+      "args": [
+        "test",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--test",
+        "selection_teardown"
+      ],
+      "exit": 101,
+      "seconds": 3.982,
+      "expectedFailure": true,
+      "log": "native-old-control.log",
+      "ram": 31519600640,
+      "free": 2674502516736
+    },
+    {
+      "label": "native-final",
+      "executable": "C:/Users/user/.cargo/bin/cargo.exe",
+      "args": [
+        "test",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--all-features",
+        "--test",
+        "selection_teardown",
+        "--test",
+        "selection_model",
+        "--test",
+        "selection_service",
+        "--test",
+        "selection_service_differential"
+      ],
+      "exit": 0,
+      "seconds": 4.287,
+      "expectedFailure": false,
+      "log": "native-final.log",
+      "ram": 31657959424,
+      "free": 2674428465152
+    }
+  ]
+}

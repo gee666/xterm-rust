@@ -1,0 +1,60 @@
+
+running 5 tests
+test teardown_failure_retains_cleared_model_and_exact_error_without_events ... FAILED
+test set_selection_clears_before_teardown_then_refreshes_and_notifies ... FAILED
+test late_assignment_preserves_reentrant_end_and_select_all_fields ... FAILED
+test teardown_mutation_survives_a_later_callback_error ... FAILED
+test nested_set_selection_finishes_before_outer_target_assignment ... FAILED
+
+failures:
+
+---- teardown_failure_retains_cleared_model_and_exact_error_without_events stdout ----
+
+thread 'teardown_failure_retains_cleared_model_and_exact_error_without_events' panicked at crates\xterm-web\tests\selection_teardown.rs:98:5:
+assertion `left == right` failed
+  left: SelectionModel { is_select_all_active: false, selection_start_length: 3, selection_start: Some(Position { column: 2, row: 0 }), selection_end: None }
+ right: SelectionModel { is_select_all_active: false, selection_start_length: 0, selection_start: None, selection_end: None }
+
+---- set_selection_clears_before_teardown_then_refreshes_and_notifies stdout ----
+
+thread 'set_selection_clears_before_teardown_then_refreshes_and_notifies' panicked at crates\xterm-web\tests\selection_teardown.rs:54:9:
+assertion `left == right` failed
+  left: SelectionModel { is_select_all_active: false, selection_start_length: 3, selection_start: Some(Position { column: 2, row: 0 }), selection_end: None }
+ right: SelectionModel { is_select_all_active: false, selection_start_length: 0, selection_start: None, selection_end: None }
+
+---- late_assignment_preserves_reentrant_end_and_select_all_fields stdout ----
+
+thread 'late_assignment_preserves_reentrant_end_and_select_all_fields' panicked at crates\xterm-web\tests\selection_teardown.rs:136:17:
+assertion `left == right` failed
+  left: SelectionModel { is_select_all_active: false, selection_start_length: 3, selection_start: Some(Position { column: 2, row: 0 }), selection_end: None }
+ right: SelectionModel { is_select_all_active: false, selection_start_length: 0, selection_start: None, selection_end: None }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- teardown_mutation_survives_a_later_callback_error stdout ----
+
+thread 'teardown_mutation_survives_a_later_callback_error' panicked at crates\xterm-web\tests\selection_teardown.rs:117:9:
+assertion `left == right` failed
+  left: SelectionModel { is_select_all_active: false, selection_start_length: 3, selection_start: Some(Position { column: 2, row: 0 }), selection_end: None }
+ right: SelectionModel { is_select_all_active: false, selection_start_length: 0, selection_start: None, selection_end: None }
+
+---- nested_set_selection_finishes_before_outer_target_assignment stdout ----
+
+thread 'nested_set_selection_finishes_before_outer_target_assignment' panicked at crates\xterm-web\tests\selection_teardown.rs:169:9:
+assertion `left == right` failed
+  left: SelectionModel { is_select_all_active: false, selection_start_length: 3, selection_start: Some(Position { column: 2, row: 0 }), selection_end: None }
+ right: SelectionModel { is_select_all_active: false, selection_start_length: 0, selection_start: None, selection_end: None }
+
+
+failures:
+    late_assignment_preserves_reentrant_end_and_select_all_fields
+    nested_set_selection_finishes_before_outer_target_assignment
+    set_selection_clears_before_teardown_then_refreshes_and_notifies
+    teardown_failure_retains_cleared_model_and_exact_error_without_events
+    teardown_mutation_survives_a_later_callback_error
+
+test result: FAILED. 0 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Compiling xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\ValeriaSelection\crates\xterm-web)
+    Finished `test` profile [unoptimized] target(s) in 3.79s
+     Running tests\selection_teardown.rs (target\debug\deps\selection_teardown-0761e33799333efb.exe)
+error: test failed, to rerun pass `-p xterm-web --test selection_teardown`

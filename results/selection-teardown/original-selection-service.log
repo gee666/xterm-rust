@@ -1,0 +1,125 @@
+{
+  "upstream": {
+    "discovered": 26,
+    "executed": 26,
+    "passed": 26,
+    "failed": 0,
+    "skipped": 0,
+    "unrun": 0,
+    "outcomes": [
+      {
+        "name": "SelectionService / _selectWordAt / should expand selection for normal width chars",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectWordAt / should expand selection for whitespace",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectWordAt / should expand selection for wide characters",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectWordAt / should select up to non-path characters that are commonly adjacent to paths",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectWordAt / should expand upwards or downards for wrapped lines",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectWordAt / should expand both upwards and downwards for word wrapped over many lines",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectWordAt / emoji / should treat a single emoji as a word when wrapped in spaces",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectWordAt / emoji / should treat multiple emojis as a word when wrapped in spaces",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectWordAt / emoji / should treat emojis using the zero-width-joiner as a single word",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectWordAt / emoji / should treat emojis and characters joined together as a word",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectWordAt / emoji / should treat complex emojis and characters joined together as a word",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectLineAt / should select the entire line",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _selectLineAt / should select the entire wrapped line",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / selectAll / should select the entire buffer, beyond the viewport",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / selectLines / should select a single line",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / selectLines / should select multiple lines",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / selectLines / should select the to the start when requesting a negative row",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / selectLines / should select the to the end when requesting beyond the final row",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / hasSelection / should return whether there is a selection",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / column selection / should select a column of text",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / column selection / should select a column of text without chopping up double width characters",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / column selection / should select a column of text with single character emojis",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / column selection / should select a column of text with double character emojis",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / _areCoordsInSelection / should return whether coords are in the selection",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / shouldForceSelection / should force selection without alt when mouseEventsRequireAlt is enabled",
+        "status": "passed"
+      },
+      {
+        "name": "SelectionService / shouldForceSelection / should take precedence over macOptionClickForcesSelection",
+        "status": "passed"
+      }
+    ]
+  },
+  "traces": {
+    "cases": 4297,
+    "upstreamTraceCount": 201,
+    "randomCases": 4096,
+    "seed": 1579075344,
+    "sha256": "90c7680dc7d1f77557ddfb0311f0c31df22baccbd1a91bd857b2de81ba35d10f",
+    "fixture": "crates/xterm-web/tests/fixtures/selection-service.tsv",
+    "description": "Replay source operations and observations from the complete 26-case unit suite. Force-selection and membership assertions are ported separately in Rust."
+  }
+}
