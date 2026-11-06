@@ -9,6 +9,11 @@ use std::borrow::Cow;
 mod address;
 #[path = "font_cff2_dict.rs"]
 mod dict;
+#[path = "font_cff2_fonts.rs"]
+mod fonts;
+#[cfg(test)]
+#[path = "font_cff2_fonts_tests.rs"]
+mod fonts_tests;
 #[cfg(test)]
 #[path = "font_cff_index_tests.rs"]
 mod tests;
@@ -51,7 +56,7 @@ impl<'a> Data<'a> {
     }
 }
 pub(super) fn validate(reader: Reader<'_>, start: usize) -> Result<(), FontError> {
-    validate_data(
+    validate_fonts(
         Data {
             reader,
             compressed: None,
@@ -60,7 +65,7 @@ pub(super) fn validate(reader: Reader<'_>, start: usize) -> Result<(), FontError
     )
 }
 pub(super) fn compressed(input: &[u8], limit: usize, prefix: &[u8]) -> Result<(), FontError> {
-    validate_data(
+    validate_fonts(
         Data {
             reader: Reader::new(prefix),
             compressed: Some((input, limit)),
@@ -68,7 +73,20 @@ pub(super) fn compressed(input: &[u8], limit: usize, prefix: &[u8]) -> Result<()
         0,
     )
 }
-fn validate_data(data: Data<'_>, start: usize) -> Result<(), FontError> {
+fn validate_fonts(data: Data<'_>, start: usize) -> Result<(), FontError> {
+    let (data, fd_array) = validate_data(data, start)?;
+    if let Some(fd_array) = fd_array {
+        fd_array.visit(&data, start, &mut |bytes| {
+            fonts::validate(&data, start as f64, bytes)
+        })?;
+    }
+    Ok(())
+}
+// Retain the INDEX-only phase as a separate contract for predecessor fixtures.
+fn validate_data(
+    data: Data<'_>,
+    start: usize,
+) -> Result<(Data<'_>, Option<address::IndexOffset>), FontError> {
     // The directory offset is u32, so it is exactly representable as a JS number.
     let base = start as f64;
     let mut position = base;
@@ -93,6 +111,48 @@ fn validate_data(data: Data<'_>, start: usize) -> Result<(), FontError> {
             usize::try_from(data.count(base + 3.0, false)?).map_err(|_| FontError::Bounds)?;
         let fd_array = dict::validate(&data.bytes(offset, length)?)?;
         fd_array.validate(&data, start)?;
+        return Ok((data, Some(fd_array)));
+    }
+    Ok((data, None))
+}
+/// Validate the entire INDEX before interpreting any of its objects. Source
+/// eagerly copies all objects first, so a later range error wins over DICT errors.
+fn visit_index(
+    data: &Data<'_>,
+    start: f64,
+    visit: &mut dyn FnMut(&[u8]) -> Result<(), FontError>,
+) -> Result<(), FontError> {
+    index(data, start, true)?;
+    let count = data.count(start, true)?;
+    if count == 0 {
+        return Ok(());
+    }
+    let width = usize::from(data.bytes(start + 4.0, 1)?[0]);
+    if width == 0 {
+        // Every object is an empty font DICT with default private[0,0].
+        return Ok(());
+    }
+    let object = start + ((count + 1) * width as i64) as f64 + 4.0;
+    let mut previous = offset(&data.bytes(start + 5.0, width)?);
+    for i in 1..=count {
+        let next = offset(&data.bytes(start + 5.0 + (i * width as i64) as f64, width)?);
+        if next > previous {
+            let length = usize::try_from(next - previous).map_err(|_| FontError::Bounds)?;
+            let first = object + previous as f64;
+            if first < 0.0 {
+                // ToIndex truncates -0.5 and +0.5 to the same byte. A bulk slice
+                // would incorrectly advance the second read to byte1.
+                let mut bytes = Vec::new();
+                bytes.try_reserve_exact(length)?;
+                for i in 0..length {
+                    bytes.push(data.bytes(first + i as f64, 1)?[0]);
+                }
+                visit(&bytes)?;
+            } else {
+                visit(&data.bytes(first, length)?)?;
+            }
+        }
+        previous = next;
     }
     Ok(())
 }

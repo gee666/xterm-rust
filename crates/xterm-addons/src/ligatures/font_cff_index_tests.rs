@@ -1,7 +1,7 @@
 use super::*;
 use serde_json::Value;
 
-fn expected(value: &Value) -> Option<FontError> {
+pub(super) fn expected(value: &Value) -> Option<FontError> {
     match value["message"].as_str() {
         None => None,
         Some("Offset is outside the bounds of the DataView") => Some(FontError::Bounds),

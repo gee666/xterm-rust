@@ -4,27 +4,54 @@ use super::{address::IndexOffset, FontError};
 const ESCAPED_OPERATOR: u16 = 1200;
 const KEY_COUNT: usize = ESCAPED_OPERATOR as usize + 256;
 const FD_ARRAY: u16 = 1236;
+const PRIVATE: u16 = 18;
+const SUBRS: u16 = 19;
 const MISSING_FD_ARRAY: &str = "This is a CFF2 font, but FDArray information is missing";
 
 pub(super) fn validate(bytes: &[u8]) -> Result<IndexOffset, FontError> {
     dictionary(bytes)?
+        .fd_array
         .filter(IndexOffset::truthy)
         .ok_or(FontError::Invalid(MISSING_FD_ARRAY))
 }
 
 /// Operand reads finish before entriesToObject can report a duplicate key.
-/// Return FDArray operands only after these earlier dictionary phases succeed.
-fn dictionary(bytes: &[u8]) -> Result<Option<IndexOffset>, FontError> {
+/// Expose interpreted operands only after these earlier dictionary phases succeed.
+#[derive(Clone, Copy, PartialEq)]
+pub(super) enum Kind {
+    Top,
+    Font,
+    Private,
+}
+#[derive(Default)]
+pub(super) struct Dictionary {
+    pub(super) fd_array: Option<IndexOffset>,
+    pub(super) private: Option<(f64, f64)>,
+    pub(super) subrs: Option<IndexOffset>,
+}
+fn dictionary(bytes: &[u8]) -> Result<Dictionary, FontError> {
+    parse(
+        &mut |at| bytes.get(at).copied().ok_or(FontError::Bounds),
+        bytes.len() as f64,
+        Kind::Top,
+    )
+}
+/// Private DICT size controls the loop, not the DataView boundary. An operand
+/// starting before size may consume following whole-font bytes.
+pub(super) fn parse(
+    input: &mut dyn FnMut(usize) -> Result<u8, FontError>,
+    size: f64,
+    kind: Kind,
+) -> Result<Dictionary, FontError> {
     let mut position = 0;
     let mut operands = Vec::new();
-    // Each operand needs at least one byte. This bound also covers blend reuse.
-    operands.try_reserve_exact(bytes.len())?;
     let mut keys = [None; KEY_COUNT];
     let mut duplicate = None;
     let mut negative_blend = false;
-    let mut fd_array = None;
-    while position < bytes.len() {
-        let byte = read(bytes, &mut position)?;
+    let mut result = Dictionary::default();
+    while (position as f64) < size {
+        operands.try_reserve(1)?;
+        let byte = read(input, &mut position)?;
         match byte {
             23 => {
                 let count = operands.pop().unwrap_or(f64::NAN);
@@ -41,7 +68,7 @@ fn dictionary(bytes: &[u8]) -> Result<Option<IndexOffset>, FontError> {
             }
             0..=27 => {
                 let key = if byte == 12 {
-                    ESCAPED_OPERATOR + u16::from(read(bytes, &mut position)?)
+                    ESCAPED_OPERATOR + u16::from(read(input, &mut position)?)
                 } else {
                     u16::from(byte)
                 };
@@ -56,27 +83,33 @@ fn dictionary(bytes: &[u8]) -> Result<Option<IndexOffset>, FontError> {
                     [value] => !value.is_nan(),
                     _ => false,
                 });
-                if key == FD_ARRAY {
+                if key == FD_ARRAY && kind == Kind::Top {
                     // entriesToObject unwraps one operand to a number, but keeps
                     // zero or multiple operands as arrays. Even [] is truthy.
-                    fd_array = Some(IndexOffset::operands(&operands)?);
+                    result.fd_array = Some(IndexOffset::operands(&operands)?);
+                } else if key == PRIVATE && kind == Kind::Font {
+                    // A single operand is unwrapped to a number. Indexing it
+                    // produces null defaults, whose private parse is empty.
+                    result.private = (operands.len() >= 2).then(|| (operands[0], operands[1]));
+                } else if key == SUBRS && kind == Kind::Private {
+                    result.subrs = Some(IndexOffset::operands(&operands)?);
                 }
                 operands.clear();
             }
             28 => {
-                let bytes = take(bytes, &mut position, 2)?;
+                let bytes = take::<2>(input, &mut position)?;
                 operands.push(f64::from(u16::from_be_bytes([bytes[0], bytes[1]])));
             }
             29 => {
-                let bytes = take(bytes, &mut position, 4)?;
+                let bytes = take::<4>(input, &mut position)?;
                 operands.push(f64::from(i32::from_be_bytes([
                     bytes[0], bytes[1], bytes[2], bytes[3],
                 ])));
             }
-            30 => operands.push(real(bytes, &mut position)?),
+            30 => operands.push(real(input, &mut position)?),
             32..=246 => operands.push(f64::from(byte) - 139.0),
             247..=254 => {
-                let next = f64::from(read(bytes, &mut position)?);
+                let next = f64::from(read(input, &mut position)?);
                 let value = if byte <= 250 {
                     f64::from(byte - 247) * 256.0 + next + 108.0
                 } else {
@@ -90,27 +123,36 @@ fn dictionary(bytes: &[u8]) -> Result<Option<IndexOffset>, FontError> {
     if negative_blend {
         return Err(FontError::Invalid("CFF2 blend count cannot be negative"));
     }
-    duplicate.map_or(Ok(fd_array), |key| Err(FontError::CffDuplicate(key)))
+    duplicate.map_or(Ok(result), |key| Err(FontError::CffDuplicate(key)))
 }
-fn read(bytes: &[u8], position: &mut usize) -> Result<u8, FontError> {
-    let byte = *bytes.get(*position).ok_or(FontError::Bounds)?;
-    *position += 1;
+fn read(
+    input: &mut dyn FnMut(usize) -> Result<u8, FontError>,
+    position: &mut usize,
+) -> Result<u8, FontError> {
+    let byte = input(*position)?;
+    *position = position.checked_add(1).ok_or(FontError::Bounds)?;
     Ok(byte)
 }
-fn take<'a>(bytes: &'a [u8], position: &mut usize, length: usize) -> Result<&'a [u8], FontError> {
-    let value = bytes
-        .get(*position..*position + length)
-        .ok_or(FontError::Bounds)?;
-    *position += length;
-    Ok(value)
+fn take<const N: usize>(
+    input: &mut dyn FnMut(usize) -> Result<u8, FontError>,
+    position: &mut usize,
+) -> Result<[u8; N], FontError> {
+    let mut bytes = [0; N];
+    for byte in &mut bytes {
+        *byte = read(input, position)?;
+    }
+    Ok(bytes)
 }
-fn real(bytes: &[u8], position: &mut usize) -> Result<f64, FontError> {
+fn real(
+    input: &mut dyn FnMut(usize) -> Result<u8, FontError>,
+    position: &mut usize,
+) -> Result<f64, FontError> {
     const NIBBLES: [&str; 15] = [
         "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "E", "E-", "null", "-",
     ];
     let mut text = String::new();
     loop {
-        let byte = read(bytes, position)?;
+        let byte = read(input, position)?;
         for nibble in [byte >> 4, byte & 15] {
             if nibble == 15 {
                 return float_prefix(&text);

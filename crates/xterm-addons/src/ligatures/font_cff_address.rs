@@ -30,10 +30,35 @@ impl IndexOffset {
             Self::Array(_) => true,
         }
     }
+    pub(super) fn visit(
+        &self,
+        data: &Data<'_>,
+        start: usize,
+        visit: &mut dyn FnMut(&[u8]) -> Result<(), FontError>,
+    ) -> Result<(), FontError> {
+        match self {
+            Self::Number(value) => super::visit_index(data, start as f64 + value, visit),
+            Self::Array(value) => text_index(data, format!("{start}{value}"), visit),
+        }
+    }
+    pub(super) fn subrs(&self, data: &Data<'_>, private: f64, base: f64) -> Result<(), FontError> {
+        match self {
+            Self::Number(value) => super::index(data, private + value + base, true).map(|_| ()),
+            Self::Array(value) => {
+                let mut before = ryu_js::Buffer::new();
+                let mut after = ryu_js::Buffer::new();
+                text_index(
+                    data,
+                    format!("{}{value}{}", before.format(private), after.format(base)),
+                    &mut |_| Ok(()),
+                )
+            }
+        }
+    }
     pub(super) fn validate(&self, data: &Data<'_>, start: usize) -> Result<(), FontError> {
         match self {
             Self::Number(value) => super::index(data, start as f64 + value, true).map(|_| ()),
-            Self::Array(value) => text_index(data, format!("{start}{value}")),
+            Self::Array(value) => text_index(data, format!("{start}{value}"), &mut |_| Ok(())),
         }
     }
 }
@@ -52,7 +77,11 @@ pub(super) fn to_index(value: f64) -> Result<usize, FontError> {
 fn number(text: &str) -> f64 {
     text.parse().unwrap_or(f64::NAN)
 }
-fn text_index(data: &Data<'_>, start: String) -> Result<(), FontError> {
+fn text_index(
+    data: &Data<'_>,
+    start: String,
+    visit: &mut dyn FnMut(&[u8]) -> Result<(), FontError>,
+) -> Result<(), FontError> {
     let count = data.count(number(&start), true)?;
     if count == 0 {
         return Ok(());
@@ -90,12 +119,36 @@ fn text_index(data: &Data<'_>, start: String) -> Result<(), FontError> {
             format!("{object}{}", pair[1]),
         )?;
     }
+    for pair in offsets.windows(2) {
+        let mut bytes = Vec::new();
+        text_range_visit(
+            data,
+            format!("{object}{}", pair[0]),
+            format!("{object}{}", pair[1]),
+            &mut |byte| {
+                bytes.try_reserve(1)?;
+                bytes.push(byte);
+                Ok(())
+            },
+        )?;
+        if !bytes.is_empty() {
+            visit(&bytes)?;
+        }
+    }
     Ok(())
 }
-fn text_range(data: &Data<'_>, mut first: String, last: String) -> Result<(), FontError> {
+fn text_range(data: &Data<'_>, first: String, last: String) -> Result<(), FontError> {
+    text_range_visit(data, first, last, &mut |_| Ok(()))
+}
+fn text_range_visit(
+    data: &Data<'_>,
+    mut first: String,
+    last: String,
+    visit: &mut dyn FnMut(u8) -> Result<(), FontError>,
+) -> Result<(), FontError> {
     while first < last {
         let value = number(&first);
-        data.bytes(value, 1)?;
+        let byte = data.bytes(value, 1)?[0];
         if value.is_nan() {
             // Source appends "1" forever while repeatedly reading byte0 here.
             // Do not hang on an untrusted malformed font.
@@ -103,6 +156,7 @@ fn text_range(data: &Data<'_>, mut first: String, last: String) -> Result<(), Fo
                 "CFF2 string INDEX range does not terminate",
             ));
         }
+        visit(byte)?;
         first.try_reserve(1)?;
         first.push('1');
     }
