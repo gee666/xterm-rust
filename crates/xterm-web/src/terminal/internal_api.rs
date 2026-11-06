@@ -20,6 +20,8 @@ pub struct CoreServices {
     core: JsValue,
     buffers: JsValue,
     store: JsValue,
+    input: JsValue,
+    browser: Rc<super::internal_browser::BrowserViewSlots>,
     render: Rc<RefCell<JsValue>>,
 }
 
@@ -44,9 +46,10 @@ impl CoreDisposalStore {
 
 impl CoreServices {
     pub(super) fn new(
-        native: &headless::Terminal,
+        native: Rc<headless::Terminal>,
         disposed: Rc<Cell<bool>>,
         render: Rc<RefCell<JsValue>>,
+        browser: Rc<super::internal_browser::BrowserViewSlots>,
     ) -> Result<Self, JsValue> {
         let (unicode, mouse, core, buffers) = native
             .with_state(|state| {
@@ -64,6 +67,8 @@ impl CoreServices {
             core: CoreModeServiceView::new(core).into(),
             buffers: InternalBufferServiceView::new(buffers).into(),
             store: CoreDisposalStore { disposed }.into(),
+            input: super::internal_input::InternalInputHandler::new(native)?.into(),
+            browser,
             render,
         })
     }
@@ -71,6 +76,22 @@ impl CoreServices {
 
 #[wasm_bindgen]
 impl CoreServices {
+    #[wasm_bindgen(getter, js_name = _inputHandler)]
+    pub fn input_handler(&self) -> JsValue {
+        self.input.clone()
+    }
+    #[wasm_bindgen(getter, js_name = _themeService)]
+    pub fn theme_service(&self) -> JsValue {
+        self.browser.theme.borrow().clone()
+    }
+    #[wasm_bindgen(getter, js_name = _coreBrowserService)]
+    pub fn browser_service(&self) -> JsValue {
+        self.browser.browser.borrow().clone()
+    }
+    #[wasm_bindgen(getter)]
+    pub fn buffer(&self) -> Result<JsValue, JsValue> {
+        js_sys::Reflect::get(&self.buffers, &JsValue::from_str("buffer"))
+    }
     #[wasm_bindgen(getter, js_name = _store)]
     pub fn store(&self) -> JsValue {
         self.store.clone()

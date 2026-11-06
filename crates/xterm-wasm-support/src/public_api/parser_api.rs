@@ -5,7 +5,7 @@ use crate::{
 };
 #[path = "parser_identifier.rs"]
 mod identifier;
-use identifier::{read_identifier, Kind};
+pub use identifier::{read_identifier, Kind};
 use js_sys::{Array, Function, Promise};
 use std::rc::Rc;
 use wasm_bindgen::{prelude::*, JsCast};

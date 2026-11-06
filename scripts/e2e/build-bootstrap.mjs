@@ -12,5 +12,7 @@ export async function buildBootstrap({ root, referenceRoot, outputFile }) {
   if (!wasm.isFile()) throw new Error('E2E WASM package must be a regular file');
   await build({ stdin: { contents: bootstrapSource(), resolveDir: root,
     sourcefile: 'rust-upstream-bootstrap.mjs' }, outfile: outputFile,
-    bundle: true, format: 'iife', platform: 'browser', target: 'es2022', logLevel: 'silent' });
+    // Private addon contracts inspect real binding constructor names. Transport
+    // bundling must not rename those classes a second time.
+    bundle: true, keepNames: true, format: 'iife', platform: 'browser', target: 'es2022', logLevel: 'silent' });
 }

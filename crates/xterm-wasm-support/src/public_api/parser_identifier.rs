@@ -30,13 +30,13 @@ extern "C" {
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
-pub(super) enum Kind {
+pub enum Kind {
     Csi,
     Dcs,
     Esc,
     Apc,
 }
-pub(super) struct Identifier {
+pub struct Identifier {
     pub packed: u32,
     pub source_guarded: bool,
 }
@@ -49,7 +49,7 @@ fn shift_or(left: &JsValue, right: &JsValue) -> Result<JsValue, JsValue> {
     Ok(i32::from_ne_bytes(packed.to_ne_bytes()).into())
 }
 
-pub(super) fn read_identifier(id: &JsValue, kind: Kind) -> Result<Identifier, JsValue> {
+pub fn read_identifier(id: &JsValue, kind: Kind) -> Result<Identifier, JsValue> {
     if kind == Kind::Apc {
         clear_prefix(id)?;
     }

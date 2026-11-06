@@ -24,8 +24,12 @@ mod input_data;
 pub mod input_host;
 mod input_services;
 mod internal_api;
+mod internal_browser;
 mod internal_buffer;
+mod internal_input;
+mod internal_lines;
 mod internal_modes;
+mod internal_parser;
 mod internal_render;
 mod joiner_api;
 mod link_api;
@@ -69,6 +73,7 @@ pub(crate) struct Shared {
     pub internal: JsValue,
     pub mouse_receiver: JsValue,
     pub internal_render: Rc<RefCell<JsValue>>,
+    internal_browser: Rc<internal_browser::BrowserViewSlots>,
     pub selection: Rc<crate::selection::service::SelectionService>,
     pub decorations: Rc<xterm_core::decoration::DecorationService>,
     pub marker_handles: Rc<marker_api::MarkerHandles>,
@@ -175,10 +180,12 @@ impl Terminal {
         // Internal services are not proposed-API gated, unlike public views.
         let core_disposed = Rc::new(Cell::new(false));
         let internal_render = Rc::new(RefCell::new(JsValue::UNDEFINED));
+        let internal_browser = Rc::new(internal_browser::BrowserViewSlots::default());
         let internal = internal_api::CoreServices::new(
-            &native,
+            Rc::clone(&native),
             Rc::clone(&core_disposed),
             Rc::clone(&internal_render),
+            Rc::clone(&internal_browser),
         )?;
         let mouse_receiver = internal.mouse_state_service();
         mouse_wheel::install(&mouse_receiver)?;
@@ -212,6 +219,7 @@ impl Terminal {
                 internal,
                 mouse_receiver,
                 internal_render,
+                internal_browser,
                 platform,
                 selection,
                 decorations,

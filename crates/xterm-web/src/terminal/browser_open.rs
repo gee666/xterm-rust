@@ -54,6 +54,10 @@ impl Terminal {
                 &services.render_service,
             ))
             .into();
+        self.shared.internal_browser.install(
+            Rc::clone(&services.theme),
+            Rc::clone(&services.core_browser),
+        );
         services.install(&self.shared)?;
         services.metrics.measure()?;
         let rows = self

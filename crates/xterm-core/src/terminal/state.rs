@@ -67,6 +67,21 @@ impl TerminalState {
             .get(buffer.ybase + y)
             .ok_or(TerminalError::MissingLine)
     }
+    /// The pending native render range, seeded at the cursor when cleared.
+    pub fn pending_dirty_range(&self) -> Result<(usize, usize), TerminalError> {
+        if let Some(range) = self.dirty {
+            return Ok(range);
+        }
+        let active = self.active_buffer();
+        let y = active.try_borrow().map_err(|_| TerminalError::Borrowed)?.y;
+        Ok((y, y))
+    }
+    pub fn clear_pending_dirty_range(&mut self) -> Result<(), TerminalError> {
+        let active = self.active_buffer();
+        let y = active.try_borrow().map_err(|_| TerminalError::Borrowed)?.y;
+        self.dirty = Some((y, y));
+        Ok(())
+    }
     pub(crate) fn dirty_row(&mut self, y: usize) {
         self.dirty = Some(match self.dirty {
             None => (y, y),

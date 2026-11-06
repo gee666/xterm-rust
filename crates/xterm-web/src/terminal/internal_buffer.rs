@@ -48,6 +48,7 @@ impl InternalBufferServiceView {
         }
         let object: JsValue = InternalBufferView {
             native: Rc::clone(&native),
+            lines: super::internal_lines::InternalLines::new(Rc::clone(&native)).into(),
         }
         .into();
         let previous = slot.replace(Some(CachedBuffer {
@@ -61,6 +62,7 @@ impl InternalBufferServiceView {
 #[wasm_bindgen]
 pub struct InternalBufferView {
     native: BufferRef,
+    lines: JsValue,
 }
 impl InternalBufferView {
     fn read(&self, read: impl FnOnce(&Buffer) -> usize) -> Result<usize, JsValue> {
@@ -73,6 +75,10 @@ impl InternalBufferView {
 }
 #[wasm_bindgen]
 impl InternalBufferView {
+    #[wasm_bindgen(getter)]
+    pub fn lines(&self) -> JsValue {
+        self.lines.clone()
+    }
     #[wasm_bindgen(getter, js_name = scrollTop)]
     pub fn scroll_top(&self) -> Result<usize, JsValue> {
         self.read(|buffer| buffer.scroll_top)

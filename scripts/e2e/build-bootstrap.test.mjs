@@ -19,7 +19,12 @@ export default async function initialize({module_or_path}) {
   await globalThis.compileReady;
   globalThis.initialized = (await WebAssembly.instantiate(await module_or_path.arrayBuffer())).instance;
 }
-export class Terminal {}
+export class _AttributeData { static __wrap() { return new _AttributeData(); } }
+export class EscapeSequenceParser { static __wrap() { return new EscapeSequenceParser(); } }
+export class Terminal {
+  getAttrData() { return _AttributeData.__wrap(); }
+  getParser() { return EscapeSequenceParser.__wrap(); }
+}
 export class FitAddon {}
 `);
     await writeFile(join(directory, 'browser/xterm.mjs'), "export * from './pkg/xterm_web.js';");
@@ -71,6 +76,9 @@ test('fetches exact package WASM before publishing constructors and releasing na
   release(); await window.__rustE2EReady;
   assert.ok(vm.initialized instanceof WebAssembly.Instance);
   assert.equal(typeof window.Terminal, 'function'); assert.equal(typeof window.FitAddon, 'function');
+  const terminal = new window.Terminal();
+  assert.equal(terminal.getAttrData().constructor.name, '_AttributeData');
+  assert.equal(terminal.getParser().constructor.name, 'EscapeSequenceParser');
   assert.equal(window.ImageAddon, undefined);
   assert.ok(window.__rustE2EMissingBindings.includes('ImageAddon'));
   assert.equal(window.__rustE2EBackend, 'xterm-web wasm32');
@@ -83,17 +91,18 @@ test('fetches exact package WASM before publishing constructors and releasing na
   assert.doesNotMatch(bundle, /atob\(|Uint8Array\.from\(/);
 }));
 
-test('fetch rejection, HTTP failure and invalid WASM fail navigation without constructors', async () => fixture(async bundle => {
-  for (const failure of ['fetch', 'http', 'wasm']) {
+test('fetch, HTTP, WASM and initializer failures stop navigation without constructors', async () => fixture(async bundle => {
+  for (const failure of ['fetch', 'http', 'wasm', 'initialize']) {
     const window = {}, requests = [], errors = [];
     const vm = context(window, {
-      compileReady: Promise.resolve(),
+      compileReady: failure === 'initialize' ? Promise.reject(new Error('broken WASM module')) : Promise.resolve(),
       console: { error: error => errors.push(String(error)) },
       fetch: async (url, options) => {
         requests.push({ url, options });
         if (url === '/pkg/xterm_web_bg.wasm') {
           if (failure === 'fetch') throw new Error('WASM transport rejected');
-          return { ok: failure !== 'http', status: 404, arrayBuffer: async () => new Uint8Array([1]) };
+          return { ok: failure !== 'http', status: 404,
+            arrayBuffer: async () => failure === 'initialize' ? minimalWasm : new Uint8Array([1]) };
         }
         return { ok: true };
       }
@@ -103,7 +112,8 @@ test('fetch rejection, HTTP failure and invalid WASM fail navigation without con
     assert.equal(window.Terminal, undefined);
     assert.equal(window.__rustE2EBackend, undefined);
     assert.match(window.__rustE2EInitializationError,
-      failure === 'fetch' ? /WASM transport rejected/ : failure === 'http' ? /WASM fetch failed: 404/ : /WebAssembly|CompileError/);
+      failure === 'fetch' ? /WASM transport rejected/ : failure === 'http' ? /WASM fetch failed: 404/
+        : failure === 'initialize' ? /broken WASM module/ : /WebAssembly|CompileError/);
     assert.deepEqual(requests.map(request => request.url), ['/pkg/xterm_web_bg.wasm', '/rust-ready?token=token&failed=1']);
     assert.equal(requests[1].options.method, 'POST');
     assert.equal(errors.length, 1);

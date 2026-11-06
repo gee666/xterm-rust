@@ -1,5 +1,7 @@
 // Copyright (c) 2014-2026 The xterm.js authors. All rights reserved. MIT license.
 //! Rust terminal engine. Async parser work is driven explicitly by the host.
+mod attribute_view;
+pub use attribute_view::AttributeView;
 mod commands;
 mod construction;
 mod controls;

@@ -44,6 +44,12 @@ impl ParserRegistrations {
     pub fn osc_registrar(&self) -> OscRegistrar {
         self.osc.clone()
     }
+    pub fn dcs_registrar(&self) -> DcsRegistrar {
+        self.dcs.clone()
+    }
+    pub fn apc_registrar(&self) -> ApcRegistrar {
+        self.apc.clone()
+    }
     pub fn esc_registrar(&self) -> CommandRegistrar {
         self.esc.clone()
     }
@@ -85,6 +91,10 @@ impl<'a> ParserApi<'a> {
             registrations: registrations.clone(),
             lifetime: PhantomData,
         }
+    }
+    /// Weak registration handles for internal streaming adapters.
+    pub fn registrations(&self) -> ParserRegistrations {
+        self.registrations.clone()
     }
     pub fn register_csi_handler(
         &mut self,

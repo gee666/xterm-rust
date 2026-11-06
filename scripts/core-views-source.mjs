@@ -7,17 +7,27 @@ import { pathToFileURL } from 'node:url';
 import { withArtifactServer } from './browser-artifact-server.mjs';
 
 const reference = resolve(process.env.SOURCE_ROOT ?? 'source_repo');
-const output = resolve('results/core-views');
-const fixture = resolve('crates/xterm-web/tests/fixtures/core-views.json');
+const caseName = process.env.CORE_VIEW_CASES ?? 'core-views';
+const cases = {
+  'core-views': { trace: 'core-view-trace', sources: ['src/common/services/CoreService.ts',
+    'src/common/services/BufferService.ts', 'src/common/buffer/BufferSet.ts'] },
+  'image-core': { trace: 'image-core-trace', sources: ['src/common/InputHandler.ts',
+    'src/common/parser/EscapeSequenceParser.ts', 'src/common/buffer/AttributeData.ts',
+    'src/common/buffer/BufferLine.ts', 'src/browser/services/ThemeService.ts',
+    'src/browser/services/CoreBrowserService.ts'] }
+};
+const selected = cases[caseName];
+assert(selected, 'Unknown core view case');
+const output = resolve('results', caseName);
+const fixture = resolve('crates/xterm-web/tests/fixtures', `${caseName}.json`);
 const generate = process.argv.includes('--generate');
-const program = await readFile('scripts/core-view-trace.js', 'utf8');
+const program = await readFile(`scripts/${selected.trace}.js`, 'utf8');
 await mkdir(output, { recursive: true });
 const playwright = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE ?? resolve(reference, 'node_modules/playwright/index.mjs')));
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const map = JSON.parse(await readFile(resolve(reference, 'lib/xterm.mjs.map'), 'utf8'));
 const hashes = {};
-for (const file of ['lib/xterm.mjs', 'lib/xterm.mjs.map', 'src/common/services/CoreService.ts',
-  'src/common/services/BufferService.ts', 'src/common/buffer/BufferSet.ts']) {
+for (const file of ['lib/xterm.mjs', 'lib/xterm.mjs.map', ...selected.sources]) {
   const bytes = await readFile(resolve(reference, file));
   hashes[file] = hash(bytes);
   if (file.endsWith('.ts')) {
@@ -46,7 +56,7 @@ try {
         try {
           entry.trace = await Promise.race([page.evaluate(async program => {
             const { Terminal } = await import('/xterm.mjs');
-            const terminal = new Terminal({ cols: 10, rows: 4 });
+            const terminal = new Terminal({ cols: 10, rows: 4, allowProposedApi: true });
             terminal.open(document.querySelector('#terminal'));
             try { return await Function('terminal', program)(terminal); }
             finally { terminal.dispose(); }
