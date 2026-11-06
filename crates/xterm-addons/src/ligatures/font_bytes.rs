@@ -232,7 +232,7 @@ impl<'a> FontTables<'a> {
             let record = cff.or(cff2).ok_or(FontError::Invalid(
                 "Font doesn't contain TrueType, CFF or CFF2 outlines.",
             ))?;
-            super::font_cff_header::validate(payload, record, woff)?;
+            super::font_cff_header::validate(payload, record, woff, glyph_count)?;
         }
         let hmtx = hmtx.ok_or(FontError::MissingTable("hmtx"))?;
         if truetype.is_some() {

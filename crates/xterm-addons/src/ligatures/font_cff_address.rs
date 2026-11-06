@@ -24,6 +24,29 @@ impl IndexOffset {
         }
         Ok(Self::Array(text))
     }
+    pub(super) fn read(
+        &self,
+        data: &Data<'_>,
+        base: usize,
+        relative: usize,
+        width: usize,
+    ) -> Result<u32, FontError> {
+        let at = match self {
+            Self::Number(value) => base as f64 + value + relative as f64,
+            Self::Array(value) => number(&format!("{base}{value}{relative}")),
+        };
+        Ok(data
+            .bytes(at, width)?
+            .iter()
+            .fold(0, |n, b| (n << 8) + u32::from(*b)))
+    }
+    pub(super) fn count(&self, data: &Data<'_>, base: usize) -> Result<u32, FontError> {
+        let at = match self {
+            Self::Number(value) => base as f64 + value,
+            Self::Array(value) => number(&format!("{base}{value}")),
+        };
+        u32::try_from(data.count(at, true)?).map_err(|_| FontError::Bounds)
+    }
     pub(super) fn truthy(&self) -> bool {
         match self {
             Self::Number(value) => *value != 0.0 && !value.is_nan(),

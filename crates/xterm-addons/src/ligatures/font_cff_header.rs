@@ -13,6 +13,7 @@ pub(super) fn validate(
     reader: Reader<'_>,
     record: Reader<'_>,
     woff: bool,
+    glyphs: Option<u16>,
 ) -> Result<(), FontError> {
     let offset = record.offset32(if woff { 4 } else { 8 })?;
     if woff && record.offset32(8)? < record.offset32(12)? {
@@ -31,10 +32,10 @@ pub(super) fn validate(
         let input = reader.bytes(input, length)?;
         font_deflate::prefix(input, &mut prefix[..size])?;
         header(Reader::new(&prefix[..size]))?;
-        index::compressed(input, limit, &prefix[..size])
+        index::compressed(input, limit, &prefix[..size], glyphs)
     } else {
         header(reader.at(offset)?)?;
-        index::validate(reader, offset)
+        index::validate(reader, offset, glyphs)
     }
 }
 fn header(reader: Reader<'_>) -> Result<(), FontError> {

@@ -9,6 +9,11 @@ use std::borrow::Cow;
 mod address;
 #[path = "font_cff2_dict.rs"]
 mod dict;
+#[path = "font_cff_fdselect.rs"]
+mod fdselect;
+#[cfg(test)]
+#[path = "font_cff_fdselect_tests.rs"]
+mod fdselect_tests;
 #[path = "font_cff2_fonts.rs"]
 mod fonts;
 #[cfg(test)]
@@ -55,38 +60,66 @@ impl<'a> Data<'a> {
             .fold(0_i64, |value, byte| (value << 8) + i64::from(*byte)))
     }
 }
-pub(super) fn validate(reader: Reader<'_>, start: usize) -> Result<(), FontError> {
-    validate_fonts(
+pub(super) fn validate(
+    reader: Reader<'_>,
+    start: usize,
+    glyphs: Option<u16>,
+) -> Result<(), FontError> {
+    validate_all(
         Data {
             reader,
             compressed: None,
         },
         start,
+        glyphs,
     )
 }
-pub(super) fn compressed(input: &[u8], limit: usize, prefix: &[u8]) -> Result<(), FontError> {
-    validate_fonts(
+pub(super) fn compressed(
+    input: &[u8],
+    limit: usize,
+    prefix: &[u8],
+    glyphs: Option<u16>,
+) -> Result<(), FontError> {
+    validate_all(
         Data {
             reader: Reader::new(prefix),
             compressed: Some((input, limit)),
         },
         0,
+        glyphs,
     )
 }
-fn validate_fonts(data: Data<'_>, start: usize) -> Result<(), FontError> {
-    let (data, fd_array) = validate_data(data, start)?;
-    if let Some(fd_array) = fd_array {
+fn validate_all(data: Data<'_>, start: usize, glyphs: Option<u16>) -> Result<(), FontError> {
+    let (data, top) = validate_fonts(data, start)?;
+    if let Some(top) = top {
+        if let Some(select) = top.fd_select.as_ref().filter(|s| s.truthy()) {
+            let count = top
+                .fd_array
+                .as_ref()
+                .ok_or(FontError::Bounds)?
+                .count(&data, start)?;
+            fdselect::validate(&data, start, select, glyphs, count)?;
+        }
+    }
+    Ok(())
+}
+fn validate_fonts(
+    data: Data<'_>,
+    start: usize,
+) -> Result<(Data<'_>, Option<dict::Dictionary>), FontError> {
+    let (data, top) = validate_data(data, start)?;
+    if let Some(fd_array) = top.as_ref().and_then(|top| top.fd_array.as_ref()) {
         fd_array.visit(&data, start, &mut |bytes| {
             fonts::validate(&data, start as f64, bytes)
         })?;
     }
-    Ok(())
+    Ok((data, top))
 }
 // Retain the INDEX-only phase as a separate contract for predecessor fixtures.
 fn validate_data(
     data: Data<'_>,
     start: usize,
-) -> Result<(Data<'_>, Option<address::IndexOffset>), FontError> {
+) -> Result<(Data<'_>, Option<dict::Dictionary>), FontError> {
     // The directory offset is u32, so it is exactly representable as a JS number.
     let base = start as f64;
     let mut position = base;
@@ -109,9 +142,12 @@ fn validate_data(
         let offset = base + f64::from(data.bytes(base + 2.0, 1)?[0]);
         let length =
             usize::try_from(data.count(base + 3.0, false)?).map_err(|_| FontError::Bounds)?;
-        let fd_array = dict::validate(&data.bytes(offset, length)?)?;
-        fd_array.validate(&data, start)?;
-        return Ok((data, Some(fd_array)));
+        let top = dict::top(&data.bytes(offset, length)?)?;
+        top.fd_array
+            .as_ref()
+            .ok_or(FontError::Bounds)?
+            .validate(&data, start)?;
+        return Ok((data, Some(top)));
     }
     Ok((data, None))
 }

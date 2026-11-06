@@ -4,14 +4,15 @@ use super::{address::IndexOffset, FontError};
 const ESCAPED_OPERATOR: u16 = 1200;
 const KEY_COUNT: usize = ESCAPED_OPERATOR as usize + 256;
 const FD_ARRAY: u16 = 1236;
+const FD_SELECT: u16 = 1237;
 const PRIVATE: u16 = 18;
 const SUBRS: u16 = 19;
 const MISSING_FD_ARRAY: &str = "This is a CFF2 font, but FDArray information is missing";
 
+#[cfg(test)]
 pub(super) fn validate(bytes: &[u8]) -> Result<IndexOffset, FontError> {
-    dictionary(bytes)?
+    top(bytes)?
         .fd_array
-        .filter(IndexOffset::truthy)
         .ok_or(FontError::Invalid(MISSING_FD_ARRAY))
 }
 
@@ -26,8 +27,16 @@ pub(super) enum Kind {
 #[derive(Default)]
 pub(super) struct Dictionary {
     pub(super) fd_array: Option<IndexOffset>,
+    pub(super) fd_select: Option<IndexOffset>,
     pub(super) private: Option<(f64, f64)>,
     pub(super) subrs: Option<IndexOffset>,
+}
+pub(super) fn top(bytes: &[u8]) -> Result<Dictionary, FontError> {
+    let result = dictionary(bytes)?;
+    if !result.fd_array.as_ref().is_some_and(IndexOffset::truthy) {
+        return Err(FontError::Invalid(MISSING_FD_ARRAY));
+    }
+    Ok(result)
 }
 fn dictionary(bytes: &[u8]) -> Result<Dictionary, FontError> {
     parse(
@@ -87,6 +96,8 @@ pub(super) fn parse(
                     // entriesToObject unwraps one operand to a number, but keeps
                     // zero or multiple operands as arrays. Even [] is truthy.
                     result.fd_array = Some(IndexOffset::operands(&operands)?);
+                } else if key == FD_SELECT && kind == Kind::Top {
+                    result.fd_select = Some(IndexOffset::operands(&operands)?);
                 } else if key == PRIVATE && kind == Kind::Font {
                     // A single operand is unwrapped to a number. Indexing it
                     // produces null defaults, whose private parse is empty.

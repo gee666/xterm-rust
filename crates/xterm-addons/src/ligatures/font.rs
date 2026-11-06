@@ -68,6 +68,7 @@ use font_bytes::FontTables;
 use font_cache::{Cache, Cached};
 pub use font_cache::{GlyphArray, LigatureData, LigatureResult, RangeArray};
 use font_cmap::Cmap;
+pub use font_error::FdSelectError;
 pub use font_tables::{Glyph, GlyphValue};
 use font_tables::{Gsub, Lookup};
 use font_tree::{Arena, TreeId};
