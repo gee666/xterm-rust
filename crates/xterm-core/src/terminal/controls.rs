@@ -179,11 +179,13 @@ impl TerminalState {
         if b.x > 0 {
             b.x -= 1;
         } else if reverse && b.y > b.scroll_top && b.y <= b.scroll_bottom {
-            let line = b
+            // Sparse rows can survive callback-driven resizing. The source's
+            // optional current-row lookup only reverses an existing soft wrap.
+            if let Some(line) = b
                 .lines
                 .get(b.ybase + b.y)
-                .ok_or(TerminalError::MissingLine)?;
-            if line.borrow().is_wrapped {
+                .filter(|line| line.borrow().is_wrapped)
+            {
                 line.borrow_mut().is_wrapped = false;
                 b.y -= 1;
                 b.x = self.cols() - 1;
