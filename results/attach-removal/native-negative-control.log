@@ -1,0 +1,33 @@
+   Compiling xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\LopamudraAttachRemoval\crates\xterm-addons)
+    Finished `test` profile [unoptimized] target(s) in 6.23s
+     Running tests\attach_removal.rs (target\debug\deps\attach_removal-ebc4c4c746064a28.exe)
+
+running 2 tests
+test infallible_compatibility_disposal_records_and_returns_exact_host_error ... FAILED
+test fallible_removal_matches_all_36_unchanged_source_traces ... FAILED
+
+failures:
+
+---- infallible_compatibility_disposal_records_and_returns_exact_host_error stdout ----
+
+thread 'infallible_compatibility_disposal_records_and_returns_exact_host_error' panicked at crates\xterm-addons\tests\attach_removal.rs:201:5:
+assertion `left == right` failed
+  left: None
+ right: Some(Host(Custom { kind: Other, error: "removal" }))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- fallible_removal_matches_all_36_unchanged_source_traces stdout ----
+
+thread 'fallible_removal_matches_all_36_unchanged_source_traces' panicked at crates\xterm-addons\tests\attach_removal.rs:162:9:
+assertion `left == right` failed: "dispose/message/getter/false"
+  left: Ok(())
+ right: Err(Host(Custom { kind: Other, error: "exact host identity" }))
+
+
+failures:
+    fallible_removal_matches_all_36_unchanged_source_traces
+    infallible_compatibility_disposal_records_and_returns_exact_host_error
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+error: test failed, to rerun pass `-p xterm-addons --test attach_removal`

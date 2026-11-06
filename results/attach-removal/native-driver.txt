@@ -1,0 +1,47 @@
+import { readFile, writeFile, mkdir, statfs } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { freemem } from 'node:os';
+import { resolve } from 'node:path';
+import { runCommand } from '../scripts/quality-process.mjs';
+const root=process.cwd(), out=resolve(root,'results/attach-removal');
+await mkdir(out,{recursive:true});
+const env={...process.env,CARGO_BUILD_JOBS:'2',CARGO_TARGET_DIR:resolve(root,'target'),TEMP:resolve(root,'tmp'),TMP:resolve(root,'tmp'),TMPDIR:resolve(root,'tmp')};
+const report={status:'running',env:Object.fromEntries(['CARGO_BUILD_JOBS','CARGO_TARGET_DIR','TEMP','TMP','TMPDIR'].map(k=>[k,env[k]])),commands:[]};
+async function guard(){const d=await statfs(root);if(freemem()<8*2**30||Number(d.bavail)*Number(d.bsize)<10*2**30)throw Error('8GiB RAM/10GiB disk guard');}
+async function persist(){await writeFile(resolve(out,'native-commands.json'),JSON.stringify(report,null,2)+'\n');}
+async function run(name,args,{allowFailure=false}={}){
+ await guard();const r=await runCommand('cargo',args,{cwd:root,env,log:resolve(out,name+'.log'),timeoutMs:240000,resourceCheck:guard});
+ report.commands.push({name,...r});await persist();console.log(name,r.status,r.elapsedMs);
+ if(!allowFailure&&r.status!=='passed')throw Error(name+' failed');
+}
+try{
+ await run('native',['test','--locked','-j2','-p','xterm-addons','--all-targets','--all-features']);
+ const file=resolve(root,'crates/xterm-addons/src/attach.rs');
+ const fixed=await readFile(file);
+ const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+ const needle='        disposable.remove()?;';
+ const source=fixed.toString();
+ if(source.split(needle).length!==2)throw Error('negative control match not unique');
+ try {
+   await writeFile(file,source.replace(needle,'        let _ = disposable.remove();'));
+   await run('native-negative-control',['test','--locked','-j2','-p','xterm-addons','--test','attach_removal'],{allowFailure:true});
+   const receipt=report.commands.at(-1);
+   if(receipt.exitCode!==101||receipt.timedOut||receipt.error)throw Error('native control did not fail as intended');
+   const log=await readFile(resolve(out,'native-negative-control.log'),'utf8');
+   if(!log.includes('fallible_removal_matches_all_36_unchanged_source_traces')||!log.includes('test result: FAILED'))throw Error('native control failure mismatch');
+ } finally {
+   await writeFile(file,fixed);
+   report.restoredSha256=sha(await readFile(file));
+   report.fixedSha256=sha(fixed);
+   if(report.restoredSha256!==report.fixedSha256)throw Error('native source restore failed');
+   await persist();
+ }
+ await run('native-final',['test','--locked','-j2','-p','xterm-addons','--all-targets','--all-features']);
+ await run('native-clippy',['clippy','--locked','-j2','-p','xterm-addons','--all-targets','--all-features','--','-D','warnings']);
+ await run('wasm-clippy',['clippy','--locked','-j2','-p','xterm-web','--target','wasm32-unknown-unknown','--lib','--test','wasm_attach_removal','--test','wasm_attach_listener_lifetime','--','-D','warnings']);
+ await run('wasm-tests-no-run',['test','--locked','-j2','-p','xterm-web','--target','wasm32-unknown-unknown','--test','wasm_attach_removal','--test','wasm_attach_listener_lifetime','--no-run']);
+ await run('aggregate-fmt',['fmt','--all','--','--check'],{allowFailure:true});
+ for(const name of ['xterm-core','xterm-addons','xterm-web','xterm-wasm-support','xterm-font-addons'])await run('fmt-'+name,['fmt','--manifest-path','crates/'+name+'/Cargo.toml','--','--check']);
+ report.status='passed';
+}catch(error){report.status='failed';report.error=String(error.stack??error);process.exitCode=1;}
+finally{report.finishedAt=new Date().toISOString();await persist();}
