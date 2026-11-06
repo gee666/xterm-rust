@@ -1,0 +1,104 @@
+
+Running 18 tests using 2 workers
+F°°°°°F°°°°°F°°°°°
+
+  1) [Chromium] › test\playwright\InputHandler.test.ts:1408:11 › InputHandler Integration Tests › CSI › CSI Ps n - DSR: Device Status Report › Status Report - CSI 5 n 
+
+    Error: page.evaluate: ReferenceError: UnicodeGraphemesAddon is not defined
+        at eval (eval at evaluate (:302:30), <anonymous>:1:22)
+        at eval (<anonymous>)
+        at UtilityScript.evaluate (<anonymous>:302:30)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at evaluate (:302:30), <anonymous>:1:22)
+        at UtilityScript.evaluate (<anonymous>:302:30)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at openTerminal (O:\xterm-rust-swarm-16\tmp\worktrees\GenghisDsr\source_repo\test\playwright\TestUtils.ts:509:20)
+        at O:\xterm-rust-swarm-16\tmp\worktrees\GenghisDsr\source_repo\test\playwright\InputHandler.test.ts:12:3
+
+    Error: page.exposeFunction: Target page, context or browser has been closed
+
+       at TestUtils.ts:149
+
+      147 |     await this._page.exposeFunction('onKey', (e: { key: string, domEvent: KeyboardEvent }) => this._onKey.fire(e));
+      148 |     await this._page.exposeFunction('onLineFeed', () => this._onLineFeed.fire());
+    > 149 |     await this._page.exposeFunction('onRender', (e: { start: number, end: number }) => this._onRender.fire(e));
+          |                      ^
+      150 |     await this._page.exposeFunction('onResize', (e: { cols: number, rows: number }) => this._onResize.fire(e));
+      151 |     await this._page.exposeFunction('onScroll', (e: number) => this._onScroll.fire(e));
+      152 |     await this._page.exposeFunction('onSelectionChange', () => this._onSelectionChange.fire());
+        at TerminalProxy.initPage (O:\xterm-rust-swarm-16\tmp\worktrees\GenghisDsr\source_repo\test\playwright\TestUtils.ts:149:22)
+
+    Error Context: ..\tmp\dsr-original-wZwlEQ\artifacts\InputHandler-InputHandler--c3610-ort-Status-Report---CSI-5-n-Chromium\error-context.md
+
+    Error Context: ..\tmp\dsr-original-wZwlEQ\artifacts\InputHandler-InputHandler--c3610-ort-Status-Report---CSI-5-n-Chromium\error-context.md
+
+  2) [FirefoxStable] › test\playwright\InputHandler.test.ts:1408:11 › InputHandler Integration Tests › CSI › CSI Ps n - DSR: Device Status Report › Status Report - CSI 5 n 
+
+    Error: page.evaluate: UnicodeGraphemesAddon is not defined
+    @debugger eval code line 302 > eval:1:1
+    evaluate@debugger eval code:302:30
+    @debugger eval code:1:44
+    @debugger eval code:1:62
+
+        at @debugger eval code line 302 > eval:1:1
+        at evaluate@debugger eval code:302:30
+        at @debugger eval code:1:44
+        at @debugger eval code:1:62
+        at openTerminal (O:\xterm-rust-swarm-16\tmp\worktrees\GenghisDsr\source_repo\test\playwright\TestUtils.ts:509:20)
+        at O:\xterm-rust-swarm-16\tmp\worktrees\GenghisDsr\source_repo\test\playwright\InputHandler.test.ts:12:3
+
+    Error: page.exposeFunction: Target page, context or browser has been closed
+
+       at TestUtils.ts:149
+
+      147 |     await this._page.exposeFunction('onKey', (e: { key: string, domEvent: KeyboardEvent }) => this._onKey.fire(e));
+      148 |     await this._page.exposeFunction('onLineFeed', () => this._onLineFeed.fire());
+    > 149 |     await this._page.exposeFunction('onRender', (e: { start: number, end: number }) => this._onRender.fire(e));
+          |                      ^
+      150 |     await this._page.exposeFunction('onResize', (e: { cols: number, rows: number }) => this._onResize.fire(e));
+      151 |     await this._page.exposeFunction('onScroll', (e: number) => this._onScroll.fire(e));
+      152 |     await this._page.exposeFunction('onSelectionChange', () => this._onSelectionChange.fire());
+        at TerminalProxy.initPage (O:\xterm-rust-swarm-16\tmp\worktrees\GenghisDsr\source_repo\test\playwright\TestUtils.ts:149:22)
+
+    Error Context: ..\tmp\dsr-original-wZwlEQ\artifacts\InputHandler-InputHandler--c3610-ort-Status-Report---CSI-5-n-FirefoxStable\error-context.md
+
+    Error Context: ..\tmp\dsr-original-wZwlEQ\artifacts\InputHandler-InputHandler--c3610-ort-Status-Report---CSI-5-n-FirefoxStable\error-context.md
+
+  3) [WebKit] › test\playwright\InputHandler.test.ts:1408:11 › InputHandler Integration Tests › CSI › CSI Ps n - DSR: Device Status Report › Status Report - CSI 5 n 
+
+    Error: page.evaluate: ReferenceError: Can't find variable: UnicodeGraphemesAddon
+
+       at TestUtils.ts:509
+
+      507 |   // more complete integration tests. See https://github.com/xtermjs/xterm.js/pull/4519#discussion_r1285234453
+      508 |   if (testOptions.loadUnicodeGraphemesAddon) {
+    > 509 |     await ctx.page.evaluate(`
+          |                    ^
+      510 |       window.unicode = new UnicodeGraphemesAddon();
+      511 |       window.term.loadAddon(window.unicode);
+      512 |       window.term.unicode.activeVersion = '15-graphemes';
+        at openTerminal (O:\xterm-rust-swarm-16\tmp\worktrees\GenghisDsr\source_repo\test\playwright\TestUtils.ts:509:20)
+        at O:\xterm-rust-swarm-16\tmp\worktrees\GenghisDsr\source_repo\test\playwright\InputHandler.test.ts:12:3
+
+    Error: page.exposeFunction: Target page, context or browser has been closed
+
+       at TestUtils.ts:149
+
+      147 |     await this._page.exposeFunction('onKey', (e: { key: string, domEvent: KeyboardEvent }) => this._onKey.fire(e));
+      148 |     await this._page.exposeFunction('onLineFeed', () => this._onLineFeed.fire());
+    > 149 |     await this._page.exposeFunction('onRender', (e: { start: number, end: number }) => this._onRender.fire(e));
+          |                      ^
+      150 |     await this._page.exposeFunction('onResize', (e: { cols: number, rows: number }) => this._onResize.fire(e));
+      151 |     await this._page.exposeFunction('onScroll', (e: number) => this._onScroll.fire(e));
+      152 |     await this._page.exposeFunction('onSelectionChange', () => this._onSelectionChange.fire());
+        at TerminalProxy.initPage (O:\xterm-rust-swarm-16\tmp\worktrees\GenghisDsr\source_repo\test\playwright\TestUtils.ts:149:22)
+
+    Error Context: ..\tmp\dsr-original-wZwlEQ\artifacts\InputHandler-InputHandler--c3610-ort-Status-Report---CSI-5-n-WebKit\error-context.md
+
+    Error Context: ..\tmp\dsr-original-wZwlEQ\artifacts\InputHandler-InputHandler--c3610-ort-Status-Report---CSI-5-n-WebKit\error-context.md
+
+  3 failed
+    [Chromium] › test\playwright\InputHandler.test.ts:1408:11 › InputHandler Integration Tests › CSI › CSI Ps n - DSR: Device Status Report › Status Report - CSI 5 n 
+    [FirefoxStable] › test\playwright\InputHandler.test.ts:1408:11 › InputHandler Integration Tests › CSI › CSI Ps n - DSR: Device Status Report › Status Report - CSI 5 n 
+    [WebKit] › test\playwright\InputHandler.test.ts:1408:11 › InputHandler Integration Tests › CSI › CSI Ps n - DSR: Device Status Report › Status Report - CSI 5 n 
+  15 did not run

@@ -1,0 +1,91 @@
+{
+  "status": "passed",
+  "receipts": [
+    {
+      "name": "workspace-tests",
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "-j2"
+      ],
+      "exit": 0,
+      "error": null,
+      "sha256": "7addf6ec946938eb71c0366be2098d380ba892fbbf5062b69253f34f54159b7f"
+    },
+    {
+      "name": "workspace-clippy",
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "clippy",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "-j2",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "error": null,
+      "sha256": "370a530079659d1916b19a15e233586920a1b38df04ccaa76b974166a04fd4b6"
+    },
+    {
+      "name": "workspace-docs",
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "test",
+        "--locked",
+        "--workspace",
+        "--all-features",
+        "--doc",
+        "-j2"
+      ],
+      "exit": 0,
+      "error": null,
+      "sha256": "0f844f8aec490d6d279bea341bf962fbc86289e2513f1aa49a13a206b08240ed"
+    },
+    {
+      "name": "workspace-wasm-check",
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "check",
+        "--locked",
+        "--workspace",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--lib",
+        "--all-features",
+        "-j2"
+      ],
+      "exit": 0,
+      "error": null,
+      "sha256": "3fe980a0f9709b0a2d093ea2a65202e1e589d4893ac71be4272c165923b9e527"
+    },
+    {
+      "name": "workspace-wasm-clippy",
+      "command": [
+        "C:/Users/user/.cargo/bin/cargo.exe",
+        "clippy",
+        "--locked",
+        "--workspace",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--lib",
+        "--all-features",
+        "-j2",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "error": null,
+      "sha256": "8a10254974bbd1a52574924f2ba6e2e78269a27b8d61c996e00c4498f15edb56"
+    }
+  ],
+  "scope": "Windows MSRV workspace native tests/docs/strict Clippy only, not native-other-OS/release/full-suite equivalence"
+}

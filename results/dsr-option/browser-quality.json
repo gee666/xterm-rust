@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "receipts": [
+    {
+      "name": "original-browser",
+      "command": [
+        "node",
+        "scripts/dsr-browser-original.mjs"
+      ],
+      "exit": 0,
+      "error": null,
+      "sha256": "90389eb8f337aae90548ac7001ed2fe1ea74ee3435fa28751bd1732c62caaea9"
+    },
+    {
+      "name": "debug-build",
+      "command": [
+        "node",
+        "scripts/build-demo.mjs",
+        "--debug"
+      ],
+      "exit": 0,
+      "error": null,
+      "sha256": "3ba2aff455a5422f9461d3dbd019dc81d0eb6a125779adbab5d04bc0aa663280"
+    },
+    {
+      "name": "rust-browser",
+      "command": [
+        "node",
+        "scripts/e2e-upstream.mjs",
+        "--suite",
+        "core",
+        "--grep",
+        "DSR: Device Status Report",
+        "--no-build",
+        "--timeout-ms",
+        "180000"
+      ],
+      "exit": 0,
+      "error": null,
+      "sha256": "638b49dda4d383422c8ee0dca4ae475df77c7007643f24a88150d27fa1eaa6ed"
+    }
+  ],
+  "scope": "Six unchanged DSR assertions each engine against original and actual Rust, 18+18 expanded cases; not full suites."
+}

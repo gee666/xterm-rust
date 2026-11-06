@@ -30,9 +30,10 @@ const esbuild = require('esbuild');
 let server;
 try {
   const bundle = join(scratch, 'source.js');
-  await esbuild.build({stdin: {contents: `import {Terminal} from ${JSON.stringify(join(source, 'src/browser/public/Terminal.ts'))}; globalThis.Terminal = Terminal;`,
+  await esbuild.build({stdin: {contents: `import {Terminal} from ${JSON.stringify(join(source, 'src/browser/public/Terminal.ts'))}; import {UnicodeGraphemesAddon} from ${JSON.stringify(join(source, 'addons/addon-unicode-graphemes/src/UnicodeGraphemesAddon.ts'))}; globalThis.Terminal = Terminal; globalThis.UnicodeGraphemesAddon = UnicodeGraphemesAddon;`,
     resolveDir: source, sourcefile: 'dsr-original-bootstrap.ts'}, outfile: bundle, bundle: true,
-    platform: 'browser', format: 'iife', tsconfig: join(source, 'src/browser/tsconfig.json'), logLevel: 'silent'});
+    platform: 'browser', format: 'iife', tsconfig: join(source, 'src/browser/tsconfig.json'),
+    nodePaths: [join(source, 'src')], logLevel: 'silent'});
   const files = new Map([
     ['/test', {bytes: await readFile(join(source, 'demo/test.html')), type: 'text/html'}],
     ['/xterm.css', {bytes: await readFile(join(source, 'css/xterm.css')), type: 'text/css'}],
@@ -51,7 +52,7 @@ try {
   await writeFile(config, configForRust(join(source, 'test/playwright/playwright.config.ts'), origin));
   const rawFile = join(output, 'playwright.json');
   const args = [join(source, 'node_modules/@playwright/test/cli.js'), 'test', `--config=${config}`,
-    '--reporter=json', '--workers=2', '--retries=0', '--global-timeout=179500',
+    '--reporter=json', '--workers=1', '--retries=0', '--global-timeout=179500',
     '--grep=DSR: Device Status Report', `--output=${join(scratch, 'artifacts')}`];
   const result = await runCommand(process.execPath, args, {cwd: source, log: join(output, 'playwright.log'),
     timeoutMs: 180000, env: {...process.env, TMP: scratch, TEMP: scratch, TMPDIR: scratch,
