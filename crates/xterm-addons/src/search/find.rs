@@ -226,6 +226,11 @@ impl SearchAddon {
             engine.host.clear_selection()?;
             return Ok(None);
         }
+        let cols = engine.host.terminal().cols()?;
+        let bound = isize::try_from(cols).map_err(|_| SearchAddonError::InvalidCoordinates)?;
+        if col >= bound {
+            return Err(xterm_core::search::SearchError::InvalidColumn { col, cols }.into());
+        }
         engine.init()?;
         let flags = options.matching_options()?;
         let text = term.text()?;
@@ -291,7 +296,11 @@ impl SearchAddon {
         Ok(with_buffer(&buffer, terminal.cols()?, |view| {
             let mut engine = SearchEngine::new(view, &mut cache, host.now_ms());
             match operation {
-                Operation::At(row, col) => engine.find(term, row, col, options),
+                Operation::At(row, col) => engine.find_after_column_check(
+                    term,
+                    xterm_core::search::SearchPosition { row, col },
+                    options,
+                ),
                 Operation::Next => engine.find_next(term, options, cached, selection),
                 Operation::Previous => engine.find_previous(term, options, cached, selection),
             }

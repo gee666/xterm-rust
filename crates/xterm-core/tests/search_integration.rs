@@ -98,6 +98,28 @@ fn malformed_cache_offsets_are_recoverable_errors() {
 }
 
 #[test]
+fn host_phased_find_does_not_recheck_a_previously_valid_column_after_resize() {
+    let lines = [BufferLine::new(2, None, false)];
+    let buffer = SearchBuffer::new(&lines, 2).unwrap();
+    let mut cache = SearchLineCache::default();
+    let mut engine = SearchEngine::new(buffer, &mut cache, 0);
+    assert_eq!(
+        engine.find(&[97], 0, 3, &SearchOptions::default()),
+        Err(SearchError::InvalidColumn { col: 3, cols: 2 })
+    );
+    assert_eq!(
+        engine
+            .find_after_column_check(
+                &[97],
+                SearchPosition { row: 0, col: 3 },
+                &SearchOptions::default(),
+            )
+            .unwrap(),
+        None
+    );
+}
+
+#[test]
 fn extreme_negative_starts_skip_nonexistent_rows_without_iteration() {
     let lines = [BufferLine::new(4, None, false)];
     let buffer = SearchBuffer::new(&lines, 4).unwrap();

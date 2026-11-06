@@ -39,8 +39,22 @@ impl<'buffer, 'cache> SearchEngine<'buffer, 'cache> {
                 cols: self.buffer.cols,
             });
         }
+        self.find_after_column_check(term, SearchPosition { row, col }, options)
+    }
+    /// Continue a host-phased `find` whose column was checked before callbacks.
+    /// The buffer may have resized since that check. Rechecking here would
+    /// reorder source errors and reject a call that already passed validation.
+    pub fn find_after_column_check(
+        &mut self,
+        term: &[u16],
+        mut position: SearchPosition,
+        options: &SearchOptions,
+    ) -> Result<Option<SearchResult>, SearchError> {
+        if term.is_empty() {
+            return Ok(None);
+        }
         self.cache.init(self.now_ms);
-        let mut position = SearchPosition { row, col };
+        let row = position.row;
         if let Some(found) = self.find_in_line(term, &mut position, options, false)? {
             return Ok(Some(found));
         }

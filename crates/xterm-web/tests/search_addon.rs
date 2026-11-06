@@ -32,6 +32,8 @@ mod engine_guard;
 mod engine_receiver;
 #[path = "search_cases/falsy_stored_options.rs"]
 mod falsy_stored_options;
+#[path = "search_cases/highlight_bounds.rs"]
+mod highlight_bounds;
 #[path = "search_cases/highlight_guard.rs"]
 mod highlight_guard;
 #[path = "search_cases/highlight_options.rs"]
