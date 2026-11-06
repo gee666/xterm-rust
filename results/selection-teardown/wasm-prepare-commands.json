@@ -1,0 +1,69 @@
+{
+  "env": {
+    "TEMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ValeriaSelection\\tmp\\runtime",
+    "TMP": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ValeriaSelection\\tmp\\runtime",
+    "TMPDIR": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ValeriaSelection\\tmp\\runtime",
+    "CARGO_TARGET_DIR": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\ValeriaSelection\\target",
+    "CARGO_BUILD_JOBS": "2"
+  },
+  "commands": [
+    {
+      "label": "wasm-test-build",
+      "executable": "C:/Users/user/.cargo/bin/cargo.exe",
+      "args": [
+        "test",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_selection_teardown",
+        "--test",
+        "wasm_selection",
+        "--test",
+        "wasm_terminal_selection",
+        "--no-run"
+      ],
+      "exit": 0,
+      "seconds": 46.893,
+      "expectedFailure": false,
+      "log": "wasm-test-build.log",
+      "ram": 32265437184,
+      "free": 2677362806784,
+      "browsers": "chromium,firefox,webkit"
+    },
+    {
+      "label": "wasm-clippy",
+      "executable": "C:/Users/user/.cargo/bin/cargo.exe",
+      "args": [
+        "clippy",
+        "--locked",
+        "-j2",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--all-features",
+        "--lib",
+        "--test",
+        "wasm_selection_teardown",
+        "--test",
+        "wasm_selection",
+        "--test",
+        "wasm_terminal_selection",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "seconds": 30.33,
+      "expectedFailure": false,
+      "log": "wasm-clippy.log",
+      "ram": 31404404736,
+      "free": 2676039753728,
+      "browsers": "chromium,firefox,webkit"
+    }
+  ]
+}
