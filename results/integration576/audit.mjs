@@ -150,6 +150,23 @@ try {
       owners.set(file,[...(owners.get(file) ?? []),batch.task]);
     }
   }
+  // Accepted process/fixture proofs pin these authored LF blobs. Preserve that
+  // same immutable content on Windows checkout, rather than changing proof pins
+  // to match core.autocrlf's CRLF smudge of unclassified extensions/documents.
+  const lfPaths = ['scripts/windows-owned-job.cs','scripts/windows-owned-job.ps1',
+    'docs/windows-owned-browser-processes.md','docs/handoffs/damaris562.md',
+    '.pi/swarm/skills/owned-browser-process-check/SKILL.md',
+    'docs/quality-wasm-fixtures578.md','docs/handoffs/damaris578.md'];
+  const attributes = expected.get('.gitattributes');
+  if (!attributes?.bytes.toString().endsWith('\n')) throw Error('Missing attribute union');
+  const lfSuffix = '# These accepted process and WASM-fixture proofs pin authored LF bytes.\n'
+    + lfPaths.map(file => `/${file} text eol=lf\n`).join('');
+  if (lfPaths.some(file => attributes.bytes.includes(Buffer.from(`/${file} text eol=lf`)))) throw Error('Repeated proof LF rule');
+  const stableAttributes = Buffer.concat([attributes.bytes,Buffer.from(lfSuffix)]);
+  expected.set('.gitattributes', {...attributes,bytes:stableAttributes});
+  owners.set('.gitattributes',[...owners.get('.gitattributes'),576]);
+  report.proofLfContract = {paths:lfPaths,producerAttributeSha256:sha(attributes.bytes),
+    integratedAttributeSha256:sha(stableAttributes)};
   // A producer's live evidence hashes necessarily stale when other accepted
   // source enters the union. Keep its immutable bytes and derive the new list
   // with the unchanged, itself-audited generator in fresh owned scratch.
