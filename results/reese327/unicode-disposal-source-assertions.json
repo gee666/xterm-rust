@@ -1,0 +1,106 @@
+{
+  "status": "passed",
+  "node": "v24.15.0",
+  "platform": "win32",
+  "results": [
+    {
+      "name": "unicode11",
+      "previous": "6",
+      "cycles": [
+        {
+          "cycle": 0,
+          "active": "11",
+          "width": [
+            2,
+            2
+          ],
+          "versions": [
+            "6",
+            "11"
+          ]
+        },
+        {
+          "cycle": 1,
+          "active": "11",
+          "width": [
+            2,
+            2
+          ],
+          "versions": [
+            "6",
+            "11"
+          ]
+        }
+      ],
+      "oldAssertion": {
+        "status": "rejected",
+        "name": "AssertionError",
+        "message": "Expected values to be strictly equal:\n\n'11' !== '6'\n"
+      }
+    },
+    {
+      "name": "unicode-graphemes",
+      "previous": "6",
+      "cycles": [
+        {
+          "cycle": 0,
+          "active": "6",
+          "width": [
+            1,
+            1
+          ],
+          "versions": [
+            "6",
+            "15",
+            "15-graphemes"
+          ]
+        },
+        {
+          "cycle": 1,
+          "active": "6",
+          "width": [
+            1,
+            1
+          ],
+          "versions": [
+            "6",
+            "15",
+            "15-graphemes"
+          ]
+        }
+      ],
+      "oldAssertion": {
+        "status": "passed"
+      }
+    }
+  ],
+  "pins": [
+    {
+      "path": "addons/addon-unicode11/src/Unicode11Addon.ts",
+      "bytes": 531,
+      "sha256": "883f9a6eaef2c40cc84836453121c6ee3b1fef3ab2050b646d8ad8b28481d393"
+    },
+    {
+      "path": "addons/addon-unicode-graphemes/src/UnicodeGraphemesAddon.ts",
+      "bytes": 1257,
+      "sha256": "bd79c7322ef1ae58129696b9b5281c22ccb8d0798b46f7ba69673de330f22cd8"
+    },
+    {
+      "path": "lib/xterm.mjs",
+      "bytes": 715899,
+      "sha256": "f183e161977e03ff2323bb083be91808a99746e9830f32b3124486b19b77b0f4"
+    },
+    {
+      "path": "addons/addon-unicode11/lib/addon-unicode11.mjs",
+      "bytes": 16014,
+      "sha256": "680a7081b7b75fd4a15f10a556620018a8a7ac1ded96e3d101533c2eda14e985"
+    },
+    {
+      "path": "addons/addon-unicode-graphemes/lib/addon-unicode-graphemes.mjs",
+      "bytes": 24458,
+      "sha256": "a9cb5a998e8f0e0c0ce5d5100110c03af0033d500390fd6de3f77c03ad197e51"
+    }
+  ],
+  "scope": "Actual original browser Terminal in Node, unopened; not Rust/browser E2E",
+  "oldAssertionRejectedOnlyUnicode11": true
+}

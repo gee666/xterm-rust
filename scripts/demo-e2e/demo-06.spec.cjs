@@ -36,7 +36,16 @@ for (const name of addons) test(`${name} load, reload, behavior and unload use t
   expect(await page.evaluate(() => demo.snapshot().addons)).not.toContain(name);
   if (name === 'webgl' || name === 'image') await expect.poll(() => page.locator('.xterm canvas').count()).toBe(initialCanvases);
   if (name === 'unicode11' || name === 'unicode-graphemes') {
-    expect(await page.evaluate(() => demo.terminal.unicode.activeVersion)).toBe(previousVersion);
+    // Unicode11 disposal leaves its registered provider active. Only the
+    // grapheme addon restores the version captured during activation.
+    const expectedVersion = name === 'unicode11' ? '11' : previousVersion;
+    expect(await page.evaluate(() => demo.terminal.unicode.activeVersion)).toBe(expectedVersion);
+    expect(await page.evaluate(() => demo.terminal.unicode.versions)).toContain(expectedVersion);
+    if (name === 'unicode11') {
+      await fresh(page, '🧐');
+      expect(await page.evaluate(() => [demo.terminal.buffer.active.cursorX,
+        demo.terminal.buffer.active.getLine(0).getCell(0).getWidth()])).toEqual([2, 2]);
+    }
   }
   if (name === 'program-status' || name === 'progress' || name === 'clipboard') {
     const before = await page.evaluate(() => ({ events: demo.events.length, outgoing: demo.outgoing.length }));
