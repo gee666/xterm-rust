@@ -35,8 +35,9 @@ impl SubView<'_> {
                 coverage,
                 replacement,
             } => {
-                let coverage =
-                    coverage.ok_or(FontError::Invalid("Substitution has no coverage table"))?;
+                let coverage = coverage.ok_or(FontError::Type(
+                    "Cannot read properties of undefined (reading 'format')",
+                ))?;
                 if coverage.index(glyph).is_none() {
                     return Ok(None);
                 }

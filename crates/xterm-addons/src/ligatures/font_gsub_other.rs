@@ -54,7 +54,9 @@ pub(super) fn generic(kind: u16, table: Reader<'_>) -> Result<GenericTable, Font
                     format,
                 ));
             }
-            let coverage = coverage(table.child16(2)?)?;
+            // An absent pointer is undefined, not an empty coverage table.
+            // Ignored lookups tolerate it; a referenced substitution does not.
+            let coverage = pointer(table, 2)?.map(coverage).transpose()?;
             let count = usize::from(table.u16(4)?);
             for offset in table.words(6, count)? {
                 let set = table.at(usize::from(offset))?;
@@ -75,7 +77,7 @@ pub(super) fn generic(kind: u16, table: Reader<'_>) -> Result<GenericTable, Font
                     set.words(2, count)?;
                 }
             }
-            Some(coverage)
+            coverage
         }
         5 => context(table)?,
         7 => {

@@ -30,6 +30,9 @@ fn expected_error(case: &Value) -> Option<FontError> {
     let message = outcome["message"].as_str().unwrap();
     if outcome["name"] == "TypeError" {
         return Some(FontError::Type(match message {
+            "Cannot read properties of undefined (reading 'format')" => {
+                "Cannot read properties of undefined (reading 'format')"
+            }
             "Cannot convert undefined or null to object" => {
                 "Cannot convert undefined or null to object"
             }

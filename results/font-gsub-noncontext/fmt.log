@@ -1,0 +1,14 @@
+Diff in \\?\O:\xterm-rust-swarm-16\tmp\worktrees\EvelynCoverage\crates\xterm-addons\src\ligatures\font_build_helpers.rs:35:
+                 coverage,
+                 replacement,
+             } => {
+[31m-                let coverage =
+[0m[31m-                    coverage.ok_or(FontError::Type(
+[0m[31m-                        "Cannot read properties of undefined (reading 'format')",
+[0m[31m-                    ))?;
+[0m[32m+                let coverage = coverage.ok_or(FontError::Type(
+[0m[32m+                    "Cannot read properties of undefined (reading 'format')",
+[0m[32m+                ))?;
+[0m                 if coverage.index(glyph).is_none() {
+                     return Ok(None);
+                 }
