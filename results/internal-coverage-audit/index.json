@@ -5,7 +5,7 @@
   "parentTask": 328,
   "canonicalRevision": "14139449bae2792afb019f42e8438b074938cfe7",
   "source": {
-    "revision": "92c3fa7d8c4fc05770f3e0ce1884c8dfc4b6cde5",
+    "revision": "3e4ee9f1dfe2870df8aacb0f0b1393879d46124a",
     "sha256": "19ffb731fe479eb0630bf8b01c74464c7be91ae039ab4641ab11e56d18b7cf95",
     "files": 1965
   },
@@ -24,7 +24,7 @@
       "log": "check.log"
     },
     {
-      "command": "node --test scripts/compatibility-{inventory,baseline-links,addon-mappings,public-mappings,internal-mappings}.test.mjs",
+      "command": "node --test scripts/compatibility-inventory.test.mjs scripts/compatibility-baseline-links.test.mjs scripts/compatibility-addon-mappings.test.mjs scripts/compatibility-public-mappings.test.mjs scripts/compatibility-internal-mappings.test.mjs",
       "exitCode": 0,
       "passed": 15,
       "failed": 0,
@@ -699,6 +699,11 @@
     "final matched timing/size/LoC distributions"
   ],
   "hashes": [
+    {
+      "path": ".gitattributes",
+      "bytes": 1100,
+      "sha256": "1c171dfe1296ec12dd05fa139f25bd2adb03c79d98683688dd74d978b83a8f0b"
+    },
     {
       "path": ".pi/swarm/skills/compatibility-inventory/SKILL.md",
       "bytes": 2448,
