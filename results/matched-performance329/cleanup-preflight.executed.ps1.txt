@@ -1,0 +1,39 @@
+$ErrorActionPreference = 'Stop'
+$root = 'O:\xterm-rust-swarm-16\tmp\worktrees\BriseisPerformance329'
+$all = @(Get-CimInstance Win32_Process)
+$byId = @{}
+foreach ($process in $all) { $byId[[int]$process.ProcessId] = $process }
+$ancestors = [System.Collections.Generic.HashSet[int]]::new()
+$cursor = [int]$PID
+for ($depth = 0; $depth -lt 64 -and $cursor -gt 0; $depth++) {
+    if (-not $ancestors.Add($cursor)) { break }
+    if (-not $byId.ContainsKey($cursor)) { break }
+    $cursor = [int]$byId[$cursor].ParentProcessId
+}
+$workers = @($all | Where-Object {
+    -not $ancestors.Contains([int]$_.ProcessId) -and
+    ($_.CommandLine -like '*BriseisPerformance329*' -or $_.ExecutablePath -like "$root*")
+} | Select-Object ProcessId, ParentProcessId, Name, ExecutablePath, CommandLine)
+$stack = [System.Collections.Generic.Stack[string]]::new()
+$stack.Push($root)
+$files = 0
+$directories = 0
+$reparse = [System.Collections.Generic.List[string]]::new()
+while ($stack.Count -gt 0) {
+    $item = $stack.Pop()
+    $attributes = [System.IO.File]::GetAttributes($item)
+    if (($attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) {
+        $reparse.Add($item)
+        continue
+    }
+    if (($attributes -band [System.IO.FileAttributes]::Directory) -ne 0) {
+        $directories++
+        foreach ($child in [System.IO.Directory]::EnumerateFileSystemEntries($item)) { $stack.Push($child) }
+    } else { $files++ }
+}
+$report = @{ root=$root; at=[DateTime]::UtcNow.ToString('o'); files=$files; directories=$directories;
+    reparse=@($reparse.ToArray()); ownedWorkers=$workers; excludedAncestorCount=$ancestors.Count }
+$json = $report | ConvertTo-Json -Depth 6
+[System.IO.File]::WriteAllText((Join-Path $root 'results\matched-performance329\cleanup-preflight.json'), $json, [System.Text.UTF8Encoding]::new($false))
+Write-Output $json
+if ($workers.Count -ne 0 -or $reparse.Count -ne 0) { exit 1 }
