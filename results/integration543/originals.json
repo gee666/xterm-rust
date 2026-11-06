@@ -1,0 +1,1364 @@
+[
+  {
+    "task": 531,
+    "receiptOnly": true,
+    "archive": "archive/Marilyn531-complete",
+    "chain": [
+      "8ee171f2",
+      "0cf1f0da"
+    ],
+    "archiveHead": "0cf1f0dac7e3a77737625707e7103e2077cbcdae",
+    "commits": [
+      {
+        "ref": "8ee171f239657438e7f116e9f4100f2f75fa7d11",
+        "parents": "8ee171f239657438e7f116e9f4100f2f75fa7d11 0442e3578a7f57d35c2ae6ff20d7186820983065",
+        "title": "Retain canonical source integration receipt and exact production artifact",
+        "paths": [
+          "docs/handoffs/marilyn531.md",
+          "results/acceptance-artifacts/0493b554f5782083fac68f383235eb40df84d6f69252666ce699afdb3790a6f6/artifact.wasm",
+          "results/integration531/canonical-commands.json",
+          "results/integration531/canonical-driver.log",
+          "results/integration531/canonical-merge.log",
+          "results/integration531/canonical-summary.json",
+          "results/integration531/cleanup-preflight.mjs",
+          "results/integration531/manifest.json"
+        ]
+      },
+      {
+        "ref": "0cf1f0dac7e3a77737625707e7103e2077cbcdae",
+        "parents": "0cf1f0dac7e3a77737625707e7103e2077cbcdae 8ee171f239657438e7f116e9f4100f2f75fa7d11",
+        "title": "Retain accepted integration review transfer and owned cleanup preflight",
+        "paths": [
+          "docs/handoffs/marilyn531.md",
+          "results/integration531/cleanup-preflight.json",
+          "results/integration531/independent-review.md",
+          "results/integration531/package-transfer.json",
+          "results/integration531/runtime-cleanup.json"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 526,
+    "receiptOnly": true,
+    "archive": "archive/Emery521526-complete",
+    "chain": [
+      "c5e26827"
+    ],
+    "archiveHead": "c5e2682759d28c689deef614f1e39985ef0b7f26",
+    "commits": [
+      {
+        "ref": "c5e2682759d28c689deef614f1e39985ef0b7f26",
+        "parents": "c5e2682759d28c689deef614f1e39985ef0b7f26 a33ea0e5eeafb6ffcaad8473a56239e2deecc130",
+        "title": "Record accepted serialization reviews and verified owned cleanup",
+        "paths": [
+          "docs/handoffs/emery521526.md",
+          "results/serialize-ansi-coercion/cleanup-initial-read-failure.md",
+          "results/serialize-ansi-coercion/cleanup-output-restoration.json",
+          "results/serialize-ansi-coercion/cleanup-preflight.json",
+          "results/serialize-ansi-coercion/review.md"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 518,
+    "archive": "archive/Danielle518-complete",
+    "chain": [
+      "9afc453b",
+      "05f59d87",
+      "3b6eb6a5",
+      "8cf831f1",
+      "b2d546a0",
+      "b82a71c2",
+      "ae145706"
+    ],
+    "archiveHead": "ae1457067715ae031a5996c5807a54630b688947",
+    "commits": [
+      {
+        "ref": "9afc453b79baf9bed0971af40a3e9a7db2bc9cdd",
+        "parents": "9afc453b79baf9bed0971af40a3e9a7db2bc9cdd 416ddf9655b98d58d603d4cf572cb4b5d387df8c",
+        "title": "Retain captured search engine host and cache across activation",
+        "paths": [
+          "crates/xterm-addons/src/search/addon.rs",
+          "crates/xterm-addons/src/search/engine.rs",
+          "crates/xterm-addons/src/search/find.rs",
+          "crates/xterm-web/tests/fixtures/search-engine-receiver.js",
+          "crates/xterm-web/tests/search_addon.rs",
+          "crates/xterm-web/tests/search_cases/engine_receiver.rs",
+          "crates/xterm-web/tests/wasm_search_addon.rs",
+          "docs/search-engine-receiver.md",
+          "scripts/search-call-args-source.mjs"
+        ]
+      },
+      {
+        "ref": "05f59d872c9ccf88f4692db1971c936226050fef",
+        "parents": "05f59d872c9ccf88f4692db1971c936226050fef 9afc453b79baf9bed0971af40a3e9a7db2bc9cdd",
+        "title": "Cover mixed highlight engines and warm nested search continuation",
+        "paths": [
+          "crates/xterm-addons/src/search/engine.rs",
+          "crates/xterm-web/tests/fixtures/search-engine-receiver.js",
+          "crates/xterm-web/tests/search_cases/engine_receiver.rs",
+          "crates/xterm-web/tests/wasm_search_addon.rs",
+          "docs/search-engine-receiver.md",
+          "scripts/search-call-args-source.mjs"
+        ]
+      },
+      {
+        "ref": "3b6eb6a5177b209a45a45f9cb1d461d829539e52",
+        "parents": "3b6eb6a5177b209a45a45f9cb1d461d829539e52 05f59d872c9ccf88f4692db1971c936226050fef",
+        "title": "Preserve cache disposal reentry and distinct live addon receiver",
+        "paths": [
+          "crates/xterm-addons/src/search/addon.rs",
+          "crates/xterm-web/tests/search_addon.rs",
+          "crates/xterm-web/tests/search_cases/engine_cache.rs",
+          "crates/xterm-web/tests/search_cases/engine_receiver.rs",
+          "docs/search-engine-receiver.md"
+        ]
+      },
+      {
+        "ref": "8cf831f1f46c88fb56969b52ba1d5b40082856e3",
+        "parents": "8cf831f1f46c88fb56969b52ba1d5b40082856e3 3b6eb6a5177b209a45a45f9cb1d461d829539e52",
+        "title": "Document source disposed registration gap without claiming parity",
+        "paths": [
+          "crates/xterm-addons/src/search/engine.rs",
+          "crates/xterm-web/tests/search_cases/engine_cache.rs",
+          "docs/search-engine-receiver.md"
+        ]
+      },
+      {
+        "ref": "b2d546a02d8758a4bbb9015bbab0c60e52d73190",
+        "parents": "b2d546a02d8758a4bbb9015bbab0c60e52d73190 8cf831f1f46c88fb56969b52ba1d5b40082856e3",
+        "title": "Record captured engine native and final formatted browser proof",
+        "paths": [
+          "crates/xterm-web/tests/wasm_search_addon.rs",
+          "docs/search-engine-receiver.md",
+          "results/search-engine-receiver/browser-commands.json",
+          "results/search-engine-receiver/browser-final-wasm_search_addon-bindgen-version.log",
+          "results/search-engine-receiver/browser-final-wasm_search_addon-bindgen.log",
+          "results/search-engine-receiver/browser-final-wasm_search_addon-build.log",
+          "results/search-engine-receiver/browser-final-wasm_search_addon-chromium.log",
+          "results/search-engine-receiver/browser-final-wasm_search_addon-firefox.log",
+          "results/search-engine-receiver/browser-final-wasm_search_addon-webkit.log",
+          "results/search-engine-receiver/browser-final.json",
+          "results/search-engine-receiver/browser-final.log",
+          "results/search-engine-receiver/browser-first-commands.json",
+          "results/search-engine-receiver/browser-initial-failed-chromium.log",
+          "results/search-engine-receiver/browser-initial-failed-firefox.log",
+          "results/search-engine-receiver/browser-initial-failed-wasm_search_addon-bindgen-version.log",
+          "results/search-engine-receiver/browser-initial-failed-wasm_search_addon-bindgen.log",
+          "results/search-engine-receiver/browser-initial-failed-wasm_search_addon-build.log",
+          "results/search-engine-receiver/browser-initial-failed-webkit.log",
+          "results/search-engine-receiver/browser-initial-failed.json",
+          "results/search-engine-receiver/browser-initial-wasm_search_addon-bindgen-version.log",
+          "results/search-engine-receiver/browser-initial-wasm_search_addon-bindgen.log",
+          "results/search-engine-receiver/browser-initial-wasm_search_addon-build.log",
+          "results/search-engine-receiver/browser-initial-wasm_search_addon-chromium.log",
+          "results/search-engine-receiver/browser-initial-wasm_search_addon-firefox.log",
+          "results/search-engine-receiver/browser-initial-wasm_search_addon-webkit.log",
+          "results/search-engine-receiver/browser-initial.json",
+          "results/search-engine-receiver/browser-initial.log",
+          "results/search-engine-receiver/browser-negative-wasm_search_addon-bindgen-version.log",
+          "results/search-engine-receiver/browser-negative-wasm_search_addon-bindgen.log",
+          "results/search-engine-receiver/browser-negative-wasm_search_addon-build.log",
+          "results/search-engine-receiver/browser-negative-wasm_search_addon-chromium.log",
+          "results/search-engine-receiver/browser-negative.json",
+          "results/search-engine-receiver/browser-negative.log",
+          "results/search-engine-receiver/browser-restore.json",
+          "results/search-engine-receiver/cargo-version.log",
+          "results/search-engine-receiver/compiler-controls.json",
+          "results/search-engine-receiver/fmt-final-xterm-addons.log",
+          "results/search-engine-receiver/fmt-final-xterm-core.log",
+          "results/search-engine-receiver/fmt-final-xterm-font-addons.log",
+          "results/search-engine-receiver/fmt-final-xterm-wasm-support.log",
+          "results/search-engine-receiver/fmt-final-xterm-web.log",
+          "results/search-engine-receiver/fmt-initial-corrected-literal.log",
+          "results/search-engine-receiver/fmt-xterm-addons.log",
+          "results/search-engine-receiver/fmt-xterm-core.log",
+          "results/search-engine-receiver/fmt-xterm-font-addons.log",
+          "results/search-engine-receiver/fmt-xterm-wasm-support.log",
+          "results/search-engine-receiver/fmt-xterm-web.log",
+          "results/search-engine-receiver/formatted-artifact-identity.json",
+          "results/search-engine-receiver/formatted-bindgen.log",
+          "results/search-engine-receiver/formatted-wasm-build.log",
+          "results/search-engine-receiver/formatting-final.json",
+          "results/search-engine-receiver/headroom-browser.json",
+          "results/search-engine-receiver/headroom-native.json",
+          "results/search-engine-receiver/headroom-refresh.json",
+          "results/search-engine-receiver/inheritance.json",
+          "results/search-engine-receiver/inherited-after.json",
+          "results/search-engine-receiver/input-manifest.json",
+          "results/search-engine-receiver/native-artifact.json",
+          "results/search-engine-receiver/native-clippy.log",
+          "results/search-engine-receiver/native-commands.json",
+          "results/search-engine-receiver/native-final-clippy.log",
+          "results/search-engine-receiver/native-final-recheck.log",
+          "results/search-engine-receiver/native-final.log",
+          "results/search-engine-receiver/native-fixed.log",
+          "results/search-engine-receiver/native-initial-commands.json",
+          "results/search-engine-receiver/native-initial.log",
+          "results/search-engine-receiver/native-negative.log",
+          "results/search-engine-receiver/native-restore.json",
+          "results/search-engine-receiver/native-second-negative-engine_cache.log",
+          "results/search-engine-receiver/native-second-negative-engine_receiver.log",
+          "results/search-engine-receiver/native-second-restore.json",
+          "results/search-engine-receiver/preformat-browser-commands.json",
+          "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-bindgen-version.log",
+          "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-bindgen.log",
+          "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-build.log",
+          "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-chromium.log",
+          "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-firefox.log",
+          "results/search-engine-receiver/preformat-browser-final-wasm_search_addon-webkit.log",
+          "results/search-engine-receiver/preformat-browser-final.json",
+          "results/search-engine-receiver/preformat-browser-final.log",
+          "results/search-engine-receiver/preformat-browser-negative-wasm_search_addon-bindgen-version.log",
+          "results/search-engine-receiver/preformat-browser-negative-wasm_search_addon-bindgen.log",
+          "results/search-engine-receiver/preformat-browser-negative-wasm_search_addon-build.log",
+          "results/search-engine-receiver/preformat-browser-negative-wasm_search_addon-chromium.log",
+          "results/search-engine-receiver/preformat-browser-negative.json",
+          "results/search-engine-receiver/preformat-browser-negative.log",
+          "results/search-engine-receiver/preformat-browser-restore.json",
+          "results/search-engine-receiver/preformat-compiler-controls.json",
+          "results/search-engine-receiver/reference-after.json",
+          "results/search-engine-receiver/refresh-commands.json",
+          "results/search-engine-receiver/runtime-manifest.json",
+          "results/search-engine-receiver/rustc-version.log",
+          "results/search-engine-receiver/source.json",
+          "results/search-engine-receiver/source.log",
+          "results/search-engine-receiver/summary.json",
+          "results/search-engine-receiver/wasm-clippy.log",
+          "results/search-engine-receiver/wasm-final-clippy.log",
+          "results/search-engine-receiver/workspace-fmt-final.log",
+          "results/search-engine-receiver/workspace-fmt.log"
+        ]
+      },
+      {
+        "ref": "b82a71c208ac72d9d667d59eb48f380847a63501",
+        "parents": "b82a71c208ac72d9d667d59eb48f380847a63501 b2d546a02d8758a4bbb9015bbab0c60e52d73190",
+        "title": "Drop replaced search engine outside slot borrow and verify reentry",
+        "paths": [
+          "crates/xterm-addons/src/search/addon.rs",
+          "crates/xterm-web/tests/search_cases/engine_cache.rs",
+          "docs/search-engine-receiver.md",
+          "results/search-engine-receiver/browser-final-wasm_search_addon-build.log",
+          "results/search-engine-receiver/browser-final-wasm_search_addon-chromium.log",
+          "results/search-engine-receiver/browser-final-wasm_search_addon-firefox.log",
+          "results/search-engine-receiver/browser-final-wasm_search_addon-webkit.log",
+          "results/search-engine-receiver/browser-final.json",
+          "results/search-engine-receiver/browser-review-final.log",
+          "results/search-engine-receiver/headroom-review-browser.json",
+          "results/search-engine-receiver/headroom-review-fix.json",
+          "results/search-engine-receiver/input-manifest.json",
+          "results/search-engine-receiver/native-artifact.json",
+          "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-bindgen-version.log",
+          "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-bindgen.log",
+          "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-build.log",
+          "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-chromium.log",
+          "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-firefox.log",
+          "results/search-engine-receiver/pre-review-browser-final-wasm_search_addon-webkit.log",
+          "results/search-engine-receiver/pre-review-browser-final.json",
+          "results/search-engine-receiver/pre-review-browser-final.log",
+          "results/search-engine-receiver/pre-review-native-artifact.json",
+          "results/search-engine-receiver/pre-review-runtime-manifest.json",
+          "results/search-engine-receiver/review-browser-command.json",
+          "results/search-engine-receiver/review-final-identity.json",
+          "results/search-engine-receiver/review-first.txt",
+          "results/search-engine-receiver/review-fix-commands.json",
+          "results/search-engine-receiver/review-native-clippy.log",
+          "results/search-engine-receiver/review-native-final.log",
+          "results/search-engine-receiver/review-negative.log",
+          "results/search-engine-receiver/review-restore.json",
+          "results/search-engine-receiver/review-wasm-clippy.log",
+          "results/search-engine-receiver/runtime-manifest.json",
+          "results/search-engine-receiver/summary.json"
+        ]
+      },
+      {
+        "ref": "ae1457067715ae031a5996c5807a54630b688947",
+        "parents": "ae1457067715ae031a5996c5807a54630b688947 b82a71c208ac72d9d667d59eb48f380847a63501",
+        "title": "Retain accepted search receiver review and owned cleanup preflight",
+        "paths": [
+          "docs/search-engine-receiver.md",
+          "results/search-engine-receiver/cleanup-preflight.json",
+          "results/search-engine-receiver/review-accepted.txt",
+          "results/search-engine-receiver/summary.json"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 525,
+    "archive": "archive/Paul525-complete",
+    "chain": [
+      "f6cab31b",
+      "774a6360",
+      "2fe5e8bc",
+      "e19e74a1",
+      "008e24ce",
+      "076463f8",
+      "b81b46e0"
+    ],
+    "archiveHead": "b81b46e0fb5a7897316ff6ec55efb5ac7492c0bb",
+    "commits": [
+      {
+        "ref": "f6cab31b728bab0da208f0827dbf0fd38062eeae",
+        "parents": "f6cab31b728bab0da208f0827dbf0fd38062eeae 11ad71a816f3d004148a168348f7442e795f8a88",
+        "title": "Recheck live link ranges before render-triggered leave",
+        "paths": [
+          ".pi/swarm/skills/link-render-recheck/SKILL.md",
+          "crates/xterm-web/src/links/browser_linkifier.rs",
+          "crates/xterm-web/src/links/browser_linkifier_events.rs",
+          "crates/xterm-web/src/links/browser_payload.rs",
+          "docs/link-render-recheck.md",
+          "scripts/link-render-recheck-methods.mjs",
+          "scripts/link-render-recheck-negative.mjs",
+          "scripts/link-render-recheck-trace.js",
+          "scripts/public-link-provider-source.mjs"
+        ]
+      },
+      {
+        "ref": "774a6360a71682708f7462facef6719ef11a2e30",
+        "parents": "774a6360a71682708f7462facef6719ef11a2e30 f6cab31b728bab0da208f0827dbf0fd38062eeae",
+        "title": "Cover current-link clearing during both render range endpoints",
+        "paths": [
+          ".pi/swarm/skills/link-render-recheck/SKILL.md",
+          "crates/xterm-web/src/links/browser_linkifier.rs",
+          "docs/link-render-recheck.md",
+          "scripts/link-render-recheck-methods.mjs"
+        ]
+      },
+      {
+        "ref": "2fe5e8bc41662f5b451fe562c29800bcb0ca11f7",
+        "parents": "2fe5e8bc41662f5b451fe562c29800bcb0ca11f7 774a6360a71682708f7462facef6719ef11a2e30",
+        "title": "Release link state borrow before constructing row reentry errors",
+        "paths": [
+          "crates/xterm-web/src/links/browser_linkifier_events.rs"
+        ]
+      },
+      {
+        "ref": "e19e74a14be5d076b172d7f414539bd12518f2e7",
+        "parents": "e19e74a14be5d076b172d7f414539bd12518f2e7 2fe5e8bc41662f5b451fe562c29800bcb0ca11f7",
+        "title": "Compare original and Rust render rechecks through opened terminals",
+        "paths": [
+          "crates/xterm-web/tests/fixtures/link-render-recheck.json",
+          "crates/xterm-web/tests/linkifier/render_recheck.js",
+          "crates/xterm-web/tests/linkifier/render_recheck.rs",
+          "crates/xterm-web/tests/wasm_link_render_recheck.rs",
+          "scripts/link-render-recheck-trace.js"
+        ]
+      },
+      {
+        "ref": "008e24ce6942ef53a170ecaf86ce424da947d05e",
+        "parents": "008e24ce6942ef53a170ecaf86ce424da947d05e e19e74a14be5d076b172d7f414539bd12518f2e7",
+        "title": "Retain render range recheck browser and negative-control evidence",
+        "paths": [
+          "docs/link-render-recheck.md",
+          "results/link-render-recheck/browser-commands.json",
+          "results/link-render-recheck/debounce-source-command.log",
+          "results/link-render-recheck/debounce-source.json",
+          "results/link-render-recheck/development/source-initial.json",
+          "results/link-render-recheck/development/source-initial.log",
+          "results/link-render-recheck/final-browser-commands.json",
+          "results/link-render-recheck/final-wasm_link_disposal.log",
+          "results/link-render-recheck/final-wasm_link_hover_event.log",
+          "results/link-render-recheck/final-wasm_link_live_cols.log",
+          "results/link-render-recheck/final-wasm_link_provider_reentry.log",
+          "results/link-render-recheck/final-wasm_link_render_recheck.log",
+          "results/link-render-recheck/final-wasm_link_underline_geometry.log",
+          "results/link-render-recheck/final-wasm_linkifier.log",
+          "results/link-render-recheck/final-wasm_public_link_provider.log",
+          "results/link-render-recheck/final-wasm_terminal_links.log",
+          "results/link-render-recheck/final.json",
+          "results/link-render-recheck/index.json",
+          "results/link-render-recheck/initial-browser.log",
+          "results/link-render-recheck/initial.json",
+          "results/link-render-recheck/methods.json",
+          "results/link-render-recheck/negative-command.log",
+          "results/link-render-recheck/negative.json",
+          "results/link-render-recheck/newtest-clippy.log",
+          "results/link-render-recheck/original-unit-command.log",
+          "results/link-render-recheck/original-unit.json",
+          "results/link-render-recheck/quality/commands.json",
+          "results/link-render-recheck/quality/fmt-xterm-addons.log",
+          "results/link-render-recheck/quality/fmt-xterm-core.log",
+          "results/link-render-recheck/quality/fmt-xterm-font-addons.log",
+          "results/link-render-recheck/quality/fmt-xterm-wasm-support.log",
+          "results/link-render-recheck/quality/fmt-xterm-web.log",
+          "results/link-render-recheck/quality/format.json",
+          "results/link-render-recheck/quality/full-fmt.log",
+          "results/link-render-recheck/quality/native-clippy.log",
+          "results/link-render-recheck/quality/native-summary.json",
+          "results/link-render-recheck/quality/native-web.log",
+          "results/link-render-recheck/quality/toolchain.log",
+          "results/link-render-recheck/quality/wasm-lib-clippy.log",
+          "results/link-render-recheck/raw/final/commands.json",
+          "results/link-render-recheck/raw/final/wasm_link_render_recheck-bindgen-version.log",
+          "results/link-render-recheck/raw/final/wasm_link_render_recheck-bindgen.log",
+          "results/link-render-recheck/raw/final/wasm_link_render_recheck-build.log",
+          "results/link-render-recheck/raw/final/wasm_link_render_recheck-chromium.log",
+          "results/link-render-recheck/raw/final/wasm_link_render_recheck-firefox.log",
+          "results/link-render-recheck/raw/final/wasm_link_render_recheck-results.json",
+          "results/link-render-recheck/raw/final/wasm_link_render_recheck-webkit.log",
+          "results/link-render-recheck/raw/initial/commands.json",
+          "results/link-render-recheck/raw/initial/wasm_link_render_recheck-bindgen-version.log",
+          "results/link-render-recheck/raw/initial/wasm_link_render_recheck-bindgen.log",
+          "results/link-render-recheck/raw/initial/wasm_link_render_recheck-build.log",
+          "results/link-render-recheck/raw/initial/wasm_link_render_recheck-chromium.log",
+          "results/link-render-recheck/raw/initial/wasm_link_render_recheck-firefox.log",
+          "results/link-render-recheck/raw/initial/wasm_link_render_recheck-results.json",
+          "results/link-render-recheck/raw/initial/wasm_link_render_recheck-webkit.log",
+          "results/link-render-recheck/raw/negative/commands.json",
+          "results/link-render-recheck/raw/negative/wasm_link_render_recheck-bindgen-version.log",
+          "results/link-render-recheck/raw/negative/wasm_link_render_recheck-bindgen.log",
+          "results/link-render-recheck/raw/negative/wasm_link_render_recheck-build.log",
+          "results/link-render-recheck/raw/negative/wasm_link_render_recheck-chromium.log",
+          "results/link-render-recheck/raw/negative/wasm_link_render_recheck-results.json",
+          "results/link-render-recheck/raw/wasm_link_disposal/commands.json",
+          "results/link-render-recheck/raw/wasm_link_disposal/wasm_link_disposal-bindgen-version.log",
+          "results/link-render-recheck/raw/wasm_link_disposal/wasm_link_disposal-bindgen.log",
+          "results/link-render-recheck/raw/wasm_link_disposal/wasm_link_disposal-build.log",
+          "results/link-render-recheck/raw/wasm_link_disposal/wasm_link_disposal-chromium.log",
+          "results/link-render-recheck/raw/wasm_link_disposal/wasm_link_disposal-firefox.log",
+          "results/link-render-recheck/raw/wasm_link_disposal/wasm_link_disposal-results.json",
+          "results/link-render-recheck/raw/wasm_link_disposal/wasm_link_disposal-webkit.log",
+          "results/link-render-recheck/raw/wasm_link_hover_event/commands.json",
+          "results/link-render-recheck/raw/wasm_link_hover_event/wasm_link_hover_event-bindgen-version.log",
+          "results/link-render-recheck/raw/wasm_link_hover_event/wasm_link_hover_event-bindgen.log",
+          "results/link-render-recheck/raw/wasm_link_hover_event/wasm_link_hover_event-build.log",
+          "results/link-render-recheck/raw/wasm_link_hover_event/wasm_link_hover_event-chromium.log",
+          "results/link-render-recheck/raw/wasm_link_hover_event/wasm_link_hover_event-firefox.log",
+          "results/link-render-recheck/raw/wasm_link_hover_event/wasm_link_hover_event-results.json",
+          "results/link-render-recheck/raw/wasm_link_hover_event/wasm_link_hover_event-webkit.log",
+          "results/link-render-recheck/raw/wasm_link_live_cols/commands.json",
+          "results/link-render-recheck/raw/wasm_link_live_cols/wasm_link_live_cols-bindgen-version.log",
+          "results/link-render-recheck/raw/wasm_link_live_cols/wasm_link_live_cols-bindgen.log",
+          "results/link-render-recheck/raw/wasm_link_live_cols/wasm_link_live_cols-build.log",
+          "results/link-render-recheck/raw/wasm_link_live_cols/wasm_link_live_cols-chromium.log",
+          "results/link-render-recheck/raw/wasm_link_live_cols/wasm_link_live_cols-firefox.log",
+          "results/link-render-recheck/raw/wasm_link_live_cols/wasm_link_live_cols-results.json",
+          "results/link-render-recheck/raw/wasm_link_live_cols/wasm_link_live_cols-webkit.log",
+          "results/link-render-recheck/raw/wasm_link_provider_reentry/commands.json",
+          "results/link-render-recheck/raw/wasm_link_provider_reentry/wasm_link_provider_reentry-bindgen-version.log",
+          "results/link-render-recheck/raw/wasm_link_provider_reentry/wasm_link_provider_reentry-bindgen.log",
+          "results/link-render-recheck/raw/wasm_link_provider_reentry/wasm_link_provider_reentry-build.log",
+          "results/link-render-recheck/raw/wasm_link_provider_reentry/wasm_link_provider_reentry-chromium.log",
+          "results/link-render-recheck/raw/wasm_link_provider_reentry/wasm_link_provider_reentry-firefox.log",
+          "results/link-render-recheck/raw/wasm_link_provider_reentry/wasm_link_provider_reentry-results.json",
+          "results/link-render-recheck/raw/wasm_link_provider_reentry/wasm_link_provider_reentry-webkit.log",
+          "results/link-render-recheck/raw/wasm_link_underline_geometry/commands.json",
+          "results/link-render-recheck/raw/wasm_link_underline_geometry/wasm_link_underline_geometry-bindgen-version.log",
+          "results/link-render-recheck/raw/wasm_link_underline_geometry/wasm_link_underline_geometry-bindgen.log",
+          "results/link-render-recheck/raw/wasm_link_underline_geometry/wasm_link_underline_geometry-build.log",
+          "results/link-render-recheck/raw/wasm_link_underline_geometry/wasm_link_underline_geometry-chromium.log",
+          "results/link-render-recheck/raw/wasm_link_underline_geometry/wasm_link_underline_geometry-firefox.log",
+          "results/link-render-recheck/raw/wasm_link_underline_geometry/wasm_link_underline_geometry-results.json",
+          "results/link-render-recheck/raw/wasm_link_underline_geometry/wasm_link_underline_geometry-webkit.log",
+          "results/link-render-recheck/raw/wasm_linkifier/commands.json",
+          "results/link-render-recheck/raw/wasm_linkifier/wasm_linkifier-bindgen-version.log",
+          "results/link-render-recheck/raw/wasm_linkifier/wasm_linkifier-bindgen.log",
+          "results/link-render-recheck/raw/wasm_linkifier/wasm_linkifier-build.log",
+          "results/link-render-recheck/raw/wasm_linkifier/wasm_linkifier-chromium.log",
+          "results/link-render-recheck/raw/wasm_linkifier/wasm_linkifier-firefox.log",
+          "results/link-render-recheck/raw/wasm_linkifier/wasm_linkifier-results.json",
+          "results/link-render-recheck/raw/wasm_linkifier/wasm_linkifier-webkit.log",
+          "results/link-render-recheck/raw/wasm_public_link_provider/commands.json",
+          "results/link-render-recheck/raw/wasm_public_link_provider/wasm_public_link_provider-bindgen-version.log",
+          "results/link-render-recheck/raw/wasm_public_link_provider/wasm_public_link_provider-bindgen.log",
+          "results/link-render-recheck/raw/wasm_public_link_provider/wasm_public_link_provider-build.log",
+          "results/link-render-recheck/raw/wasm_public_link_provider/wasm_public_link_provider-chromium.log",
+          "results/link-render-recheck/raw/wasm_public_link_provider/wasm_public_link_provider-firefox.log",
+          "results/link-render-recheck/raw/wasm_public_link_provider/wasm_public_link_provider-results.json",
+          "results/link-render-recheck/raw/wasm_public_link_provider/wasm_public_link_provider-webkit.log",
+          "results/link-render-recheck/raw/wasm_terminal_links/commands.json",
+          "results/link-render-recheck/raw/wasm_terminal_links/wasm_terminal_links-bindgen-version.log",
+          "results/link-render-recheck/raw/wasm_terminal_links/wasm_terminal_links-bindgen.log",
+          "results/link-render-recheck/raw/wasm_terminal_links/wasm_terminal_links-build.log",
+          "results/link-render-recheck/raw/wasm_terminal_links/wasm_terminal_links-chromium.log",
+          "results/link-render-recheck/raw/wasm_terminal_links/wasm_terminal_links-firefox.log",
+          "results/link-render-recheck/raw/wasm_terminal_links/wasm_terminal_links-results.json",
+          "results/link-render-recheck/raw/wasm_terminal_links/wasm_terminal_links-webkit.log",
+          "results/link-render-recheck/reference-after-tests.json",
+          "results/link-render-recheck/reference-before.json",
+          "results/link-render-recheck/reply-source-command.log",
+          "results/link-render-recheck/reply-source.json",
+          "results/link-render-recheck/source-command.log",
+          "results/link-render-recheck/source.json",
+          "results/link-render-recheck/wasm_link_disposal.json",
+          "results/link-render-recheck/wasm_link_hover_event.json",
+          "results/link-render-recheck/wasm_link_live_cols.json",
+          "results/link-render-recheck/wasm_link_provider_reentry.json",
+          "results/link-render-recheck/wasm_link_underline_geometry.json",
+          "results/link-render-recheck/wasm_linkifier.json",
+          "results/link-render-recheck/wasm_public_link_provider.json",
+          "results/link-render-recheck/wasm_terminal_links.json"
+        ]
+      },
+      {
+        "ref": "076463f803876101a633610c1b26e6b47fcc67bf",
+        "parents": "076463f803876101a633610c1b26e6b47fcc67bf 008e24ce6942ef53a170ecaf86ce424da947d05e",
+        "title": "Record accepted render recheck review and pickup boundaries",
+        "paths": [
+          "docs/handoffs/paul525.md",
+          "results/link-render-recheck/review.json"
+        ]
+      },
+      {
+        "ref": "b81b46e0fb5a7897316ff6ec55efb5ac7492c0bb",
+        "parents": "b81b46e0fb5a7897316ff6ec55efb5ac7492c0bb 076463f803876101a633610c1b26e6b47fcc67bf",
+        "title": "Retain owned render recheck worktree cleanup preflight",
+        "paths": [
+          "results/link-render-recheck/cleanup-preflight.json"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 528,
+    "archive": "archive/Willa528-complete",
+    "chain": [
+      "f40366b1",
+      "7c9627ce",
+      "e6a3dad7",
+      "4312def5",
+      "14dd6eae"
+    ],
+    "archiveHead": "14dd6eae5e47816c97f12f6c21ee1aa7381c8dec",
+    "commits": [
+      {
+        "ref": "f40366b1af8950971ce24b1656519c24c53297a1",
+        "parents": "f40366b1af8950971ce24b1656519c24c53297a1 11ad71a816f3d004148a168348f7442e795f8a88",
+        "title": "Retain raw image palette options through decoder and control phases",
+        "paths": [
+          "crates/xterm-addons/src/image/sixel/canvas.rs",
+          "crates/xterm-addons/src/image/sixel/handler.rs",
+          "crates/xterm-addons/src/image/sixel/mod.rs",
+          "crates/xterm-addons/src/image/sixel/parser.rs",
+          "crates/xterm-addons/src/image/sixel/tests.rs",
+          "crates/xterm-web/src/image/addon.rs",
+          "crates/xterm-web/src/image/addon/bindings.rs",
+          "crates/xterm-web/src/image/addon/controls.rs",
+          "crates/xterm-web/src/image/addon/option_inspection.rs",
+          "crates/xterm-web/src/image/addon/options.rs",
+          "crates/xterm-web/src/image/addon/palette.rs",
+          "crates/xterm-web/src/image/addon/protocols.rs",
+          "crates/xterm-web/src/image/sixel_protocol.rs",
+          "crates/xterm-web/src/image/sixel_protocol/palette.rs",
+          "crates/xterm-web/tests/image_addon_browser.rs",
+          "crates/xterm-web/tests/image_addon_support/raw_palette.rs",
+          "crates/xterm-web/tests/image_addon_support/raw_palette_failures.rs",
+          "crates/xterm-web/tests/image_addon_support/raw_palette_primitives.rs",
+          "crates/xterm-web/tests/image_addon_support/raw_palette_release.rs",
+          "crates/xterm-web/tests/image_addon_support/raw_sixel_limit.rs",
+          "scripts/image-canvas-check.mjs"
+        ]
+      },
+      {
+        "ref": "7c9627ce80938266d50048a6b3e686e0b024417d",
+        "parents": "7c9627ce80938266d50048a6b3e686e0b024417d f40366b1af8950971ce24b1656519c24c53297a1",
+        "title": "Compare raw UTF16 replies and observe decoder rejection promises",
+        "paths": [
+          "crates/xterm-web/tests/image_addon_support/mod.rs",
+          "crates/xterm-web/tests/image_addon_support/raw_palette_failures.rs"
+        ]
+      },
+      {
+        "ref": "e6a3dad7e2be3af9367f8e2f1923f46cae711793",
+        "parents": "e6a3dad7e2be3af9367f8e2f1923f46cae711793 7c9627ce80938266d50048a6b3e686e0b024417d",
+        "title": "Retain raw palette source matrices controls and identity audit",
+        "paths": [
+          ".pi/swarm/skills/image-palette-check/SKILL.md",
+          "docs/image-palette-values.md",
+          "results/image-palette-values/audit.json",
+          "results/image-palette-values/audit.mjs",
+          "results/image-palette-values/clippy-native.log",
+          "results/image-palette-values/clippy-wasm.log",
+          "results/image-palette-values/environment.json",
+          "results/image-palette-values/final-browser.json",
+          "results/image-palette-values/final-build.log",
+          "results/image-palette-values/final-chromium.log",
+          "results/image-palette-values/final-commands.json",
+          "results/image-palette-values/final-firefox.log",
+          "results/image-palette-values/final-verification.json",
+          "results/image-palette-values/final-webkit.log",
+          "results/image-palette-values/final.log",
+          "results/image-palette-values/first-failed-browser.json",
+          "results/image-palette-values/first-failed-build.log",
+          "results/image-palette-values/first-failed-chromium.log",
+          "results/image-palette-values/first-failed-commands.json",
+          "results/image-palette-values/first-failed-firefox.log",
+          "results/image-palette-values/first-failed-verification.json",
+          "results/image-palette-values/first-failed-webkit.log",
+          "results/image-palette-values/first-failed.log",
+          "results/image-palette-values/fmt-all.log",
+          "results/image-palette-values/fmt-xterm-addons.log",
+          "results/image-palette-values/fmt-xterm-core.log",
+          "results/image-palette-values/fmt-xterm-font-addons.log",
+          "results/image-palette-values/fmt-xterm-wasm-support.log",
+          "results/image-palette-values/fmt-xterm-web.log",
+          "results/image-palette-values/format-commands.json",
+          "results/image-palette-values/initial-browser.json",
+          "results/image-palette-values/initial-build.log",
+          "results/image-palette-values/initial-chromium.log",
+          "results/image-palette-values/initial-clippy-wasm-failure.log",
+          "results/image-palette-values/initial-commands.json",
+          "results/image-palette-values/initial-firefox.log",
+          "results/image-palette-values/initial-native-test-failure.log",
+          "results/image-palette-values/initial-verification.json",
+          "results/image-palette-values/initial-webkit.log",
+          "results/image-palette-values/initial.log",
+          "results/image-palette-values/native-addons.log",
+          "results/image-palette-values/native-commands.json",
+          "results/image-palette-values/native-sixel.log",
+          "results/image-palette-values/negative-audit.json",
+          "results/image-palette-values/negative-browser.json",
+          "results/image-palette-values/negative-build.log",
+          "results/image-palette-values/negative-chromium.log",
+          "results/image-palette-values/negative-control.mjs",
+          "results/image-palette-values/negative-verification.json",
+          "results/image-palette-values/negative.log",
+          "results/image-palette-values/producer-browser.json",
+          "results/image-palette-values/producer-build.log",
+          "results/image-palette-values/producer-chromium.log",
+          "results/image-palette-values/producer-commands.json",
+          "results/image-palette-values/producer-firefox.log",
+          "results/image-palette-values/producer-verification.json",
+          "results/image-palette-values/producer-webkit.log",
+          "results/image-palette-values/producer.log",
+          "results/image-palette-values/reconstructed-addon-comparator.ts",
+          "results/image-palette-values/reconstructed-producer-comparator.ts",
+          "results/image-palette-values/reference-before.json",
+          "results/image-palette-values/run.mjs"
+        ]
+      },
+      {
+        "ref": "4312def560fc05a44d8ee92b6bf473f2ee744762",
+        "parents": "4312def560fc05a44d8ee92b6bf473f2ee744762 e6a3dad7e2be3af9367f8e2f1923f46cae711793",
+        "title": "Record independent palette review and owned cleanup preflight",
+        "paths": [
+          "docs/handoffs/willa528.md",
+          "results/image-palette-values/cleanup-outputs.json",
+          "results/image-palette-values/cleanup-preflight.json",
+          "results/image-palette-values/cleanup-processes.json",
+          "results/image-palette-values/review.md"
+        ]
+      },
+      {
+        "ref": "14dd6eae5e47816c97f12f6c21ee1aa7381c8dec",
+        "parents": "14dd6eae5e47816c97f12f6c21ee1aa7381c8dec 4312def560fc05a44d8ee92b6bf473f2ee744762",
+        "title": "Confirm owned palette cleanup and post-removal reference integrity",
+        "paths": [
+          "results/image-palette-values/cleanup-removed.json"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 529,
+    "archive": "archive/Colton529-complete",
+    "chain": [
+      "57ba28db",
+      "ab0b3b3f",
+      "a0d10ee1",
+      "8183eeda"
+    ],
+    "archiveHead": "8183eeda9c03ed17fcd75023d07da741427b3f6c",
+    "commits": [
+      {
+        "ref": "57ba28db7178a1b958f63693e63170611772cf5d",
+        "parents": "57ba28db7178a1b958f63693e63170611772cf5d 394690641dbc47c78fa0943484775de0db8d655b",
+        "title": "Port actual WebGL canvas base and retained link layers",
+        "paths": [
+          ".pi/swarm/skills/canvas-layer-check/SKILL.md",
+          "crates/xterm-web/src/webgl/canvas_layer.rs",
+          "crates/xterm-web/src/webgl/canvas_layer_text.rs",
+          "crates/xterm-web/src/webgl/layer_services.rs",
+          "crates/xterm-web/src/webgl/link_layer.rs",
+          "crates/xterm-web/src/webgl/mod.rs",
+          "crates/xterm-web/tests/canvas_layer_probe.js",
+          "crates/xterm-web/tests/reference/canvas-layer.mjs",
+          "crates/xterm-web/tests/support/canvas_layer.rs",
+          "crates/xterm-web/tests/wasm_webgl_canvas_layer.rs",
+          "docs/webgl-canvas-layers.md",
+          "docs/webgl-port.md",
+          "results/canvas-layer/before-phase-fix-canvas_layer.rs.txt",
+          "results/canvas-layer/before-phase-fix-canvas_layer_text.rs.txt",
+          "scripts/canvas-layer-audit.mjs",
+          "scripts/canvas-layer-negative.mjs",
+          "scripts/canvas-layer-oracle.mjs"
+        ]
+      },
+      {
+        "ref": "ab0b3b3ff6c4ce94767fd24235d368345fe6988c",
+        "parents": "ab0b3b3ff6c4ce94767fd24235d368345fe6988c 57ba28db7178a1b958f63693e63170611772cf5d",
+        "title": "Verify canvas layers and reentry against three browser engines",
+        "paths": [
+          ".pi/swarm/skills/canvas-layer-check/SKILL.md",
+          "docs/webgl-canvas-layers.md",
+          "results/canvas-layer/browser-before-consumer-glyph.json",
+          "results/canvas-layer/browser-before-warmup-observer.json",
+          "results/canvas-layer/browser-commands.mjs.txt",
+          "results/canvas-layer/browser-final.json",
+          "results/canvas-layer/browser-final.log",
+          "results/canvas-layer/browser-initial.json",
+          "results/canvas-layer/browser-initial.log",
+          "results/canvas-layer/browser-negative.json",
+          "results/canvas-layer/browser-phase-negative.json",
+          "results/canvas-layer/browser-ten-final.json",
+          "results/canvas-layer/browser-ten-initial.json",
+          "results/canvas-layer/browser-ten-negative.json",
+          "results/canvas-layer/clippy-native.log",
+          "results/canvas-layer/clippy-wasm-final.log",
+          "results/canvas-layer/clippy-wasm.log",
+          "results/canvas-layer/commands.mjs.txt",
+          "results/canvas-layer/final-commands.mjs.txt",
+          "results/canvas-layer/fmt-web-final.log",
+          "results/canvas-layer/fmt-web.log",
+          "results/canvas-layer/fmt-workspace-final.log",
+          "results/canvas-layer/fmt-workspace.log",
+          "results/canvas-layer/native-final.log",
+          "results/canvas-layer/native.log",
+          "results/canvas-layer/negative-driver.log",
+          "results/canvas-layer/negative-mutant.rs.txt",
+          "results/canvas-layer/negative.json",
+          "results/canvas-layer/negative.log",
+          "results/canvas-layer/oracle-final.log",
+          "results/canvas-layer/oracle.log",
+          "results/canvas-layer/phase-negative-driver.log",
+          "results/canvas-layer/phase-negative.json",
+          "results/canvas-layer/phase-negative.log",
+          "results/canvas-layer/reference-before-final.log",
+          "results/canvas-layer/reference-before.log",
+          "results/canvas-layer/refresh-commands.mjs.txt",
+          "results/canvas-layer/source-inputs.json",
+          "results/canvas-layer/ten-negative.json",
+          "results/canvas-layer/toolchain.log",
+          "results/canvas-layer/verification.json",
+          "results/canvas-layer/wasm-build-final.log",
+          "results/canvas-layer/wasm-build.log",
+          "scripts/canvas-layer-audit.mjs"
+        ]
+      },
+      {
+        "ref": "a0d10ee1dfdf46940258e279ceaa4a72dc99cb8d",
+        "parents": "a0d10ee1dfdf46940258e279ceaa4a72dc99cb8d ab0b3b3ff6c4ce94767fd24235d368345fe6988c",
+        "title": "Retain independent canvas layer review and owned cleanup preflight",
+        "paths": [
+          "docs/handoffs/colton529.md",
+          "results/canvas-layer/cleanup-preflight.mjs",
+          "results/canvas-layer/cleanup.json",
+          "results/canvas-layer/independent-review.md"
+        ]
+      },
+      {
+        "ref": "8183eeda9c03ed17fcd75023d07da741427b3f6c",
+        "parents": "8183eeda9c03ed17fcd75023d07da741427b3f6c a0d10ee1dfdf46940258e279ceaa4a72dc99cb8d",
+        "title": "Record accepted canvas layer runtime cleanup and retained proof",
+        "paths": [
+          "docs/handoffs/colton529.md",
+          "results/canvas-layer/cleanup.json"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 530,
+    "archive": "archive/Dustin530-complete",
+    "chain": [
+      "0333d575",
+      "1992832b",
+      "3b8cc832"
+    ],
+    "archiveHead": "3b8cc832d907ca631bff8919f2f9e0472db8312b",
+    "commits": [
+      {
+        "ref": "0333d57511aa21b20dec1fbb7651cf0d66f8648e",
+        "parents": "0333d57511aa21b20dec1fbb7651cf0d66f8648e 11ad71a816f3d004148a168348f7442e795f8a88",
+        "title": "Validate GSUB single substitution format before coverage reads",
+        "paths": [
+          ".pi/swarm/skills/font-gsub-single-check/SKILL.md",
+          "crates/xterm-addons/src/ligatures/font_gsub_other.rs",
+          "crates/xterm-addons/tests/fixtures/font-gsub-single.json",
+          "crates/xterm-addons/tests/font_gsub_single.rs",
+          "crates/xterm-addons/tests/support/font_gsub_lookup_assertions.rs",
+          "crates/xterm-font-addons/tests/fixtures/font-gsub-single-addon.json",
+          "crates/xterm-font-addons/tests/font_gsub_single_browser.rs",
+          "docs/font-gsub-single.md",
+          "results/font-gsub-single/checks.json",
+          "results/font-gsub-single/fmt-all.log",
+          "results/font-gsub-single/fmt-xterm-addons.log",
+          "results/font-gsub-single/fmt-xterm-core.log",
+          "results/font-gsub-single/fmt-xterm-font-addons.log",
+          "results/font-gsub-single/fmt-xterm-wasm-support.log",
+          "results/font-gsub-single/fmt-xterm-web.log",
+          "results/font-gsub-single/native-addons.log",
+          "results/font-gsub-single/native-after.log",
+          "results/font-gsub-single/native-artifact.json",
+          "results/font-gsub-single/native-before.log",
+          "results/font-gsub-single/native-clippy.log",
+          "results/font-gsub-single/negative-control.json",
+          "results/font-gsub-single/oracle.json",
+          "results/font-gsub-single/reference-integrity.json",
+          "results/font-gsub-single/source-node-generate.log",
+          "results/font-gsub-single/source-node-replay.log",
+          "results/font-gsub-single/wasm-clippy.log",
+          "results/font-gsub-single/wasm-dependents.log",
+          "scripts/font-gsub-header-browser-source.mjs",
+          "scripts/font-gsub-lookup-oracle.mjs",
+          "scripts/font-gsub-single-recipes.mjs"
+        ]
+      },
+      {
+        "ref": "1992832b74097ab191b73815237a3dd160691c01",
+        "parents": "1992832b74097ab191b73815237a3dd160691c01 0333d57511aa21b20dec1fbb7651cf0d66f8648e",
+        "title": "Retain GSUB single format three-browser proof and artifact pins",
+        "paths": [
+          "docs/font-gsub-single.md",
+          "results/font-gsub-single/commands.json",
+          "results/font-gsub-single/font_gsub_single_browser-bindgen-version.log",
+          "results/font-gsub-single/font_gsub_single_browser-bindgen.log",
+          "results/font-gsub-single/font_gsub_single_browser-build.log",
+          "results/font-gsub-single/font_gsub_single_browser-chromium.log",
+          "results/font-gsub-single/font_gsub_single_browser-firefox.log",
+          "results/font-gsub-single/font_gsub_single_browser-webkit.log",
+          "results/font-gsub-single/processes-after-browser.json",
+          "results/font-gsub-single/producer-hashes.json",
+          "results/font-gsub-single/proof-check.json",
+          "results/font-gsub-single/receipt-whitespace.log",
+          "results/font-gsub-single/rust-browser.json",
+          "results/font-gsub-single/rust-browser.log",
+          "results/font-gsub-single/source-browser.json",
+          "results/font-gsub-single/source-browser.log"
+        ]
+      },
+      {
+        "ref": "3b8cc832d907ca631bff8919f2f9e0472db8312b",
+        "parents": "3b8cc832d907ca631bff8919f2f9e0472db8312b 1992832b74097ab191b73815237a3dd160691c01",
+        "title": "Record accepted GSUB single review and owned cleanup preflight",
+        "paths": [
+          "docs/font-gsub-single.md",
+          "docs/handoffs/dustin530.md",
+          "results/font-gsub-single/cleanup-preflight.json",
+          "results/font-gsub-single/review.json"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 532,
+    "archive": "archive/Kayla532-complete",
+    "chain": [
+      "ba5e1094",
+      "11fa184b",
+      "0ac47e05",
+      "2442584e"
+    ],
+    "archiveHead": "2442584e2170256ac021e9f387a25ec999205f19",
+    "commits": [
+      {
+        "ref": "ba5e1094c7735f0982500f484f356035b947108c",
+        "parents": "ba5e1094c7735f0982500f484f356035b947108c 11ad71a816f3d004148a168348f7442e795f8a88",
+        "title": "Preserve JavaScript mouse coordinate zero signs across optimization levels",
+        "paths": [
+          ".pi/swarm/skills/mouse-coordinate-zero/SKILL.md",
+          "crates/xterm-web/src/input/mouse_coords.rs",
+          "crates/xterm-web/tests/fixtures/mouse-coordinate-zero.tsv",
+          "crates/xterm-web/tests/mouse_coordinate_zero.rs",
+          "docs/mouse-coordinate-zero.md",
+          "results/mouse-coordinate-zero/fixed-probe-debug-build.log",
+          "results/mouse-coordinate-zero/fixed-probe-debug.log",
+          "results/mouse-coordinate-zero/fixed-probe-release-build.log",
+          "results/mouse-coordinate-zero/fixed-probe-release.log",
+          "results/mouse-coordinate-zero/fmt-all.log",
+          "results/mouse-coordinate-zero/fmt-xterm-addons.log",
+          "results/mouse-coordinate-zero/fmt-xterm-core.log",
+          "results/mouse-coordinate-zero/fmt-xterm-font-addons.log",
+          "results/mouse-coordinate-zero/fmt-xterm-wasm-support.log",
+          "results/mouse-coordinate-zero/fmt-xterm-web.log",
+          "results/mouse-coordinate-zero/old-probe-debug-build.log",
+          "results/mouse-coordinate-zero/old-probe-debug.log",
+          "results/mouse-coordinate-zero/old-probe-release-build.log",
+          "results/mouse-coordinate-zero/old-probe-release.log",
+          "results/mouse-coordinate-zero/source.json",
+          "scripts/mouse-coordinate-zero-oracle.mjs"
+        ]
+      },
+      {
+        "ref": "11fa184ba4007066b2db1c77bd9f3b9951df5b5a",
+        "parents": "11fa184ba4007066b2db1c77bd9f3b9951df5b5a ba5e1094c7735f0982500f484f356035b947108c",
+        "title": "Retain native signed-zero failure control and scoped quality evidence",
+        "paths": [
+          "docs/mouse-coordinate-zero.md",
+          "results/mouse-coordinate-zero/control.json",
+          "results/mouse-coordinate-zero/final-probe-debug-build.log",
+          "results/mouse-coordinate-zero/final-probe-debug.log",
+          "results/mouse-coordinate-zero/final-probe-release-build.log",
+          "results/mouse-coordinate-zero/final-probe-release.log",
+          "results/mouse-coordinate-zero/fixed-cargo-final.log",
+          "results/mouse-coordinate-zero/native-clippy.log",
+          "results/mouse-coordinate-zero/native-counts.json",
+          "results/mouse-coordinate-zero/native-web.log",
+          "results/mouse-coordinate-zero/native.json",
+          "results/mouse-coordinate-zero/old-cargo-negative.log",
+          "results/mouse-coordinate-zero/release-mouse.log",
+          "results/mouse-coordinate-zero/source-pins.json",
+          "results/mouse-coordinate-zero/wasm-clippy.log",
+          "results/mouse-coordinate-zero/wasm-test-clippy.log"
+        ]
+      },
+      {
+        "ref": "0ac47e058e0d3a0d40891319c19542926efc7e74",
+        "parents": "0ac47e058e0d3a0d40891319c19542926efc7e74 11fa184ba4007066b2db1c77bd9f3b9951df5b5a",
+        "title": "Verify coordinate zero signs through three actual Rust WASM engines",
+        "paths": [
+          "docs/mouse-coordinate-zero.md",
+          "results/mouse-coordinate-zero/browser-commands.json",
+          "results/mouse-coordinate-zero/browser-summary.json",
+          "results/mouse-coordinate-zero/direct-native-rerun.log",
+          "results/mouse-coordinate-zero/mouse_coordinate_zero-browser-run.log",
+          "results/mouse-coordinate-zero/mouse_coordinate_zero-browser.json",
+          "results/mouse-coordinate-zero/mouse_coordinate_zero-chromium.log",
+          "results/mouse-coordinate-zero/mouse_coordinate_zero-firefox.log",
+          "results/mouse-coordinate-zero/mouse_coordinate_zero-webkit.log",
+          "results/mouse-coordinate-zero/mouse_policy-browser-run.log",
+          "results/mouse-coordinate-zero/mouse_policy-browser.json",
+          "results/mouse-coordinate-zero/mouse_policy-chromium.log",
+          "results/mouse-coordinate-zero/mouse_policy-firefox.log",
+          "results/mouse-coordinate-zero/mouse_policy-webkit.log",
+          "results/mouse-coordinate-zero/mouse_routing-browser-run.log",
+          "results/mouse-coordinate-zero/mouse_routing-browser.json",
+          "results/mouse-coordinate-zero/mouse_routing-chromium.log",
+          "results/mouse-coordinate-zero/mouse_routing-firefox.log",
+          "results/mouse-coordinate-zero/mouse_routing-webkit.log",
+          "results/mouse-coordinate-zero/native-pins.json",
+          "results/mouse-coordinate-zero/reference-integrity.json",
+          "results/mouse-coordinate-zero/runtime-pins.json",
+          "results/mouse-coordinate-zero/toolchain.log"
+        ]
+      },
+      {
+        "ref": "2442584e2170256ac021e9f387a25ec999205f19",
+        "parents": "2442584e2170256ac021e9f387a25ec999205f19 0ac47e058e0d3a0d40891319c19542926efc7e74",
+        "title": "Record accepted coordinate review and owned cleanup preflight",
+        "paths": [
+          "docs/handoffs/kayla532.md",
+          "results/mouse-coordinate-zero/cleanup-preflight.json",
+          "results/mouse-coordinate-zero/mouse_coordinate_zero-bindgen-version.log",
+          "results/mouse-coordinate-zero/mouse_coordinate_zero-bindgen.log",
+          "results/mouse-coordinate-zero/mouse_coordinate_zero-build.log",
+          "results/mouse-coordinate-zero/mouse_policy-bindgen-version.log",
+          "results/mouse-coordinate-zero/mouse_policy-bindgen.log",
+          "results/mouse-coordinate-zero/mouse_policy-build.log",
+          "results/mouse-coordinate-zero/mouse_routing-bindgen-version.log",
+          "results/mouse-coordinate-zero/mouse_routing-bindgen.log",
+          "results/mouse-coordinate-zero/mouse_routing-build.log",
+          "results/mouse-coordinate-zero/receipt-pins.json",
+          "results/mouse-coordinate-zero/review.md"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 534,
+    "archive": "archive/Genghis534-complete",
+    "chain": [
+      "aebd45d5",
+      "ae2a0e58",
+      "492e9e57",
+      "6a608233",
+      "ce685dda"
+    ],
+    "archiveHead": "ce685dda12ec85d16319c04da6b41e76f1581155",
+    "commits": [
+      {
+        "ref": "aebd45d5eaf8abd96079976a1e945b0172f82a2c",
+        "parents": "aebd45d5eaf8abd96079976a1e945b0172f82a2c 11ad71a816f3d004148a168348f7442e795f8a88",
+        "title": "Release private DSR raw option getters across callbacks",
+        "paths": [
+          ".pi/swarm/skills/dsr-option-check/SKILL.md",
+          "crates/xterm-core/src/terminal/commands.rs",
+          "crates/xterm-core/src/terminal/modes.rs",
+          "crates/xterm-core/src/terminal/replies.rs",
+          "crates/xterm-core/src/terminal/reply_callbacks.rs",
+          "crates/xterm-core/tests/dsr_option.rs",
+          "crates/xterm-core/tests/fixtures/dsr-option.tsv",
+          "docs/dsr-option-callbacks.md",
+          "results/dsr-option/source.json",
+          "scripts/dsr-option-oracle.mjs"
+        ]
+      },
+      {
+        "ref": "ae2a0e58886a37cd7f3599c8a8320c0a860f139b",
+        "parents": "ae2a0e58886a37cd7f3599c8a8320c0a860f139b aebd45d5eaf8abd96079976a1e945b0172f82a2c",
+        "title": "Assert DSR first-parameter short circuits without option reads",
+        "paths": [
+          "crates/xterm-core/tests/dsr_option.rs",
+          "results/dsr-option/source.json",
+          "scripts/dsr-option-oracle.mjs"
+        ]
+      },
+      {
+        "ref": "492e9e57c552b1b4de0daff95b78ff6a5fda3260",
+        "parents": "492e9e57c552b1b4de0daff95b78ff6a5fda3260 ae2a0e58886a37cd7f3599c8a8320c0a860f139b",
+        "title": "Retain DSR core negative control and scoped native quality",
+        "paths": [
+          "docs/dsr-option-callbacks.md",
+          "results/dsr-option/core-all-tests.log",
+          "results/dsr-option/core-clippy.log",
+          "results/dsr-option/counts.json",
+          "results/dsr-option/exact-full-fmt.log",
+          "results/dsr-option/fmt-xterm-addons.log",
+          "results/dsr-option/fmt-xterm-core.log",
+          "results/dsr-option/fmt-xterm-font-addons.log",
+          "results/dsr-option/fmt-xterm-wasm-support.log",
+          "results/dsr-option/fmt-xterm-web.log",
+          "results/dsr-option/generated-report-deltas.json",
+          "results/dsr-option/initial-fixed.log",
+          "results/dsr-option/native-quality.json",
+          "results/dsr-option/old-production.log",
+          "results/dsr-option/production-control.json",
+          "results/dsr-option/restored-fixed.log",
+          "results/dsr-option/wasm-dependent-check.log",
+          "results/dsr-option/wasm-dependent-clippy.log",
+          "scripts/dsr-browser-original.mjs"
+        ]
+      },
+      {
+        "ref": "6a608233e63f742b7752a1f7bcce16f632ce0d3c",
+        "parents": "6a608233e63f742b7752a1f7bcce16f632ce0d3c 492e9e57c552b1b4de0daff95b78ff6a5fda3260",
+        "title": "Retain DSR original and Rust browser proof and full workspace gates",
+        "paths": [
+          ".pi/swarm/skills/dsr-option-check/SKILL.md",
+          "docs/dsr-option-callbacks.md",
+          "results/dsr-option/browser-quality.json",
+          "results/dsr-option/build-bindgen-version.log",
+          "results/dsr-option/build-bindgen.log",
+          "results/dsr-option/build-cargo-version.log",
+          "results/dsr-option/build-debug-wasm.log",
+          "results/dsr-option/build-report.json",
+          "results/dsr-option/build-rustc-version.log",
+          "results/dsr-option/counts.json",
+          "results/dsr-option/debug-build.log",
+          "results/dsr-option/exact-full-fmt.log",
+          "results/dsr-option/generated-report-deltas.json",
+          "results/dsr-option/native-executable-pins.json",
+          "results/dsr-option/original-browser-initial/driver.log",
+          "results/dsr-option/original-browser-initial/playwright.json",
+          "results/dsr-option/original-browser-initial/playwright.log",
+          "results/dsr-option/original-browser-initial/summary.json",
+          "results/dsr-option/original-browser-timeout/driver.log",
+          "results/dsr-option/original-browser-timeout/playwright.json",
+          "results/dsr-option/original-browser-timeout/playwright.log",
+          "results/dsr-option/original-browser-timeout/summary.json",
+          "results/dsr-option/original-browser.log",
+          "results/dsr-option/original-browser/playwright.json",
+          "results/dsr-option/original-browser/playwright.log",
+          "results/dsr-option/original-browser/summary.json",
+          "results/dsr-option/original-build-failure/driver.log",
+          "results/dsr-option/original-build-failure/summary.json",
+          "results/dsr-option/raw-log-endings.json",
+          "results/dsr-option/receipt-pins.json",
+          "results/dsr-option/runtime-pins.json",
+          "results/dsr-option/rust-browser.log",
+          "results/dsr-option/rust-browser/playwright.json",
+          "results/dsr-option/rust-browser/playwright.log",
+          "results/dsr-option/rust-browser/summary.json",
+          "results/dsr-option/source-pins.json",
+          "results/dsr-option/workspace-clippy.log",
+          "results/dsr-option/workspace-docs.log",
+          "results/dsr-option/workspace-quality.json",
+          "results/dsr-option/workspace-tests.log",
+          "results/dsr-option/workspace-wasm-check.log",
+          "results/dsr-option/workspace-wasm-clippy.log",
+          "scripts/dsr-browser-original.mjs"
+        ]
+      },
+      {
+        "ref": "ce685dda12ec85d16319c04da6b41e76f1581155",
+        "parents": "ce685dda12ec85d16319c04da6b41e76f1581155 6a608233e63f742b7752a1f7bcce16f632ce0d3c",
+        "title": "Retain independent DSR review and owned cleanup preflight",
+        "paths": [
+          "docs/dsr-option-callbacks.md",
+          "docs/handoffs/genghis534.md",
+          "results/dsr-option/cleanup-preflight.json",
+          "results/dsr-option/review.md"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 535,
+    "archive": "archive/Theodelinda535-complete",
+    "chain": [
+      "9ccf5eaf",
+      "283f5a28",
+      "1df41b71",
+      "29cce14f"
+    ],
+    "archiveHead": "29cce14fd5865712658cd5fc3e8276646e961775",
+    "commits": [
+      {
+        "ref": "9ccf5eafcda7a07d928502e4c49d89748951fd82",
+        "parents": "9ccf5eafcda7a07d928502e4c49d89748951fd82 11ad71a816f3d004148a168348f7442e795f8a88",
+        "title": "Visit Attach handles appended during disposal reentry",
+        "paths": [
+          ".pi/swarm/skills/attach-disposal-check/SKILL.md",
+          "crates/xterm-addons/src/attach.rs",
+          "crates/xterm-addons/tests/attach_disposal_reentry.rs",
+          "crates/xterm-web/tests/fixtures/attach-disposal-reentry.js",
+          "crates/xterm-web/tests/fixtures/attach-disposal-reentry.json",
+          "crates/xterm-web/tests/wasm_attach_disposal_reentry.rs",
+          "docs/attach-disposal-reentry.md",
+          "results/attach-disposal-reentry/source.json",
+          "scripts/attach-disposal-reentry-oracle.mjs"
+        ]
+      },
+      {
+        "ref": "283f5a28944ddc2deb9b51ebd4144d3dfef40810",
+        "parents": "283f5a28944ddc2deb9b51ebd4144d3dfef40810 9ccf5eafcda7a07d928502e4c49d89748951fd82",
+        "title": "Retain Attach disposal native and three-engine controls",
+        "paths": [
+          "docs/attach-disposal-reentry.md",
+          "results/attach-disposal-reentry/aggregate-format.log",
+          "results/attach-disposal-reentry/browser-fixed-final-build.log",
+          "results/attach-disposal-reentry/browser-fixed-final.json",
+          "results/attach-disposal-reentry/browser-fixed-final.log",
+          "results/attach-disposal-reentry/browser-fixed-initial-build.log",
+          "results/attach-disposal-reentry/browser-fixed-initial.json",
+          "results/attach-disposal-reentry/browser-fixed-initial.log",
+          "results/attach-disposal-reentry/browser-old-control-build.log",
+          "results/attach-disposal-reentry/browser-old-control.json",
+          "results/attach-disposal-reentry/browser-old-control.log",
+          "results/attach-disposal-reentry/browser-retained-attach-build.log",
+          "results/attach-disposal-reentry/browser-retained-attach.json",
+          "results/attach-disposal-reentry/browser-retained-attach.log",
+          "results/attach-disposal-reentry/browser.json",
+          "results/attach-disposal-reentry/evidence-pins.json",
+          "results/attach-disposal-reentry/format.json",
+          "results/attach-disposal-reentry/inputs.json",
+          "results/attach-disposal-reentry/local-driver.mjs.txt",
+          "results/attach-disposal-reentry/local-pin-builder.mjs.txt",
+          "results/attach-disposal-reentry/native-binaries.json",
+          "results/attach-disposal-reentry/native-clippy.log",
+          "results/attach-disposal-reentry/native-fixed-final.log",
+          "results/attach-disposal-reentry/native-fixed-initial.log",
+          "results/attach-disposal-reentry/native-old-control.log",
+          "results/attach-disposal-reentry/native.json",
+          "results/attach-disposal-reentry/owned-format.log",
+          "results/attach-disposal-reentry/runtime-pins.json",
+          "results/attach-disposal-reentry/source-copy.json",
+          "results/attach-disposal-reentry/source-original.json",
+          "results/attach-disposal-reentry/source-roots.json",
+          "results/attach-disposal-reentry/toolchain.json",
+          "results/attach-disposal-reentry/wasm-clippy.log",
+          "results/attach-disposal-reentry/xterm-addons-format.log",
+          "results/attach-disposal-reentry/xterm-core-format.log",
+          "results/attach-disposal-reentry/xterm-font-addons-format.log",
+          "results/attach-disposal-reentry/xterm-wasm-support-format.log",
+          "results/attach-disposal-reentry/xterm-web-format.log"
+        ]
+      },
+      {
+        "ref": "1df41b713baa6f82684df56a12f47ece7ebae50c",
+        "parents": "1df41b713baa6f82684df56a12f47ece7ebae50c 283f5a28944ddc2deb9b51ebd4144d3dfef40810",
+        "title": "Record Attach disposal review and owned cleanup preflight",
+        "paths": [
+          "docs/attach-disposal-reentry.md",
+          "docs/handoffs/theodelinda535.md",
+          "docs/reviews/theodelinda535.md",
+          "results/attach-disposal-reentry/cleanup-preflight.json",
+          "results/attach-disposal-reentry/local-cleanup.mjs.txt",
+          "results/attach-disposal-reentry/review.json"
+        ]
+      },
+      {
+        "ref": "29cce14fd5865712658cd5fc3e8276646e961775",
+        "parents": "29cce14fd5865712658cd5fc3e8276646e961775 1df41b713baa6f82684df56a12f47ece7ebae50c",
+        "title": "Retain exact owned Attach runtime unlink receipt",
+        "paths": [
+          "results/attach-disposal-reentry/cleanup-unlink.json"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 533,
+    "archive": "ee43c27f",
+    "chain": [
+      "2f14ffc2",
+      "43ea99dc",
+      "a3ef9f72",
+      "1911c902",
+      "0b439f0a",
+      "ee43c27f"
+    ],
+    "archiveHead": "ee43c27ff34b6317d908df7dacde9429d8580de7",
+    "commits": [
+      {
+        "ref": "2f14ffc24618d02da34ec055a0ca6636026e4ed6",
+        "parents": "2f14ffc24618d02da34ec055a0ca6636026e4ed6 51c677f250cc30270e9dc1216b89751d24feb87c",
+        "title": "Validate eager CFF2 FDArray INDEX addresses and bounds",
+        "paths": [
+          ".pi/swarm/skills/font-cff2-index-check/SKILL.md",
+          "crates/xterm-addons/src/ligatures/font_cff2_dict.rs",
+          "crates/xterm-addons/src/ligatures/font_cff_address.rs",
+          "crates/xterm-addons/src/ligatures/font_cff_index.rs",
+          "crates/xterm-addons/src/ligatures/font_cff_index_tests.rs",
+          "crates/xterm-addons/tests/fixtures/font-cff2-index.json",
+          "crates/xterm-addons/tests/font_cff2_index.rs",
+          "crates/xterm-addons/tests/support/font_cff2_index_assertions.rs",
+          "crates/xterm-font-addons/tests/font_cff2_index_browser.rs",
+          "crates/xterm-font-addons/tests/support/font_cff2_index_input.mjs",
+          "docs/font-cff2-index.md",
+          "docs/intent-lukeni533.md",
+          "scripts/font-cff2-index-browser-source.mjs",
+          "scripts/font-cff2-index-negative.mjs",
+          "scripts/font-cff2-index-oracle.mjs"
+        ]
+      },
+      {
+        "ref": "43ea99dcca1e747018188eb2d46028c25d154a22",
+        "parents": "43ea99dcca1e747018188eb2d46028c25d154a22 2f14ffc24618d02da34ec055a0ca6636026e4ed6",
+        "title": "Check first DataView read before rejecting nonterminating string ranges",
+        "paths": [
+          "crates/xterm-addons/src/ligatures/font_cff_address.rs"
+        ]
+      },
+      {
+        "ref": "a3ef9f729910817dc73dd3f29b1971c1db197bf2",
+        "parents": "a3ef9f729910817dc73dd3f29b1971c1db197bf2 43ea99dcca1e747018188eb2d46028c25d154a22",
+        "title": "Assert full constructor Bounds for eight previously limited FDArray cases",
+        "paths": [
+          "crates/xterm-addons/tests/support/font_cff2_index_assertions.rs",
+          "docs/font-cff2-index.md"
+        ]
+      },
+      {
+        "ref": "1911c90210583cf2cb1249387564ad67d544f578",
+        "parents": "1911c90210583cf2cb1249387564ad67d544f578 a3ef9f729910817dc73dd3f29b1971c1db197bf2",
+        "title": "Compare source addon Bounds diagnostics with its exact constructor inputs",
+        "paths": [
+          "scripts/font-cff2-index-browser-source.mjs"
+        ]
+      },
+      {
+        "ref": "0b439f0a49f1863680f34e598563ca411c3e86b4",
+        "parents": "0b439f0a49f1863680f34e598563ca411c3e86b4 1911c90210583cf2cb1249387564ad67d544f578",
+        "title": "Reject unexpected source worker failures and record final CFF2 browser proof",
+        "paths": [
+          "docs/font-cff2-index.md",
+          "scripts/font-cff2-index-oracle.mjs"
+        ]
+      },
+      {
+        "ref": "ee43c27ff34b6317d908df7dacde9429d8580de7",
+        "parents": "ee43c27ff34b6317d908df7dacde9429d8580de7 0b439f0a49f1863680f34e598563ca411c3e86b4",
+        "title": "Retain native and three-engine FDArray INDEX proof with bounded source hazards",
+        "paths": [
+          "docs/font-cff2-index.md",
+          "results/acceptance-artifacts/71831e51ad87427409f0e400e231a8e91b96c7a0074f1c5f8ab00249529e17d4/artifact.wasm",
+          "results/font-cff2-index/audit.log",
+          "results/font-cff2-index/audit.mjs",
+          "results/font-cff2-index/browser-commands-final.json",
+          "results/font-cff2-index/browser-commands.json",
+          "results/font-cff2-index/browser-plan.json",
+          "results/font-cff2-index/browser-process-initial.json",
+          "results/font-cff2-index/browser-process.json",
+          "results/font-cff2-index/cached-index.log",
+          "results/font-cff2-index/cached-test-pins.json",
+          "results/font-cff2-index/checks.json",
+          "results/font-cff2-index/clippy-native-final.log",
+          "results/font-cff2-index/clippy-native-initial.log",
+          "results/font-cff2-index/clippy-native.log",
+          "results/font-cff2-index/clippy-wasm-final.log",
+          "results/font-cff2-index/clippy-wasm-font.log",
+          "results/font-cff2-index/dependents-native.log",
+          "results/font-cff2-index/dependents-wasm.log",
+          "results/font-cff2-index/finish-commands.json",
+          "results/font-cff2-index/fmt-workspace.log",
+          "results/font-cff2-index/fmt-xterm-addons.log",
+          "results/font-cff2-index/fmt-xterm-core.log",
+          "results/font-cff2-index/fmt-xterm-font-addons.log",
+          "results/font-cff2-index/fmt-xterm-wasm-support.log",
+          "results/font-cff2-index/fmt-xterm-web.log",
+          "results/font-cff2-index/generated-runtime-pins.json",
+          "results/font-cff2-index/initial-commands.json",
+          "results/font-cff2-index/initial-source-failure.json",
+          "results/font-cff2-index/native-commands.json",
+          "results/font-cff2-index/native-final.log",
+          "results/font-cff2-index/native-focused-second.log",
+          "results/font-cff2-index/native-initial.log",
+          "results/font-cff2-index/native.log",
+          "results/font-cff2-index/negative-initial.json",
+          "results/font-cff2-index/negative-initial.log",
+          "results/font-cff2-index/negative-run-initial.log",
+          "results/font-cff2-index/negative-run.log",
+          "results/font-cff2-index/negative.json",
+          "results/font-cff2-index/negative.log",
+          "results/font-cff2-index/oracle-initial.json",
+          "results/font-cff2-index/oracle-replay.log",
+          "results/font-cff2-index/oracle.json",
+          "results/font-cff2-index/producer-hashes.json",
+          "results/font-cff2-index/raw-log-bytes.json",
+          "results/font-cff2-index/resource-generation.json",
+          "results/font-cff2-index/resource-replay.json",
+          "results/font-cff2-index/restored-initial.log",
+          "results/font-cff2-index/restored.log",
+          "results/font-cff2-index/rust-browser.json",
+          "results/font-cff2-index/rust-browser.log",
+          "results/font-cff2-index/source-browser-initial.json",
+          "results/font-cff2-index/source-browser-initial.log",
+          "results/font-cff2-index/source-browser.json",
+          "results/font-cff2-index/source-browser.log",
+          "results/font-cff2-index/source-generate.log",
+          "results/font-cff2-index/wasm-build.log"
+        ]
+      }
+    ]
+  },
+  {
+    "task": 542,
+    "archive": "archive/Tahmasp542-complete",
+    "chain": [
+      "ae5aefd1",
+      "2ef308a1"
+    ],
+    "archiveHead": "2ef308a1d6cc3b0a18b4a9d8cb514c53f69d1cc5",
+    "commits": [
+      {
+        "ref": "ae5aefd14e18e05b83bd9c86cf96a66bd4da8061",
+        "parents": "ae5aefd14e18e05b83bd9c86cf96a66bd4da8061 0442e3578a7f57d35c2ae6ff20d7186820983065",
+        "title": "Restore hosted Windows fullfmt budget for current target inventory",
+        "paths": [
+          ".github/workflows/rust.yml",
+          "docs/quality-windows-budget542.md",
+          "results/quality/tahmasp304-preflight/SHA256SUMS",
+          "results/quality/tahmasp304-preflight/exact-local-fullfmt-command.json",
+          "results/quality/tahmasp304-preflight/exact-local-fullfmt.log",
+          "results/quality/tahmasp304-preflight/fixed-source-pins.json",
+          "results/quality/tahmasp304-preflight/fixed-verifiers-final-command.json",
+          "results/quality/tahmasp304-preflight/fixed-verifiers-final.log",
+          "results/quality/tahmasp304-preflight/fixed-verifiers.log",
+          "results/quality/tahmasp304-preflight/metadata.log",
+          "results/quality/tahmasp304-preflight/old-workflow-negative.log",
+          "results/quality/tahmasp304-preflight/old-workflow-targeted-negative-command.json",
+          "results/quality/tahmasp304-preflight/old-workflow-targeted-negative.log",
+          "results/quality/tahmasp304-preflight/preflight.json",
+          "results/quality/tahmasp304-preflight/prior-audit.json",
+          "results/quality/tahmasp304-preflight/revision.log",
+          "results/quality/tahmasp304-preflight/shortened-budget.json",
+          "results/quality/tahmasp304-preflight/verifiers.log",
+          "scripts/windows-quality-worktree.test.mjs"
+        ]
+      },
+      {
+        "ref": "2ef308a1d6cc3b0a18b4a9d8cb514c53f69d1cc5",
+        "parents": "2ef308a1d6cc3b0a18b4a9d8cb514c53f69d1cc5 ae5aefd14e18e05b83bd9c86cf96a66bd4da8061",
+        "title": "Record accepted Windows budget repair review and continuation",
+        "paths": [
+          "docs/handoffs/tahmasp542.md",
+          "results/quality/tahmasp304-preflight/review542.md"
+        ]
+      }
+    ]
+  }
+]
