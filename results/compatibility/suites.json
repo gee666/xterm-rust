@@ -24734,20 +24734,18 @@
     "status": "partial",
     "implementation": [
       "crates/xterm-web/src/renderer/utils.rs",
-      "crates/xterm-web/src/renderer/selection_model.rs"
+      "crates/xterm-web/src/api.rs"
     ],
     "tests": [
-      "crates/xterm-web/tests/render_callback_iteration.rs",
-      "crates/xterm-web/tests/selection_model.rs"
+      "crates/xterm-web/tests/webgl.rs",
+      "crates/xterm-web/tests/webgl_cases/renderer_utils.rs"
     ],
     "evidence": [
-      "docs/render-callback-iteration.md",
-      "docs/selection-model.md",
       "docs/internal-coverage-audit.md"
     ],
-    "command": "cargo test --locked -p xterm-web --test render_callback_iteration; cargo test --locked -p xterm-web --test selection_model",
-    "binding": "Renderer utility/selection geometry values are Rust helpers, separate from DOM SelectionService and actual render ownership.",
-    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. SelectionRenderModel has no dedicated full-suite certification; geometry helper evidence does not prove DOM selection."
+    "command": "cargo test --locked -p xterm-web --test webgl",
+    "binding": "RendererUtils maps glyph classification/rescaling/variant offset and default dimensions to Rust renderer::utils; webgl target includes the direct renderer_utils assertion module.",
+    "gap": "Full source assertion-by-assertion migration and final stable native OS/three-engine execution remain unverified. Scoped historical receipts are not full-suite counts. Native typed glyph/Number helpers and FalsyValue text checks do not prove JS throwIfFalsy truthiness or browser render outcomes."
   },
   {
     "source": "source_repo/src/browser/renderer/shared/TextBlinkStateManager.test.ts",

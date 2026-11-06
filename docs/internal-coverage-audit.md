@@ -20,6 +20,14 @@ The guides were reconciled with Rust module declarations, public signatures, ser
 | Viewport and all scroll helpers | Rust ScrollableElement, oriented bars, visibility, pointer/touch and host schedulers are callable components. Typed geometry does not close raw JS model arithmetic, trusted pointer capture or complete Viewport behavior. |
 | Public record families | Source-qualified maps cover logger, theme, Windows PTY, VT/window options, decorations, browser localization/links and dimensions. These are type/owner guides, not member-by-member raw argument or callback certification. |
 
+## Renderer guide correction after review
+
+Independent573 review caught two wrong test/document ownership links. RendererUtils and renderer SelectionRenderModel had been grouped with RenderDebouncer callback tests and the unrelated selection service model tests. Those links were removed, not treated as indirect evidence. The original review found no source/hash/count errors and independently passed all15 controls, but correctly requested changes for these two guides.
+
+RendererUtils now points to `crates/xterm-web/tests/webgl_cases/renderer_utils.rs`, included by the `webgl` target. Its five direct tests cover glyph classification boundaries, rescaling exclusions/thresholds, JavaScript rounding/remainder/signed-zero variant offsets, initial dimensions and FalsyValue text. Run `cargo test --locked -p xterm-web --test webgl`. That does not certify the WASM throwIfFalsy truthiness boundary or browser rendering.
+
+The renderer SelectionRenderModel now points to `crates/xterm-web/tests/webgl_renderer.rs` and `docs/webgl-renderer-update.md`. The test calls `renderer::selection_model::SelectionRenderModel::update` and checks downstream source-derived renderer traces. Run `cargo test --locked -p xterm-web --test webgl_renderer`. This is indirect renderer selection coverage, not a dedicated full SelectionRenderModel assertion migration, and it is not `selection::model::SelectionModel` or DOM SelectionService evidence. Regression assertions in the inventory controls preserve the exact test/implementation distinction. No Rust test was rerun or changed during this guide correction.
+
 ## What remains missing
 
 The exact outstanding rows are retained in `results/internal-coverage-audit/index.json` and generated inventories. They are not silently assigned a nearby implementation.

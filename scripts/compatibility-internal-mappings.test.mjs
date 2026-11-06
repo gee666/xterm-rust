@@ -18,6 +18,19 @@ test('common/browser guides cover source paths without manufacturing execution o
     assert(module.command && module.binding && module.gap);
   }
   assert.equal(modules.find(m => m.source === 'source_repo/css/xterm.css').status, 'partial');
+  const utils = modules.find(m => m.source.endsWith('/renderer/shared/RendererUtils.ts'));
+  assert(utils.implementation.includes('crates/xterm-web/src/renderer/utils.rs'));
+  assert(utils.tests.includes('crates/xterm-web/tests/webgl_cases/renderer_utils.rs'));
+  assert.equal(utils.command, 'cargo test --locked -p xterm-web --test webgl');
+  const selection = modules.find(m => m.source.endsWith('/renderer/shared/SelectionRenderModel.ts'));
+  assert(selection.implementation.includes('crates/xterm-web/src/renderer/selection_model.rs'));
+  assert.deepEqual(selection.tests, ['crates/xterm-web/tests/webgl_renderer.rs']);
+  assert.equal(selection.command, 'cargo test --locked -p xterm-web --test webgl_renderer');
+  assert.match(selection.gap, /indirect selection geometry coverage/);
+  for (const row of [utils, selection]) {
+    assert(!row.tests.includes('crates/xterm-web/tests/render_callback_iteration.rs'));
+    assert(!row.tests.includes('crates/xterm-web/tests/selection_model.rs'));
+  }
   const missing = modules.filter(m => m.status === 'missing');
   assert.equal(missing.length, 17);
   assert(missing.every(m => m.source.startsWith('source_repo/addons/')));
