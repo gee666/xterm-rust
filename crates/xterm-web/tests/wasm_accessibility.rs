@@ -4,6 +4,8 @@
 mod accessibility_support;
 #[path = "accessibility_cases/announcements.rs"]
 mod announcements;
+#[path = "accessibility_cases/dimensions.rs"]
+mod dimensions;
 #[path = "accessibility_cases/failures.rs"]
 mod failures;
 #[path = "accessibility_cases/focus.rs"]

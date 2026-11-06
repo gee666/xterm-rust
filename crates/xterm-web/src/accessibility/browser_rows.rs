@@ -16,10 +16,7 @@ impl Inner {
         let element: HtmlElement = self.document.create_element("div")?.unchecked_into();
         element.set_attribute("role", "listitem")?;
         element.set_tab_index(-1);
-        element.style().set_property(
-            "height",
-            &format!("{}px", number(self.host.dimensions()?.cell_height)),
-        )?;
+        self.refresh_row_dimensions(&element)?;
         Ok(Rc::new(TreeRow { element }))
     }
     pub fn render_rows(&self, start: f64, end: f64) -> Result<(), JsValue> {
@@ -62,54 +59,6 @@ impl Inner {
             }
         }
         self.announce()
-    }
-    pub fn refresh_dimensions(self: &Rc<Self>) -> Result<(), JsValue> {
-        let dimensions = self.host.dimensions()?;
-        // JavaScript truthiness skips zero and NaN, not negative values.
-        if dimensions.cell_height == 0.0 || dimensions.cell_height.is_nan() {
-            return Ok(());
-        }
-        self.container
-            .style()
-            .set_property("width", &format!("{}px", number(dimensions.canvas_width)))?;
-        self.container
-            .style()
-            .set_property("font-size", &format!("{}px", number(dimensions.font_size)))?;
-        let count = self.host.rows()?;
-        if self.rows.borrow().len() != count {
-            self.resize_rows(count)?;
-        }
-        for index in 0..count {
-            let row = self
-                .rows
-                .borrow()
-                .get(index)
-                .cloned()
-                .ok_or_else(|| js_sys::Error::new("accessibility row is missing"))?;
-            row.element
-                .style()
-                .set_property("height", &format!("{}px", number(dimensions.cell_height)))?;
-            self.align_width(&row)?;
-        }
-        Ok(())
-    }
-    fn align_width(&self, row: &TreeRow) -> Result<(), JsValue> {
-        row.element.style().set_property("transform", "")?;
-        let width = row.element.get_bounding_client_rect().width();
-        let mapping = self.column_map.get(row.element.unchecked_ref());
-        let last_column = mapping.dyn_ref::<js_sys::Array>().and_then(|columns| {
-            columns
-                .length()
-                .checked_sub(1)
-                .and_then(|index| columns.get(index).as_f64())
-        });
-        if let Some(last_column) = last_column.filter(|last| *last != 0.0 && !last.is_nan()) {
-            let target = last_column * self.host.dimensions()?.cell_width;
-            row.element
-                .style()
-                .set_property("transform", &format!("scaleX({})", number(target / width)))?;
-        }
-        Ok(())
     }
     pub fn detach_boundaries(&self) -> Result<(), JsValue> {
         let (top, bottom) = {
@@ -312,18 +261,5 @@ impl Inner {
         row.element
             .add_event_listener_with_callback("focus", bottom_callback)?;
         self.refresh_dimensions()
-    }
-}
-fn number(value: f64) -> String {
-    if value.is_nan() {
-        "NaN".into()
-    } else if value == f64::INFINITY {
-        "Infinity".into()
-    } else if value == f64::NEG_INFINITY {
-        "-Infinity".into()
-    } else if value == 0.0 {
-        "0".into()
-    } else {
-        value.to_string()
     }
 }

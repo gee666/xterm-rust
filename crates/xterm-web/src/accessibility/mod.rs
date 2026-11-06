@@ -11,6 +11,8 @@ pub use selection::{map_point, selection_range, CellPoint, InvalidRange, Selecti
 #[cfg(target_arch = "wasm32")]
 pub mod browser;
 #[cfg(target_arch = "wasm32")]
+mod browser_dimensions;
+#[cfg(target_arch = "wasm32")]
 mod browser_rows;
 #[cfg(target_arch = "wasm32")]
 mod browser_selection;

@@ -57,6 +57,20 @@ pub trait AccessibilityHost {
     fn render_buffer(self: Rc<Self>) -> Result<Rc<dyn AccessibilityBuffer>, JsValue>;
     fn buffer_length(&self) -> Result<usize, JsValue>;
     fn dimensions(&self) -> Result<Dimensions, JsValue>;
+    /// Individual reads preserve DOM/coercion boundaries. Hosts whose aggregate
+    /// snapshot performs unrelated conversions should override these methods.
+    fn cell_height(&self) -> Result<f64, JsValue> {
+        Ok(self.dimensions()?.cell_height)
+    }
+    fn cell_width(&self) -> Result<f64, JsValue> {
+        Ok(self.dimensions()?.cell_width)
+    }
+    fn canvas_width(&self) -> Result<f64, JsValue> {
+        Ok(self.dimensions()?.canvas_width)
+    }
+    fn font_size(&self) -> Result<f64, JsValue> {
+        Ok(self.dimensions()?.font_size)
+    }
     fn scroll_lines(&self, amount: i32) -> Result<(), JsValue>;
     fn clear_selection(&self) -> Result<(), JsValue>;
     fn select(&self, column: f64, row: f64, length: f64) -> Result<(), JsValue>;

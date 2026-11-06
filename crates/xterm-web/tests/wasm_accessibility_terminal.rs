@@ -22,6 +22,8 @@ extern "C" {
     #[wasm_bindgen(catch, js_name = accessibilityKey)]
     fn key(textarea: &HtmlTextAreaElement, value: &str) -> Result<(), JsValue>;
 }
+#[path = "accessibility_cases/terminal_dimensions.rs"]
+mod dimensions;
 #[path = "accessibility_cases/terminal_reentry.rs"]
 mod reentry;
 struct Opened {

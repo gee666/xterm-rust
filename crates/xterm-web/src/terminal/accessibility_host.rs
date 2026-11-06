@@ -148,6 +148,30 @@ impl AccessibilityHost for WeakBrowserServices {
             font_size,
         })
     }
+    fn cell_height(&self) -> Result<f64, JsValue> {
+        Ok(self.upgrade()?.render_service.dimensions()?.css.cell.height)
+    }
+    fn cell_width(&self) -> Result<f64, JsValue> {
+        Ok(self.upgrade()?.render_service.dimensions()?.css.cell.width)
+    }
+    fn canvas_width(&self) -> Result<f64, JsValue> {
+        Ok(self
+            .upgrade()?
+            .render_service
+            .dimensions()?
+            .css
+            .canvas
+            .width)
+    }
+    fn font_size(&self) -> Result<f64, JsValue> {
+        self.upgrade()?
+            .native
+            .options()
+            .get("fontSize")
+            .map_err(|error| to_js_error(&error))?
+            .to_number()
+            .map_err(|error| to_js_error(&error))
+    }
     fn scroll_lines(&self, amount: i32) -> Result<(), JsValue> {
         self.upgrade()?.scroll_lines(i64::from(amount), false)
     }
