@@ -1,31 +1,55 @@
 # Retired search cache timeout setup
 
-Task 544 repairs one part of 527. Full search and full-port equivalence remain NOT PROVEN.
+Task 544 repairs the scheduling-error part of 527. Full search and full-port equivalence remain NOT PROVEN.
 
 ## Failure and repair
 
-An ordinary search captures its engine before evaluating the engine's raw term-length guard. The guard can activate the addon on a different terminal or dispose the addon. The captured engine then continues on the original terminal, including cache initialization.
+An ordinary search captures its engine before evaluating the engine's raw term-length guard. That getter can activate the addon elsewhere or dispose it. The captured engine still continues on the original terminal, including cache initialization.
 
-The source `SearchLineCache.initLinesCache` still invokes `disposableTimeout` after its `MutableDisposable` has been disposed. That setter ignores the returned handle, but it cannot suppress errors from creating the timeout. Rust's retired engine returned before evaluating timeout creation. Consequently, a throwing `window.setTimeout` was never called and a later matching-option error incorrectly won.
+Source `SearchLineCache.initLinesCache` invokes `disposableTimeout` even after its `MutableDisposable` has been disposed. The setter ignores the returned handle, but cannot suppress an error from creating that handle. Rust's retired engine returned before timeout creation. A throwing `window.setTimeout` was therefore skipped, and a later matching-option error incorrectly won.
 
-`EngineContext.init` now attempts timeout creation in that retired branch. Errors propagate through the existing host error representation, before any matching option or raw text conversion. A returned timeout is still cancelled immediately by the existing RAII branch. Initial installation uses the source's full 15,000 ms TTL, rather than subtracting a second clock read from the deadline. Expiry callbacks read the clock once and reuse that timestamp when calculating an extension. No new dependency, unsafe operation, public API or JavaScript matching implementation is introduced.
+`EngineContext.init` now attempts timeout creation in that branch. Setup errors propagate through the existing host error representation before matching or raw text conversion. A successfully returned retired timeout is still cancelled immediately for Rust ownership safety.
 
-## Deliberate scope
+Initial installation also uses the source's full 15,000 ms TTL. The old helper subtracted a second clock read, potentially shortening it to 14,999 ms. Expiry callbacks now read the clock once and reuse that timestamp for expiry and extension calculations. No dependency, unsafe operation, public API or JavaScript matching implementation was added.
 
-This is not approval of a source/Rust lifetime divergence. Task 527 remains open for the source's orphan listener/timer liveness, observable registration counts, timer callbacks after disposal and a compatible ownership solution or explicit approved divergence. A successful timer setup in these tests proves invocation and subsequent matching-error order only. Native pending-timer assertions check Rust cleanup, not source liveness equivalence. Calls after explicit addon disposal are covered only where the raw guard disposes an already captured engine, not arbitrary later searches.
+## Scope and remaining work
 
-The fixture uses a raw term whose second length read retires the captured engine. It deliberately throws from the first matching-option getter, so successful boxed or overridden term matching is neither required nor claimed. Full raw matching, repeated per-line getter order and cell mutation phases remain 347 and 322.
+Task 527 remains open for orphan listener/timer registration counts, callback liveness after disposal and a compatible ownership solution or explicit approved divergence. These tests do not approve that divergence. Their successful-setup cases prove invocation and subsequent matching-error order only. Native pending-timer assertions check Rust cleanup, not source orphan liveness.
 
-## Controls
+The raw term deliberately throws through the first matching-option getter. Successful boxed/overridden term matching, per-line getter phases, cell mutation and arbitrary searches after addon disposal remain 347/322. Guard disposal here concerns an already captured engine, not all later calls on a disposed addon.
 
-The shared source/actual-WASM fixture has 56 scenarios. It covers both search directions, warm/cold caches, guard activation/disposal, thrown frozen-object/null/symbol identities, successful timeout setup followed by a distinct matching failure, and strict-zero engine guards that must not schedule at all. Successful source timers are explicitly cancelled in the fixture's finally block, since source disposal intentionally cannot own those returned handles. Window methods, terminals and DOM nodes are restored or disposed in finally. The same fixture and assertions run against unchanged source classes and real Rust/WASM bindings.
+## Tests and actual results
 
-One native test expands 24 scenarios over the same direction, cache and lifecycle combinations. A second native test fires a refreshed live cache's first timeout with an advancing clock, checks one callback clock read and the exact 5,000 ms extension, then checks final expiry without rescheduling. Its clock advances on every read to catch shortened initial delays and extra clock reads. It compares retained error identity and exact guard/timeout/matching phase order, verifies noScroll is reached only for an empty engine result, and checks Rust timers are not left pending.
+Evidence is under `results/search-retired-timeout/`, on native Windows with Rust/Cargo 1.85.1, Node 24.15.0 and wasm-bindgen CLI 0.2.100.
 
-## Verification
+- All 72 native functions pass, zero failed, ignored or filtered. One new function expands 24 direction/cache/lifecycle/setup scenarios. The second fires a refreshed live cache timeout with an advancing clock, checks one callback clock read and the exact 5,000 ms extension, then verifies final expiry without rescheduling.
+- Exact accepted-518 engine bytes fail the designated native setup-error function at the intended retained-error identity assertion, zero passes, one failure and 71 filtered. A finally block restores the fixed source hash, then all 72 pass again.
+- The identical shared fixture passes all 56 cases against unchanged source in Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4. It checks both directions, warm/cold caches, guard activation/disposal, frozen-object/null/symbol throw identities, successful setup followed by a distinct matching error, and strict-zero guards that must not schedule.
+- Actual old-code WASM fails only the new function in Chromium, 21 passes and one failure. The diagnostic shows guard then matching, with timeout setup missing. After exact source restoration, actual current WASM passes all 22 functions in each of the three engines, zero failed, ignored or filtered. The 56 shared cases are inside one function per engine, not 56 extra functions.
+- Both completed WASM control variants are actual rebuilds, `fresh=false`, with distinct compiler and served-WASM hashes and the exact shared fixture embedded. Final compiler hash is `cc35b89d5ece2a4e2873e95094ad6d6055895a9b46daf2198c3a8f6cfef8ba79`. Bindings, served WASM and test-source identity were checked.
+- Final scoped native and WASM library/search-test Clippy pass with `-D warnings`. All five whole-member formatting checks pass; xterm-web was checked again after the WASM helper correction. Full-workspace quality/release, complete original Search suites, seeded corpus, demo/GC and native Linux/macOS were not run for 544.
+- All 1,872 current tracked crate/build inputs, ten retained runtime artifact descriptors and both 776-file original/physical source manifests were checked. Runtime binaries are temporary verification artifacts, not deliverables.
 
-The pre-review native Windows Rust/Cargo 1.85.1 execution passed all 71 functions, zero failed, ignored or filtered. The independent reviewer reran that pinned executable, verified all 1,872 inputs and runtime pins, and found no production defect. Review correctly requested the browser gates and a discriminating expiry-callback clock test. The added live expiry test raises the current native count to 72. All 72 now pass, zero failed, ignored or filtered. The exact accepted-518 engine control fails the designated setup-error function, zero passes, one failure and 71 filtered, then finally restores the fixed hash before all 72 pass again. Final scoped native/WASM Clippy and all five whole-member formatting checks pass. Cargo reports a fresh WASM rebuild, `fresh=false`, whose bytes remain identical to the earlier build because the review addition is native-only. Its current hash and fixture embedding were rechecked. The earlier 71-function proof remains historical. Exact accepted-518 engine bytes failed only the new filtered native function, zero passes, one failure and 70 filtered, at the intended retained-error identity assertion. The finally block restored the fixed source hash, then all 71 passed again. Scoped native and WASM library/search-test Clippy passed with `-D warnings`. All five whole-member formatting checks passed. All-feature WASM compilation produced a fresh test artifact embedding the exact shared fixture. Browser execution, complete original suites, full-workspace quality/release and native Linux/macOS are still UNRUN for 544 at this checkpoint.
+The fixture cancels successfully installed source timers in finally because the disposed source owner cannot own them. It also restores window methods, disposes terminals and removes DOM nodes. Source registrations are bounded by the outer terminal lifetime. Rust never deliberately leaks them.
 
-The initial native run passed 70 and failed the new clock-count assertion. Its total-count expectation overlooked the existing `run_engine` clock read during warmup. The corrected assertion measures the cache phase relative to the completed warmup. Both raw failure and corrected passes are retained; no original assertion changed.
+## Retained failures and independent review
 
-Historical 518 results are prerequisites, not current 544 passes. Its seven approved private prerequisite copies are excluded from the eventual 544 pickup, and all four private 508 copies are excluded entirely. Main is read-only throughout producer work. Commands, raw logs, 1,872 tracked build-input hashes, native runtime descriptors and actual compiler/fixture identity are under `results/search-retired-timeout/`.
+The first native run passed 70 and failed the new total clock-count expectation. Warm matching has an existing separate `run_engine` clock read. The new assertion now measures the cache phase relative to completed warmup. The raw failure is retained; no original assertion changed.
+
+The first actual old-WASM attempt reached the intended identity failure, but the shared helper's `JsFuture.unwrap` then triggered a secondary wasm-test ScopedTLS panic. That run discovered 22 functions but produced no completed count summary, so it is not reported as 21/1. Its report, console trace, artifacts and finally restoration receipt remain retained. The new test now returns `Result<(), JsValue>` directly to wasm-bindgen-test through a fallible helper. Existing tests retain their unwrap wrapper. Assertions, fixture bytes, feature selection and timeout limits did not change. The corrected old-code run produces the completed 21/1 result above; final 22-by-three execution uses that same corrected harness.
+
+The first isolated review of `ae8a8e62` independently ran the then-current 71 native functions, checked all 1,872 inputs, native pins, compiler hash and embedded fixture, and found no production defect. It correctly requested browser execution and a discriminating expiry-clock regression. The added second native function and the actual browser results address those findings. Resumed review is recorded separately.
+
+## Reproduce and integration
+
+Use an owned O: target and literal O: TEMP/TMP/TMPDIR, Cargo `-j2`, existing reference dependencies and an explicitly coordinated heavy/browser allocation. Set SOURCE_DEPENDENCIES to the installed reference root, PLAYWRIGHT_MODULE to its Playwright entry and WASM_BINDGEN to CLI 0.2.100.
+
+```sh
+cargo test --locked -j2 -p xterm-web --test search_addon --all-features
+cargo clippy --locked -j2 -p xterm-addons -p xterm-web --lib --test search_addon --all-features -- -D warnings
+cargo clippy --locked -j2 -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_search_addon --all-features -- -D warnings
+SEARCH_CASES=search-retired-timeout node scripts/search-call-args-source.mjs
+WASM_TEST=wasm_search_addon CARGO_FEATURES=acceptance-hooks node scripts/browser-host-check.mjs
+```
+
+Main remained read-only. Approved private prerequisites are exactly seven accepted 518 copies on main0442, patch-byte audited against the originals. They are excluded from the 544 pickup. No private 508 copies were included. Original assertions, AGENTS.md, credentials and unrelated user work are preserved. Historical 518 evidence is not current 544 proof.
