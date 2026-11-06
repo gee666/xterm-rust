@@ -35,8 +35,12 @@ async fn raw_pixel_direct_and_shipped_terminal_protocols_match_original_pixels_a
             addon.dispose();t?.dispose();parent?.remove();addon.free?.();t?.free?.();runtime?.free?.();
           }
         }
-        for(const expression of ["1n","4n","5n","NaN","'1000'","({log:[],[Symbol.toPrimitive](h){this.log.push(h);return 1000}})"]){
-          for(const text of [iip,kitty,'\x1b[?2;1S']){
+        for(const expression of ["1n","4n","5n","1000000000n","NaN","'1000'","({log:[],[Symbol.toPrimitive](h){this.log.push(h);return 1000}})"]){
+          // Small BigInt geometry reaches Math.sqrt and throws before an
+          // asynchronous write callback. Exact throws use the synchronous
+          // parser comparison; public writes here have completing inputs.
+          const sequences=['1n','4n','5n'].includes(expression)?[iip,kitty]:[iip,kitty,'\x1b[?2;1S'];
+          for(const text of sequences){
             const expected=await trial(apis[0],expression,text);
             for(const api of apis.slice(1)){
               const actual=await trial(api,expression,text);

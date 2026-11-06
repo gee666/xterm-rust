@@ -4,7 +4,7 @@ use crate::{
     raw_sixel_limit::parse,
     support::*,
 };
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::{closure::Closure, JsValue};
 use wasm_bindgen_test::*;
 use xterm_web::image::ImageAddon;
@@ -215,6 +215,26 @@ fn raw_pixel_sixel_activation_converts_synchronously_and_preserves_errors() {
             get(&trial.addon.handler_inspection(), "size"),
             JsValue::from(0)
         );
+        // Parent controls registered before the throwing SIXEL constructor
+        // must remain callable, even though no protocol handler was inserted.
+        let replies = Rc::new(RefCell::new(Vec::new()));
+        let capture = replies.clone();
+        let registration = trial
+            .terminal
+            .shared_native()
+            .on_data()
+            .subscribe(move |text| capture.borrow_mut().push(text.clone()));
+        trial.terminal.shared_native().write("\x1b[?1;4S").unwrap();
+        let source_replies = eval("[]");
+        js_sys::Function::new_with_args("state,replies", "state.terminal.onData(s=>replies.push(s));return state.terminal._core._inputHandler.parse('\\x1b[?1;4S')")
+            .call2(&JsValue::UNDEFINED, &trial.source, &source_replies).unwrap();
+        assert_eq!(
+            replies.borrow().as_slice(),
+            &["\x1b[?1;0;4096S".encode_utf16().collect::<Vec<_>>()]
+        );
+        assert_eq!(get(&source_replies, "length"), JsValue::from(1));
+        assert_eq!(get(&source_replies, "0"), JsValue::from("\x1b[?1;0;4096S"));
+        registration.dispose();
     }
 }
 
@@ -229,12 +249,34 @@ async fn raw_pixel_sixel_memory_capture_is_once_per_activation_not_per_packet() 
     }
     same_log(&pair, "[\"number\"]");
     pair.compare_image(0.0, 0.0);
-    for value in ["'16777216'", "[16777216]", "new Number(16777216)"] {
+    for (value, inserted) in [
+        ("undefined", true),
+        ("null", true),
+        ("false", true),
+        ("true", false),
+        ("0", true),
+        ("-0", true),
+        ("NaN", true),
+        ("Infinity", true),
+        ("-Infinity", false),
+        ("-1", false),
+        ("1", false),
+        ("'16777216'", true),
+        ("[16777216]", true),
+        ("new Number(16777216)", true),
+    ] {
         let pair = pixel_pair(&format!("({{showPlaceholder:false,pixelLimit:{value}}})"));
         pair.ready().await;
         pair.write(sixel()).await;
         pair.compare();
-        pair.compare_image(0.0, 0.0);
+        assert_eq!(
+            get(&pair.events, "count"),
+            JsValue::from(u32::from(inserted)),
+            "{value}"
+        );
+        if inserted {
+            pair.compare_image(0.0, 0.0);
+        }
     }
 }
 

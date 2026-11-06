@@ -20,7 +20,7 @@ fn raw(addon: &JsValue) -> JsValue {
 // and decoder construction. Reuse the paired host, not protocol expectations.
 pub(super) struct Activation {
     pub addon: ImageAddon,
-    terminal: Terminal,
+    pub(super) terminal: Terminal,
     pub source: JsValue,
     key: &'static str,
 }
