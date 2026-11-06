@@ -10,6 +10,7 @@ struct TimerHost {
     failure: RefCell<Option<Rc<dyn Error>>>,
     trace: Trace,
     clock_reads: Cell<usize>,
+    delays: RefCell<Vec<u64>>,
 }
 impl SearchHost for TimerHost {
     fn terminal(&self) -> Rc<xterm_core::headless::Terminal> {
@@ -45,7 +46,7 @@ impl SearchHost for TimerHost {
         callback: TimeoutCallback,
     ) -> Result<DisposableHandle, SearchAddonError> {
         self.trace.borrow_mut().push("timeout");
-        assert_eq!(delay, xterm_core::search::CACHE_TTL_MS);
+        self.delays.borrow_mut().push(delay);
         if let Some(error) = self.failure.borrow().clone() {
             return Err(SearchAddonError::Host(error));
         }
@@ -111,6 +112,7 @@ fn retired_cache_setup_preserves_timer_errors_and_successful_setup_matching_orde
                         failure: RefCell::default(),
                         trace: trace.clone(),
                         clock_reads: Cell::new(0),
+                        delays: RefCell::default(),
                     });
                     old.addon.activate(host.clone()).unwrap();
                     if warm {
@@ -187,9 +189,56 @@ fn retired_cache_setup_preserves_timer_errors_and_successful_setup_matching_orde
                         "RAII, not orphan liveness parity"
                     );
                     assert_eq!(other.host.clock.pending(), 0);
+                    assert_eq!(
+                        *host.delays.borrow(),
+                        vec![
+                            xterm_core::search::CACHE_TTL_MS;
+                            usize::from(warm) + usize::from(mode != "empty")
+                        ]
+                    );
                     old.addon.dispose().unwrap();
                 }
             }
         }
     }
+}
+
+#[test]
+fn refreshed_live_cache_timeout_uses_one_clock_read_for_extension_and_expiry() {
+    let h = Harness::new(20, 3, None);
+    h.write("a a a");
+    let trace: Trace = Rc::default();
+    let host = Rc::new(TimerHost {
+        base: h.host.clone(),
+        failure: RefCell::default(),
+        trace: trace.clone(),
+        clock_reads: Cell::new(0),
+        delays: RefCell::default(),
+    });
+    h.addon.activate(host.clone()).unwrap();
+    assert!(h.addon.find_next(&term("a"), None).unwrap());
+    assert_eq!(*host.delays.borrow(), [15_000]);
+    h.host.clock.advance(5_000).unwrap();
+    assert!(h.addon.find_next(&term("a"), None).unwrap());
+    // Matching has its existing separate clock read. Record the actual final
+    // access timestamp so this test isolates the timer callback's reads.
+    let last_access = h.host.clock.now.get();
+    assert_eq!(last_access, 5_002);
+    let reads = host.clock_reads.get();
+    trace.borrow_mut().clear();
+    h.host.clock.advance(15_002).unwrap();
+    assert_eq!(host.clock_reads.get(), reads + 1);
+    assert_eq!(*host.delays.borrow(), [15_000, 5_000]);
+    assert_eq!(*trace.borrow(), ["timeout"]);
+    assert_eq!(h.host.clock.pending(), 1);
+    trace.borrow_mut().clear();
+    h.host.clock.advance(last_access + 15_001).unwrap();
+    assert_eq!(host.clock_reads.get(), reads + 2);
+    assert_eq!(*host.delays.borrow(), [15_000, 5_000]);
+    assert!(
+        trace.borrow().is_empty(),
+        "final expiry must not reschedule"
+    );
+    assert_eq!(h.host.clock.pending(), 0);
+    h.addon.dispose().unwrap();
 }
