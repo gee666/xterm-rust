@@ -1,0 +1,43 @@
+   Compiling equivalent v1.0.3
+   Compiling allocator-api2 v0.2.21
+   Compiling foldhash v0.1.5
+   Compiling memchr v2.8.3
+   Compiling hashbrown v0.15.5
+   Compiling regress v0.10.4
+   Compiling ryu-js v1.0.3
+   Compiling xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\CarlosSparseClear\crates\xterm-core)
+warning: function `parse_hex` is never used
+  --> crates\xterm-core\tests\support\terminal_snapshot.rs:14:8
+   |
+14 | pub fn parse_hex(text: &str) -> Vec<u16> {
+   |        ^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: function `snapshot` is never used
+  --> crates\xterm-core\tests\support\terminal_snapshot.rs:59:8
+   |
+59 | pub fn snapshot(t: &CoreTerminal) -> String {
+   |        ^^^^^^^^
+
+warning: function `events` is never used
+  --> crates\xterm-core\tests\support\terminal_snapshot.rs:89:8
+   |
+89 | pub fn events(t: &mut CoreTerminal) -> String {
+   |        ^^^^^^
+
+warning: function `event` is never used
+  --> crates\xterm-core\tests\support\terminal_snapshot.rs:96:8
+   |
+96 | pub fn event(e: &TerminalEvent) -> Option<String> {
+   |        ^^^^^
+
+warning: `xterm-core` (test "clear_sparse") generated 4 warnings
+    Finished `test` profile [unoptimized] target(s) in 9.13s
+     Running tests\clear_sparse.rs (target\debug\deps\clear_sparse-50adf33939af9590.exe)
+
+running 1 test
+test clear_preserves_sparse_row_transfer_callback_order_and_errors ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+

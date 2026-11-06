@@ -1,0 +1,73 @@
+[
+  {
+    "name": "core-all",
+    "command": [
+      "cargo",
+      "test",
+      "-j2",
+      "-p",
+      "xterm-core",
+      "--all-targets",
+      "--all-features"
+    ],
+    "exit": 0,
+    "error": null,
+    "elapsedMs": 101991,
+    "freeRAM": 31814696960,
+    "freeO": 2676599259136
+  },
+  {
+    "name": "core-clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "-j2",
+      "-p",
+      "xterm-core",
+      "--all-targets",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit": 0,
+    "error": null,
+    "elapsedMs": 16980,
+    "freeRAM": 33489006592,
+    "freeO": 2675092045824
+  },
+  {
+    "name": "affected-native",
+    "command": [
+      "cargo",
+      "check",
+      "-j2",
+      "--workspace",
+      "--all-targets",
+      "--all-features"
+    ],
+    "exit": 0,
+    "error": null,
+    "elapsedMs": 31061,
+    "freeRAM": 33425133568,
+    "freeO": 2675081416704
+  },
+  {
+    "name": "affected-wasm",
+    "command": [
+      "cargo",
+      "check",
+      "-j2",
+      "--workspace",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--lib",
+      "--all-features"
+    ],
+    "exit": 0,
+    "error": null,
+    "elapsedMs": 30702,
+    "freeRAM": 32876236800,
+    "freeO": 2674848309248
+  }
+]
