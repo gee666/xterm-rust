@@ -47,6 +47,16 @@ try {
   await esbuild.build({...common, entryPoints: [join(source, 'src/headless/public/Terminal.ts')],
     outfile: join(scratch, 'source.cjs'), tsconfig: join(source, 'src/headless/tsconfig.json')});
   const {Terminal} = require(resolve(scratch, 'source.cjs'));
+  const controls = new Terminal();
+  const replies = [];
+  controls.onData(data => replies.push(data));
+  Object.defineProperty(controls._core.optionsService.rawOptions, 'vtExtensions',
+    {get() {throw new Error('non-996 branch must not read options');}});
+  for (const command of ['\x1b[996n', '\x1b[?15;996n', '\x1b[?6;996n', '\x1b[5;996n']) {
+    controls._core._inputHandler.parse(command);
+  }
+  assert.deepEqual(replies, ['\x1b[?1;1R', '\x1b[0n']);
+  controls.dispose();
   for (const phase of ['bag', 'nested']) for (const alternate of [false, true]) {
     for (const [name, value] of Object.entries(values)) for (const action of actions) {
       const terminal = new Terminal({cols: 5, rows: 4, scrollback: 2, allowProposedApi: true});
@@ -112,7 +122,7 @@ try {
   mkdirSync('results/dsr-option', {recursive: true});
   writeFileSync('results/dsr-option/source.json', JSON.stringify({command: process.argv.slice(1),
     node: process.version, platform: process.platform, source, referenceFilesVerifiedBeforeAndAfter: manifest.length,
-    cases: output.length, upstream: {discovered: 1, executed: 1, passed: 1, failed: 0, skipped: 0, unrun: 0, outcomes: upstream},
+    cases: output.length, non996ShortCircuitCommands: 4, upstream: {discovered: 1, executed: 1, passed: 1, failed: 0, skipped: 0, unrun: 0, outcomes: upstream},
     fixture, fixtureSha256: createHash('sha256').update(text).digest('hex'),
     scope: 'Private DSR raw bag/nested property, two buffers, nine values, thirteen callback actions. No full equivalence claim.'
   }, null, 2) + '\n');

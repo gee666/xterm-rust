@@ -290,10 +290,43 @@ fn private_dsr_raw_option_getters_match_source_states_events_and_original_errors
 }
 
 #[test]
+fn non_996_branches_do_not_read_raw_extensions() {
+    let store = Rc::new(Store {
+        values: RefCell::new(
+            default_options(false)
+                .into_iter()
+                .map(|(key, value)| (key.into(), value))
+                .collect(),
+        ),
+        getter: RefCell::new(Some(Rc::new(|| panic!("non-996 branch read options")))),
+        special: RefCell::new(None),
+        bag_phase: true,
+        calls: Cell::new(0),
+        armed: Cell::new(true),
+    });
+    let layout = default_options(false)
+        .into_iter()
+        .map(|(key, _)| (key.into(), true))
+        .collect();
+    let options = Rc::new(OptionsService::default().with_raw_store(store.clone(), layout));
+    let mut terminal = CoreTerminal::with_options(options).unwrap();
+    *store.special.borrow_mut() = Some(OptionValue::Undefined);
+    terminal
+        .write("\x1b[996n\x1b[?15;996n\x1b[?6;996n\x1b[5;996n")
+        .unwrap();
+    assert_eq!(data_events(&mut terminal), ["\x1b[?1;1R", "\x1b[0n"]);
+    assert_eq!(store.calls.get(), 0);
+}
+
+#[test]
 fn unchanged_headless_on_data_dsr_assertion() {
     let mut terminal = CoreTerminal::new(80, 24, 1000).unwrap();
     terminal.write("\x1b[5n").unwrap();
-    let calls: Vec<_> = terminal
+    assert_eq!(data_events(&mut terminal), ["\x1b[0n"]);
+}
+
+fn data_events(terminal: &mut CoreTerminal) -> Vec<String> {
+    terminal
         .drain_events()
         .into_iter()
         .filter_map(|event| {
@@ -303,6 +336,5 @@ fn unchanged_headless_on_data_dsr_assertion() {
                 None
             }
         })
-        .collect();
-    assert_eq!(calls, ["\x1b[0n"]);
+        .collect()
 }
