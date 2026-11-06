@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "task": 567,
+  "parentTask": 328,
+  "parentStatus": "OPEN",
+  "base": "224d1b339a43eddf899c2944d9dad734d8c44234",
+  "acceptedPrerequisite": {
+    "task": 561,
+    "archive": "archive/Elijah561-complete",
+    "originalCommits": [
+      "0abaa971",
+      "1b262ddd"
+    ],
+    "localPrerequisiteCommits": [
+      "dd5524d3",
+      "d9d03227"
+    ]
+  },
+  "equivalence": "NOT PROVEN",
+  "scope": "Inspected public contract mapping only. No terminal execution or full source/API/assertion closure.",
+  "environment": {
+    "node": "v24.15.0",
+    "platform": "win32",
+    "arch": "x64",
+    "typescript": "5.9.3"
+  },
+  "commands": [
+    {
+      "argv": "node scripts/compatibility-inventory.mjs",
+      "status": "passed"
+    },
+    {
+      "argv": "node scripts/compatibility-inventory.mjs --check",
+      "status": "passed"
+    },
+    {
+      "argv": "node --test scripts/compatibility-inventory.test.mjs scripts/compatibility-baseline-links.test.mjs scripts/compatibility-addon-mappings.test.mjs scripts/compatibility-public-mappings.test.mjs",
+      "status": "passed",
+      "discovered": 13,
+      "executed": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "argv": "node --check scripts/compatibility-inventory.mjs; node --check scripts/compatibility-public-mappings.test.mjs",
+      "status": "passed"
+    },
+    {
+      "argv": "git diff --check",
+      "status": "passed"
+    }
+  ],
+  "referenceChecks": [
+    {
+      "root": "source_repo",
+      "phase": "after generator and thirteen Node tests",
+      "files": 776,
+      "mismatches": []
+    },
+    {
+      "root": "P:/workshop/Windows_Worshop/oira666/xterm-rust/source_repo",
+      "phase": "after generator and thirteen Node tests",
+      "files": 776,
+      "mismatches": []
+    }
+  ],
+  "counts": {
+    "referenceFiles": 776,
+    "productionModules": 209,
+    "declarationFiles": 16,
+    "apis": 770,
+    "apiCategories": {
+      "declaration": 109,
+      "event": 38,
+      "member": 440,
+      "option": 183
+    },
+    "apiStatuses": {
+      "missing": 239,
+      "partial": 531
+    },
+    "moduleStatuses": {
+      "missing": 103,
+      "partial": 106
+    },
+    "testFiles": 120,
+    "suiteKinds": {
+      "benchmark": 6,
+      "browser-integration": 25,
+      "test-support": 16,
+      "unit": 73
+    },
+    "staticTestDefinitions": 2426,
+    "fixtures": 162,
+    "addons": 14,
+    "modulesWithoutFocusedCriteria": 4,
+    "apisWithoutFocusedCriteria": 261,
+    "casesWithoutFocusedCriteria": 690,
+    "staticBenchmarkDefinitions": 32
+  },
+  "added": {
+    "modules": 11,
+    "qualifiedOwners": 32,
+    "suiteGuides": 5,
+    "partialApiRecords": 363
+  },
+  "knownAbsentMember": {
+    "source": "source_repo/typings/xterm-headless.d.ts",
+    "owner": "Terminal",
+    "member": "strings",
+    "status": "missing"
+  },
+  "historicalPublicReceipts": [
+    {
+      "path": "results/headless/latest.json",
+      "status": "failed"
+    },
+    {
+      "path": "results/public-api/headless-native-run.json",
+      "exitCode": 101
+    },
+    {
+      "path": "results/public-api/integration-summary.json",
+      "status": "failed",
+      "exitCode": 101
+    },
+    {
+      "path": "results/public-api/numeric-summary.json",
+      "status": "changed-during-run",
+      "exitCode": 101
+    }
+  ],
+  "inputs": [
+    {
+      "path": "README.md",
+      "bytes": 9264,
+      "sha256": "a2db4225bebe915d13cd33d70cf9fc8d53fca5ca674e00d3d52f3e54bbd16153"
+    },
+    {
+      "path": "docs/compatibility.md",
+      "bytes": 15962,
+      "sha256": "fd4f38c07f0df162e9f114f9cf73cc24d6ccd73c59a488be4b8b01384abfff04"
+    },
+    {
+      "path": "docs/verification.md",
+      "bytes": 23804,
+      "sha256": "97816739576e90980227e333ac8e91093b20018fc877ce6ad621a31e9ace8aaa"
+    },
+    {
+      "path": "docs/headless-declaration-map.md",
+      "bytes": 9588,
+      "sha256": "31d5cdec6c83648e1aa774e126137c5487495da8cd38bfdb601c644eea5baef6"
+    },
+    {
+      "path": "docs/public-api-coverage-audit.md",
+      "bytes": 8107,
+      "sha256": "34c63c6f0d4f97fa378d6f078783de76c7a92757a7971b5d066b260481821261"
+    },
+    {
+      "path": "scripts/compatibility-inventory.mjs",
+      "bytes": 23190,
+      "sha256": "6da3d274078292e30a1206b98276ed03b62226649089778a05677d4d05aff7f9"
+    },
+    {
+      "path": "scripts/compatibility-inventory.test.mjs",
+      "bytes": 18902,
+      "sha256": "eca428840a40e68e92c62bce28933b9f6145ef8b2db549ff8b08bdce8f14907c"
+    },
+    {
+      "path": "scripts/compatibility-addon-mappings.test.mjs",
+      "bytes": 5233,
+      "sha256": "7d2ea6bcb79f4496278475b6f45c1cd98411efd17b678da852230b3d02ef342c"
+    },
+    {
+      "path": "scripts/compatibility-public-mappings.test.mjs",
+      "bytes": 6835,
+      "sha256": "e09d1fbd53092c21354a8311c064152d268a4046d273d09d3c997477331aca55"
+    },
+    {
+      "path": "tools/compatibility/public-mappings.json",
+      "bytes": 91309,
+      "sha256": "24abb41217a98ca906c9bec6205b200cd6c6f471f2da4306ecb49dceefe11704"
+    },
+    {
+      "path": "results/compatibility/apis.json",
+      "bytes": 1937488,
+      "sha256": "7471c066fa4d84363995833e597d486c93347782ca8d6bfd5a378339663da3d6"
+    },
+    {
+      "path": "results/compatibility/modules.json",
+      "bytes": 227135,
+      "sha256": "9a6ec83ceda11634c861a2dcfcc5b4d94c4bcb6205c13f275a6d482ee31ee161"
+    },
+    {
+      "path": "results/compatibility/runtime-contracts.json",
+      "bytes": 4483,
+      "sha256": "11611edd5319cd6e32efadd6ee13bf80b38e450db59bc3b623819c46e0ba3b97"
+    },
+    {
+      "path": "results/compatibility/suites.json",
+      "bytes": 2341886,
+      "sha256": "0c8e08a0690af6906f238dab1c5118e53db868aba18a29c87fc2c5010f320fe3"
+    },
+    {
+      "path": "results/compatibility/summary.json",
+      "bytes": 4834,
+      "sha256": "5f450e6057e8dfb80d83becabcf4599becb0827299a20850cbd56654e075ba78"
+    },
+    {
+      "path": "results/compatibility/evidence-manifest.json",
+      "bytes": 64111,
+      "sha256": "b32db26b08b288dace56108d5e516058982d39357d8e19376f0d8bad57b12fb8"
+    },
+    {
+      "path": "results/public-api-coverage-audit/generate.log",
+      "bytes": 4878,
+      "sha256": "4a57814ee7a940f89389f7aaa0f1b9e2fc3355cb1f176655b308e2a134037899"
+    },
+    {
+      "path": "results/public-api-coverage-audit/check.log",
+      "bytes": 4875,
+      "sha256": "6062f6bac809b21246b973af180a1d36633a3e9b3ef010f3268a1a2b8d27c085"
+    },
+    {
+      "path": "results/public-api-coverage-audit/node-tests.log",
+      "bytes": 1419,
+      "sha256": "137ed2e98108816246959ddfae4d19cd71e771fa55c3546ce1fff7abed7a9612"
+    }
+  ],
+  "notRun": [
+    "Rust compilation or terminal behavior",
+    "complete common/browser/internal/source assertion reconciliation",
+    "workspace fmt/Clippy/all-feature/all-target/release/doctest gates",
+    "native Windows/Linux/macOS runtime or Miri/unsafe/license review",
+    "component/original browser suites or demos",
+    "speed/size/LoC comparison"
+  ],
+  "temporary": {
+    "ownedRoot": "O:/xterm-rust-swarm-16/tmp/worktrees/FrancesAudit328",
+    "jobs": 0,
+    "cleanup": "Pending independent review; regular private target/tmp, physical reference and locked TypeScript install. No cleanup claimed."
+  }
+}

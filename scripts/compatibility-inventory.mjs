@@ -38,11 +38,13 @@ const modifiers = node => (node.modifiers ?? []).map(m => m.getText());
 const nameOf = (sf, node) => node.name?.getText(sf) ?? (ts.isConstructorDeclaration(node) ? 'constructor' : ts.isCallSignatureDeclaration(node) ? '<call>' : ts.isConstructSignatureDeclaration(node) ? '<new>' : '<index>');
 const referenceFiles = await listReferenceFiles(root);
 const entries = JSON.parse(await read(mappingsPath));
-const addonMappingsPath = 'tools/compatibility/addon-mappings.json';
+const supplementalMappings = ['tools/compatibility/addon-mappings.json', 'tools/compatibility/public-mappings.json'];
 if (mappingsPath === 'tools/compatibility/mappings.json') {
-  const addonEntries = JSON.parse(await read(addonMappingsPath));
-  assert.equal(addonEntries.schemaVersion, 1, 'Unsupported addon mapping schema');
-  for (const key of ['modules', 'apiOwners', 'suites']) entries[key] = [...(entries[key] ?? []), ...(addonEntries[key] ?? [])];
+  for (const mapping of supplementalMappings) {
+    const additional = JSON.parse(await read(mapping));
+    assert.equal(additional.schemaVersion, 1, `Unsupported mapping schema: ${mapping}`);
+    for (const key of ['modules', 'apiOwners', 'suites']) entries[key] = [...(entries[key] ?? []), ...(additional[key] ?? [])];
+  }
 }
 const behaviorRules = JSON.parse(await read('tools/compatibility/behavior-criteria.json'));
 const criteriaIndexPath = 'results/acceptance/criteria-index.json';
@@ -83,7 +85,7 @@ const suiteMappings = new Map((entries.suites ?? []).map(m => [m.source, m]));
 assert.equal(suiteMappings.size, (entries.suites ?? []).length, 'Duplicate suite mapping');
 assert.equal(new Set(entries.apiOwners.map(m => `${m.source ?? '*'}:${m.owner}`)).size, entries.apiOwners.length, 'Duplicate API owner mapping');
 const evidencePaths = new Set([criteriaIndexPath, ...mappingDocuments, mappingsPath, 'tools/compatibility/behavior-criteria.json']);
-if (mappingsPath === 'tools/compatibility/mappings.json') evidencePaths.add(addonMappingsPath);
+if (mappingsPath === 'tools/compatibility/mappings.json') for (const mapping of supplementalMappings) evidencePaths.add(mapping);
 for (const entry of [...entries.modules, ...entries.apiOwners, ...(entries.suites ?? [])]) {
   for (const p of [...entry.implementation, ...entry.tests, ...entry.evidence]) { await validateMappedFile(p); evidencePaths.add(p); }
   assert(entry.binding && entry.gap && entry.command, 'Mappings need binding, gap, and executable command');
@@ -124,7 +126,7 @@ for (const kind of ['browser', 'headless']) {
     ts.forEachChild(node, visit);
   }
   visit(sf);
-  runtimeContracts.push({ source, module: kind === 'browser' ? '@xterm/xterm' : '@xterm/headless', proposedMembers, constructorOnlyOptions, status: 'missing', gap: 'No Rust public Terminal option mutation or proposed-API gating implementation mapped.' });
+  runtimeContracts.push({ source, module: kind === 'browser' ? '@xterm/xterm' : '@xterm/headless', proposedMembers, constructorOnlyOptions, ...mapped(moduleMappings.get(source)) });
 }
 const apis = [];
 for (const p of declarations) {
@@ -141,6 +143,10 @@ for (const p of declarations) {
     const ownerName = declaration ? name : scope[1];
     const match = entries.apiOwners.find(e => e.owner === ownerName && e.source === p)
       ?? entries.apiOwners.find(e => e.owner === ownerName && !e.source);
+    // A family mapping must not turn a known absent declaration member into an
+    // implementation. Keep source/runtime disagreements explicit on that row.
+    const memberGap = !declaration && Object.hasOwn(match?.unmappedMembers ?? {}, name) ? match.unmappedMembers[name] : null;
+    const implementation = memberGap ? { ...mapped(null), gap: memberGap } : mapped(match);
     const kind = ts.SyntaxKind[node.kind];
     const category = declaration ? 'declaration' : /^on[A-Z]/.test(name) || /\bIEvent\s*</.test(node.type?.getText(sf) ?? '') ? 'event'
       : /Options$/.test(scope[1]) ? 'option' : 'member';
@@ -148,7 +154,7 @@ for (const p of declarations) {
       module: scope[0], owner, name, kind, category, modifiers: modifiers(node), optional: Boolean(node.questionToken),
       proposedDocumentation: /\b(experimental|proposed)\b/i.test(docs),
       proposedRuntimeGate: scope[1] === 'Terminal' ? runtimeContracts.find(r => r.module === scope[0])?.proposedMembers.includes(name) ?? null : null, documentation: docs,
-      signature: node.getText(sf), ...acceptanceFor(p, [...scope, name].join('.')), ...mapped(match) });
+      signature: node.getText(sf), ...acceptanceFor(p, [...scope, name].join('.')), ...implementation });
     if (node.members) node.members.forEach(n => visit(n, [...scope, name], docs));
     if (ts.isTypeAliasDeclaration(node) && ts.isTypeLiteralNode(node.type)) node.type.members.forEach(n => visit(n, [...scope, name], docs));
     if (ts.isVariableDeclaration(node) && node.type && ts.isTypeLiteralNode(node.type)) node.type.members.forEach(n => visit(n, [...scope, name], docs));
@@ -167,7 +173,17 @@ for (const module of modules.filter(m => m.source.endsWith('.d.ts') && m.accepta
     module.acceptanceGap = null;
   }
 }
-for (const entry of entries.apiOwners) assert(apis.some(a => (!entry.source || a.source === entry.source) && (a.owner.split('.')[0] || a.name) === entry.owner), `Unknown API owner mapping: ${entry.source ?? '*'}:${entry.owner}`);
+for (const entry of entries.apiOwners) {
+  const owned = apis.filter(a => (!entry.source || a.source === entry.source) && (a.owner.split('.')[0] || a.name) === entry.owner);
+  assert(owned.length, `Unknown API owner mapping: ${entry.source ?? '*'}:${entry.owner}`);
+  if (entry.unmappedMembers !== undefined) {
+    assert(entry.unmappedMembers && typeof entry.unmappedMembers === 'object' && !Array.isArray(entry.unmappedMembers), 'unmappedMembers must be a member-to-gap object');
+    for (const [name, gap] of Object.entries(entry.unmappedMembers)) {
+      assert(owned.some(a => a.owner && a.name === name), `Unknown unmapped API member: ${entry.owner}.${name}`);
+      assert(typeof gap === 'string' && gap.trim(), `Unmapped API member requires a gap: ${entry.owner}.${name}`);
+    }
+  }
+}
 const testFiles = referenceFiles.filter(p => p.endsWith('.ts') && (/\.(test|benchmark)\.ts$/.test(p) || p.includes('/test/')));
 for (const source of suiteMappings.keys()) assert(testFiles.includes(source), `Unknown suite mapping: ${source}`);
 for (const source of originalBySource.keys()) assert(testFiles.includes(source), `Baseline suite omitted by inventory: ${source}`);

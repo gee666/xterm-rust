@@ -1,0 +1,1435 @@
+{
+  "schemaVersion": 1,
+  "modules": [
+    {
+      "source": "source_repo/src/headless/public/Terminal.ts",
+      "implementation": [
+        "crates/xterm-core/src/headless/terminal.rs",
+        "crates/xterm-core/src/headless/views.rs",
+        "crates/xterm-core/src/headless/queued.rs",
+        "crates/xterm-core/src/headless/native_queue.rs",
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-core/src/public_api/validation.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_upstream.rs",
+        "crates/xterm-core/tests/headless_contract.rs",
+        "crates/xterm-core/tests/public_api_integration.rs",
+        "crates/xterm-core/tests/public_api_validation.rs",
+        "crates/xterm-core/tests/headless_options.rs"
+      ],
+      "evidence": [
+        "docs/headless.md",
+        "docs/headless-declaration-map.md",
+        "docs/public-api-acceptance.md",
+        "results/headless/latest.json",
+        "results/public-api/headless-case-map.json",
+        "results/public-api/headless-native-run.json",
+        "results/public-api/integration-summary.json",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_upstream --test headless_contract --test public_api_integration --test headless_options --test public_api_validation",
+      "binding": "Native xterm_core::headless::Terminal uses typed dimensions, Result and UTF-16/byte writes. QueuedTerminal/NativeWritePump are host-driven queue adapters. Only unicode() checks allowProposedApi; PublicOptions guards cols/rows. This is not an @xterm/headless npm constructor.",
+      "gap": "Native synchronous/pending writes, usize dimensions, borrowed parser and marker snapshots are explicit representation differences, not JS event-loop or Number ABI equivalence. Headless strings is declared but absent upstream runtime. Latest retained headless/integration receipts fail and numeric receipt changed during run. All callback/reentry/lifecycle/platform and assertion-level gaps remain parent328/family312 work."
+    },
+    {
+      "source": "source_repo/src/headless/Terminal.ts",
+      "implementation": [
+        "crates/xterm-core/src/headless/terminal.rs",
+        "crates/xterm-core/src/headless/views.rs",
+        "crates/xterm-core/src/headless/queued.rs",
+        "crates/xterm-core/src/headless/native_queue.rs",
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-core/src/public_api/validation.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_upstream.rs",
+        "crates/xterm-core/tests/headless_contract.rs",
+        "crates/xterm-core/tests/public_api_integration.rs",
+        "crates/xterm-core/tests/public_api_validation.rs",
+        "crates/xterm-core/tests/headless_options.rs"
+      ],
+      "evidence": [
+        "docs/headless.md",
+        "docs/headless-declaration-map.md",
+        "docs/public-api-acceptance.md",
+        "results/headless/latest.json",
+        "results/public-api/headless-case-map.json",
+        "results/public-api/headless-native-run.json",
+        "results/public-api/integration-summary.json",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_upstream --test headless_contract --test public_api_integration --test headless_options --test public_api_validation",
+      "binding": "Native xterm_core::headless::Terminal uses typed dimensions, Result and UTF-16/byte writes. QueuedTerminal/NativeWritePump are host-driven queue adapters. Only unicode() checks allowProposedApi; PublicOptions guards cols/rows. This is not an @xterm/headless npm constructor.",
+      "gap": "Native synchronous/pending writes, usize dimensions, borrowed parser and marker snapshots are explicit representation differences, not JS event-loop or Number ABI equivalence. Headless strings is declared but absent upstream runtime. Latest retained headless/integration receipts fail and numeric receipt changed during run. All callback/reentry/lifecycle/platform and assertion-level gaps remain parent328/family312 work."
+    },
+    {
+      "source": "source_repo/src/browser/public/Terminal.ts",
+      "implementation": [
+        "crates/xterm-web/src/terminal/mod.rs",
+        "crates/xterm-web/src/terminal/operations.rs",
+        "crates/xterm-web/src/terminal/browser_open.rs",
+        "crates/xterm-web/src/terminal/event_functions.rs",
+        "crates/xterm-web/src/terminal/selection_api.rs",
+        "crates/xterm-web/src/terminal/marker_api.rs",
+        "crates/xterm-web/src/terminal/joiner_api.rs",
+        "crates/xterm-web/src/terminal/link_api.rs",
+        "crates/xterm-web/src/terminal/runtime.rs",
+        "crates/xterm-wasm-support/src/options.rs",
+        "crates/xterm-core/src/public_api/validation.rs",
+        "browser/xterm.mjs"
+      ],
+      "tests": [
+        "crates/xterm-web/tests/wasm_host.rs",
+        "crates/xterm-web/tests/wasm_terminal_writer.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs",
+        "crates/xterm-wasm-support/tests/wasm_options.rs"
+      ],
+      "evidence": [
+        "docs/public-api-acceptance.md",
+        "docs/public-adapters.md",
+        "docs/unicode-browser-api.md",
+        "results/public-adapters/verification.json",
+        "results/full-suite-checkpoint/summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "WASM_TEST=wasm_host node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_writer node scripts/browser-host-check.mjs; WASM_TEST=unicode_public_api node scripts/browser-host-check.mjs",
+      "binding": "browser/xterm.mjs Terminal subclasses the Rust WASM Terminal for shared runtime strings and JS addon ownership only. Rust owns state/parsing/operations. Live options use OptionsBinding; only unicode getter is proposed-gated and cols/rows public writes reject.",
+      "gap": "Callable browser methods do not establish all raw JS arguments, descriptors, callback errors, event order, DOM/render/selection/link/decorations, disposal/GC or original-suite parity. Historical suite failures/skips and missing final stable three-engine matrix remain explicit; native helper evidence is not a browser pass."
+    },
+    {
+      "source": "source_repo/src/common/public/AddonManager.ts",
+      "implementation": [
+        "crates/xterm-core/src/public_api/addon_manager.rs",
+        "crates/xterm-core/src/headless/terminal.rs",
+        "crates/xterm-wasm-support/src/public_api/addon_manager.rs",
+        "crates/xterm-wasm-support/src/public_api/addon_bridge.js",
+        "crates/xterm-web/src/terminal/addon_manager.rs",
+        "browser/xterm.mjs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_addon_manager.rs",
+        "crates/xterm-core/tests/public_addon_reentrancy.rs",
+        "crates/xterm-core/tests/public_adapter_terminal.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-api-acceptance.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_addon_manager --test public_addon_reentrancy --test public_adapter_terminal; WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs",
+      "binding": "ITerminalAddon maps to native TerminalAddon/AddonManager managed handles, and BrowserAddonManager plus a JS WeakMap facade passing the actual public Terminal to Rust activation. Native handles replace JS method mutation.",
+      "gap": "Historical two-case original and native component evidence does not close every raw structural addon, reactivation, LIFO/error/reentrant disposal, GC or cross-addon contract. Full addon families and final unchanged suites remain open."
+    },
+    {
+      "source": "source_repo/src/common/public/BufferApiView.ts",
+      "implementation": [
+        "crates/xterm-core/src/public_api/buffer.rs",
+        "crates/xterm-core/src/public_api/line_numbers.rs",
+        "crates/xterm-core/src/public_api/line_translation.rs",
+        "crates/xterm-core/src/buffer/line.rs",
+        "crates/xterm-core/src/buffer/cell.rs",
+        "crates/xterm-core/src/buffer/attributes.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_api.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell_extended.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_shape.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_buffer_api.rs",
+        "crates/xterm-core/tests/public_cell_numbers.rs",
+        "crates/xterm-core/tests/public_cell_numbers_differential.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/public_buffer_numbers_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-buffer-numbers.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_buffer_api --test public_cell_numbers --test public_cell_numbers_differential; WASM_TEST=public_buffer_numbers_wasm node scripts/browser-host-check.mjs",
+      "binding": "IBuffer/IBufferNamespace/IBufferLine/IBufferCell map to BufferApiView/BufferNamespaceApi/BufferLine/CellData and exported BufferView/BufferNamespace/BufferLine/BufferCell. getLine uses Number-aware ring lookup; typed native signed/unsigned methods remain available. Cells retain masks and source default color -1.",
+      "gap": "Family-level links do not certify each method/assertion. Native handles/borrows replace JS references. Full stale-line identity, raw Number/accessor/target/UTF-16/error/disposal/GC behavior and nonterminating-source safety divergences still need full-family reconciliation and final matrices."
+    },
+    {
+      "source": "source_repo/src/common/public/BufferNamespaceApi.ts",
+      "implementation": [
+        "crates/xterm-core/src/public_api/buffer.rs",
+        "crates/xterm-core/src/public_api/line_numbers.rs",
+        "crates/xterm-core/src/public_api/line_translation.rs",
+        "crates/xterm-core/src/buffer/line.rs",
+        "crates/xterm-core/src/buffer/cell.rs",
+        "crates/xterm-core/src/buffer/attributes.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_api.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell_extended.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_shape.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_buffer_api.rs",
+        "crates/xterm-core/tests/public_cell_numbers.rs",
+        "crates/xterm-core/tests/public_cell_numbers_differential.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/public_buffer_numbers_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-buffer-numbers.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_buffer_api --test public_cell_numbers --test public_cell_numbers_differential; WASM_TEST=public_buffer_numbers_wasm node scripts/browser-host-check.mjs",
+      "binding": "IBuffer/IBufferNamespace/IBufferLine/IBufferCell map to BufferApiView/BufferNamespaceApi/BufferLine/CellData and exported BufferView/BufferNamespace/BufferLine/BufferCell. getLine uses Number-aware ring lookup; typed native signed/unsigned methods remain available. Cells retain masks and source default color -1.",
+      "gap": "Family-level links do not certify each method/assertion. Native handles/borrows replace JS references. Full stale-line identity, raw Number/accessor/target/UTF-16/error/disposal/GC behavior and nonterminating-source safety divergences still need full-family reconciliation and final matrices."
+    },
+    {
+      "source": "source_repo/src/common/public/ParserApi.ts",
+      "implementation": [
+        "crates/xterm-core/src/public_api/parser.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_api.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier_bridge.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_parser_api.rs",
+        "crates/xterm-core/tests/public_parser_guard.rs",
+        "crates/xterm-core/tests/public_parser_reentrant.rs",
+        "crates/xterm-core/tests/public_streaming_apc.rs",
+        "crates/xterm-core/tests/public_streaming_dcs.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_parser_api --test public_parser_guard --test public_parser_reentrant --test public_streaming_apc --test public_streaming_dcs; WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs",
+      "binding": "IParser/IFunctionIdentifier use native with_parser/ParserApi and JS ParserApi with all five register*Handler methods over Rust registrars. Owned UTF-16/ParamValue snapshots and HandlerResult replace native JS callbacks/Promises; JS identifiers and Promise results are handled at the WASM boundary.",
+      "gap": "Native transient facade is not cached JS identity. Headless declarations omit Promise returns accepted by source runtime. Exact identifier property/coercion/error ordering, arbitrary async/reentry/disposal/GC and complete original Parser assertions require further execution, not filename inference."
+    },
+    {
+      "source": "source_repo/src/common/public/UnicodeApi.ts",
+      "implementation": [
+        "crates/xterm-core/src/unicode_service.rs",
+        "crates/xterm-core/src/unicode_callbacks.rs",
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-wasm-support/src/public_api/unicode_api.rs",
+        "crates/xterm-wasm-support/src/public_api/unicode_service.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/unicode_service.rs",
+        "crates/xterm-core/tests/unicode_service_differential.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs",
+        "crates/xterm-web/tests/unicode_internal_service.rs"
+      ],
+      "evidence": [
+        "docs/unicode-service.md",
+        "docs/unicode-binding-contract.md",
+        "docs/unicode-browser-api.md",
+        "results/unicode-service/oracle.json",
+        "results/unicode-browser/oracle.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test unicode_service --test unicode_service_differential; WASM_TEST=unicode_public_api node scripts/browser-host-check.mjs",
+      "binding": "IUnicodeHandling/IUnicodeVersionProvider use shared UnicodeService/provider traits and callback providers. JS UnicodeApi creates fresh public wrappers, preserves version names through lossless UTF-16 boundary encoding, and exposes register/versions/activeVersion. Only obtaining the public view is gated.",
+      "gap": "Native String/vector/UnicodeCharWidth/UnicodeCharProperties representations differ from arbitrary JS values. Scoped native/provider and three-engine observations do not close all raw version/provider mutation/error/property/reentry or generated data assertions and final integration matrices."
+    },
+    {
+      "source": "source_repo/src/common/services/OptionsService.ts",
+      "implementation": [
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-core/src/public_api/validation.rs",
+        "crates/xterm-core/src/options/mod.rs",
+        "crates/xterm-core/src/options/defaults.rs",
+        "crates/xterm-core/src/options/validation.rs",
+        "crates/xterm-wasm-support/src/options.rs",
+        "crates/xterm-wasm-support/src/options_convert.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_options.rs",
+        "crates/xterm-core/tests/public_api_validation.rs",
+        "crates/xterm-core/tests/options_service.rs",
+        "crates/xterm-core/tests/options_host_store.rs",
+        "crates/xterm-wasm-support/tests/wasm_options.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs"
+      ],
+      "evidence": [
+        "docs/options-acceptance.md",
+        "docs/options-verification.md",
+        "docs/public-api-acceptance.md",
+        "results/options/summary.json",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_options --test options_service --test options_host_store; WASM_PACKAGE=xterm-wasm-support WASM_TEST=wasm_options node scripts/browser-host-check.mjs",
+      "binding": "ITerminalOptions/ITerminalInitOnlyOptions use OptionsService and PublicOptions with OptionValue. Browser OptionsBinding preserves live descriptors and sequential assignment. verify_mutable_option rejects cols/rows; unicode access alone checks allowProposedApi.",
+      "gap": "Option storage/validation is not every renderer/input/protocol side effect. Native unknown keys error instead of detached expandos; native dimensions are typed. Full descriptor/prototype/accessor/coercion/error ordering, source option assertions and current native/browser matrices remain unproved."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "implementation": [
+        "crates/xterm-core/src/headless/terminal.rs",
+        "crates/xterm-core/src/headless/views.rs",
+        "crates/xterm-core/src/headless/queued.rs",
+        "crates/xterm-core/src/headless/native_queue.rs",
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-core/src/public_api/validation.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_upstream.rs",
+        "crates/xterm-core/tests/headless_contract.rs",
+        "crates/xterm-core/tests/public_api_integration.rs",
+        "crates/xterm-core/tests/public_api_validation.rs",
+        "crates/xterm-core/tests/headless_options.rs"
+      ],
+      "evidence": [
+        "docs/headless.md",
+        "docs/headless-declaration-map.md",
+        "docs/public-api-acceptance.md",
+        "results/headless/latest.json",
+        "results/public-api/headless-case-map.json",
+        "results/public-api/headless-native-run.json",
+        "results/public-api/integration-summary.json",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_upstream --test headless_contract --test public_api_integration --test headless_options --test public_api_validation",
+      "binding": "Native xterm_core::headless::Terminal uses typed dimensions, Result and UTF-16/byte writes. QueuedTerminal/NativeWritePump are host-driven queue adapters. Only unicode() checks allowProposedApi; PublicOptions guards cols/rows. This is not an @xterm/headless npm constructor.",
+      "gap": "Native synchronous/pending writes, usize dimensions, borrowed parser and marker snapshots are explicit representation differences, not JS event-loop or Number ABI equivalence. Headless strings is declared but absent upstream runtime. Latest retained headless/integration receipts fail and numeric receipt changed during run. All callback/reentry/lifecycle/platform and assertion-level gaps remain parent328/family312 work."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "implementation": [
+        "crates/xterm-web/src/terminal/mod.rs",
+        "crates/xterm-web/src/terminal/operations.rs",
+        "crates/xterm-web/src/terminal/browser_open.rs",
+        "crates/xterm-web/src/terminal/event_functions.rs",
+        "crates/xterm-web/src/terminal/selection_api.rs",
+        "crates/xterm-web/src/terminal/marker_api.rs",
+        "crates/xterm-web/src/terminal/joiner_api.rs",
+        "crates/xterm-web/src/terminal/link_api.rs",
+        "crates/xterm-web/src/terminal/runtime.rs",
+        "crates/xterm-wasm-support/src/options.rs",
+        "crates/xterm-core/src/public_api/validation.rs",
+        "browser/xterm.mjs"
+      ],
+      "tests": [
+        "crates/xterm-web/tests/wasm_host.rs",
+        "crates/xterm-web/tests/wasm_terminal_writer.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs",
+        "crates/xterm-wasm-support/tests/wasm_options.rs"
+      ],
+      "evidence": [
+        "docs/public-api-acceptance.md",
+        "docs/public-adapters.md",
+        "docs/unicode-browser-api.md",
+        "results/public-adapters/verification.json",
+        "results/full-suite-checkpoint/summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "WASM_TEST=wasm_host node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_writer node scripts/browser-host-check.mjs; WASM_TEST=unicode_public_api node scripts/browser-host-check.mjs",
+      "binding": "browser/xterm.mjs Terminal subclasses the Rust WASM Terminal for shared runtime strings and JS addon ownership only. Rust owns state/parsing/operations. Live options use OptionsBinding; only unicode getter is proposed-gated and cols/rows public writes reject.",
+      "gap": "Callable browser methods do not establish all raw JS arguments, descriptors, callback errors, event order, DOM/render/selection/link/decorations, disposal/GC or original-suite parity. Historical suite failures/skips and missing final stable three-engine matrix remain explicit; native helper evidence is not a browser pass."
+    }
+  ],
+  "apiOwners": [
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "Terminal",
+      "implementation": [
+        "crates/xterm-core/src/headless/terminal.rs",
+        "crates/xterm-core/src/headless/views.rs",
+        "crates/xterm-core/src/headless/queued.rs",
+        "crates/xterm-core/src/headless/native_queue.rs",
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-core/src/public_api/validation.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_upstream.rs",
+        "crates/xterm-core/tests/headless_contract.rs",
+        "crates/xterm-core/tests/public_api_integration.rs",
+        "crates/xterm-core/tests/public_api_validation.rs",
+        "crates/xterm-core/tests/headless_options.rs"
+      ],
+      "evidence": [
+        "docs/headless.md",
+        "docs/headless-declaration-map.md",
+        "docs/public-api-acceptance.md",
+        "results/headless/latest.json",
+        "results/public-api/headless-case-map.json",
+        "results/public-api/headless-native-run.json",
+        "results/public-api/integration-summary.json",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_upstream --test headless_contract --test public_api_integration --test headless_options --test public_api_validation",
+      "binding": "Native xterm_core::headless::Terminal uses typed dimensions, Result and UTF-16/byte writes. QueuedTerminal/NativeWritePump are host-driven queue adapters. Only unicode() checks allowProposedApi; PublicOptions guards cols/rows. This is not an @xterm/headless npm constructor.",
+      "gap": "Native synchronous/pending writes, usize dimensions, borrowed parser and marker snapshots are explicit representation differences, not JS event-loop or Number ABI equivalence. Headless strings is declared but absent upstream runtime. Latest retained headless/integration receipts fail and numeric receipt changed during run. All callback/reentry/lifecycle/platform and assertion-level gaps remain parent328/family312 work.",
+      "unmappedMembers": {
+        "strings": "Terminal.strings is declared in xterm-headless.d.ts but absent from the supplied headless runtime. No native static getter or compatible headless JS constructor is implemented by this mapping. Browser localization is a separate contract."
+      }
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "ITerminalOptions",
+      "implementation": [
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-core/src/public_api/validation.rs",
+        "crates/xterm-core/src/options/mod.rs",
+        "crates/xterm-core/src/options/defaults.rs",
+        "crates/xterm-core/src/options/validation.rs",
+        "crates/xterm-wasm-support/src/options.rs",
+        "crates/xterm-wasm-support/src/options_convert.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_options.rs",
+        "crates/xterm-core/tests/public_api_validation.rs",
+        "crates/xterm-core/tests/options_service.rs",
+        "crates/xterm-core/tests/options_host_store.rs",
+        "crates/xterm-wasm-support/tests/wasm_options.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs"
+      ],
+      "evidence": [
+        "docs/options-acceptance.md",
+        "docs/options-verification.md",
+        "docs/public-api-acceptance.md",
+        "results/options/summary.json",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_options --test options_service --test options_host_store; WASM_PACKAGE=xterm-wasm-support WASM_TEST=wasm_options node scripts/browser-host-check.mjs",
+      "binding": "ITerminalOptions/ITerminalInitOnlyOptions use OptionsService and PublicOptions with OptionValue. Browser OptionsBinding preserves live descriptors and sequential assignment. verify_mutable_option rejects cols/rows; unicode access alone checks allowProposedApi.",
+      "gap": "Option storage/validation is not every renderer/input/protocol side effect. Native unknown keys error instead of detached expandos; native dimensions are typed. Full descriptor/prototype/accessor/coercion/error ordering, source option assertions and current native/browser matrices remain unproved."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "ITerminalInitOnlyOptions",
+      "implementation": [
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-core/src/public_api/validation.rs",
+        "crates/xterm-core/src/options/mod.rs",
+        "crates/xterm-core/src/options/defaults.rs",
+        "crates/xterm-core/src/options/validation.rs",
+        "crates/xterm-wasm-support/src/options.rs",
+        "crates/xterm-wasm-support/src/options_convert.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_options.rs",
+        "crates/xterm-core/tests/public_api_validation.rs",
+        "crates/xterm-core/tests/options_service.rs",
+        "crates/xterm-core/tests/options_host_store.rs",
+        "crates/xterm-wasm-support/tests/wasm_options.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs"
+      ],
+      "evidence": [
+        "docs/options-acceptance.md",
+        "docs/options-verification.md",
+        "docs/public-api-acceptance.md",
+        "results/options/summary.json",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_options --test options_service --test options_host_store; WASM_PACKAGE=xterm-wasm-support WASM_TEST=wasm_options node scripts/browser-host-check.mjs",
+      "binding": "ITerminalOptions/ITerminalInitOnlyOptions use OptionsService and PublicOptions with OptionValue. Browser OptionsBinding preserves live descriptors and sequential assignment. verify_mutable_option rejects cols/rows; unicode access alone checks allowProposedApi.",
+      "gap": "Option storage/validation is not every renderer/input/protocol side effect. Native unknown keys error instead of detached expandos; native dimensions are typed. Full descriptor/prototype/accessor/coercion/error ordering, source option assertions and current native/browser matrices remain unproved."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IBuffer",
+      "implementation": [
+        "crates/xterm-core/src/public_api/buffer.rs",
+        "crates/xterm-core/src/public_api/line_numbers.rs",
+        "crates/xterm-core/src/public_api/line_translation.rs",
+        "crates/xterm-core/src/buffer/line.rs",
+        "crates/xterm-core/src/buffer/cell.rs",
+        "crates/xterm-core/src/buffer/attributes.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_api.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell_extended.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_shape.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_buffer_api.rs",
+        "crates/xterm-core/tests/public_cell_numbers.rs",
+        "crates/xterm-core/tests/public_cell_numbers_differential.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/public_buffer_numbers_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-buffer-numbers.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_buffer_api --test public_cell_numbers --test public_cell_numbers_differential; WASM_TEST=public_buffer_numbers_wasm node scripts/browser-host-check.mjs",
+      "binding": "IBuffer/IBufferNamespace/IBufferLine/IBufferCell map to BufferApiView/BufferNamespaceApi/BufferLine/CellData and exported BufferView/BufferNamespace/BufferLine/BufferCell. getLine uses Number-aware ring lookup; typed native signed/unsigned methods remain available. Cells retain masks and source default color -1.",
+      "gap": "Family-level links do not certify each method/assertion. Native handles/borrows replace JS references. Full stale-line identity, raw Number/accessor/target/UTF-16/error/disposal/GC behavior and nonterminating-source safety divergences still need full-family reconciliation and final matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IBufferNamespace",
+      "implementation": [
+        "crates/xterm-core/src/public_api/buffer.rs",
+        "crates/xterm-core/src/public_api/line_numbers.rs",
+        "crates/xterm-core/src/public_api/line_translation.rs",
+        "crates/xterm-core/src/buffer/line.rs",
+        "crates/xterm-core/src/buffer/cell.rs",
+        "crates/xterm-core/src/buffer/attributes.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_api.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell_extended.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_shape.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_buffer_api.rs",
+        "crates/xterm-core/tests/public_cell_numbers.rs",
+        "crates/xterm-core/tests/public_cell_numbers_differential.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/public_buffer_numbers_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-buffer-numbers.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_buffer_api --test public_cell_numbers --test public_cell_numbers_differential; WASM_TEST=public_buffer_numbers_wasm node scripts/browser-host-check.mjs",
+      "binding": "IBuffer/IBufferNamespace/IBufferLine/IBufferCell map to BufferApiView/BufferNamespaceApi/BufferLine/CellData and exported BufferView/BufferNamespace/BufferLine/BufferCell. getLine uses Number-aware ring lookup; typed native signed/unsigned methods remain available. Cells retain masks and source default color -1.",
+      "gap": "Family-level links do not certify each method/assertion. Native handles/borrows replace JS references. Full stale-line identity, raw Number/accessor/target/UTF-16/error/disposal/GC behavior and nonterminating-source safety divergences still need full-family reconciliation and final matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IBufferLine",
+      "implementation": [
+        "crates/xterm-core/src/public_api/buffer.rs",
+        "crates/xterm-core/src/public_api/line_numbers.rs",
+        "crates/xterm-core/src/public_api/line_translation.rs",
+        "crates/xterm-core/src/buffer/line.rs",
+        "crates/xterm-core/src/buffer/cell.rs",
+        "crates/xterm-core/src/buffer/attributes.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_api.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell_extended.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_shape.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_buffer_api.rs",
+        "crates/xterm-core/tests/public_cell_numbers.rs",
+        "crates/xterm-core/tests/public_cell_numbers_differential.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/public_buffer_numbers_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-buffer-numbers.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_buffer_api --test public_cell_numbers --test public_cell_numbers_differential; WASM_TEST=public_buffer_numbers_wasm node scripts/browser-host-check.mjs",
+      "binding": "IBuffer/IBufferNamespace/IBufferLine/IBufferCell map to BufferApiView/BufferNamespaceApi/BufferLine/CellData and exported BufferView/BufferNamespace/BufferLine/BufferCell. getLine uses Number-aware ring lookup; typed native signed/unsigned methods remain available. Cells retain masks and source default color -1.",
+      "gap": "Family-level links do not certify each method/assertion. Native handles/borrows replace JS references. Full stale-line identity, raw Number/accessor/target/UTF-16/error/disposal/GC behavior and nonterminating-source safety divergences still need full-family reconciliation and final matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IBufferCell",
+      "implementation": [
+        "crates/xterm-core/src/public_api/buffer.rs",
+        "crates/xterm-core/src/public_api/line_numbers.rs",
+        "crates/xterm-core/src/public_api/line_translation.rs",
+        "crates/xterm-core/src/buffer/line.rs",
+        "crates/xterm-core/src/buffer/cell.rs",
+        "crates/xterm-core/src/buffer/attributes.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_api.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell_extended.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_shape.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_buffer_api.rs",
+        "crates/xterm-core/tests/public_cell_numbers.rs",
+        "crates/xterm-core/tests/public_cell_numbers_differential.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/public_buffer_numbers_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-buffer-numbers.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_buffer_api --test public_cell_numbers --test public_cell_numbers_differential; WASM_TEST=public_buffer_numbers_wasm node scripts/browser-host-check.mjs",
+      "binding": "IBuffer/IBufferNamespace/IBufferLine/IBufferCell map to BufferApiView/BufferNamespaceApi/BufferLine/CellData and exported BufferView/BufferNamespace/BufferLine/BufferCell. getLine uses Number-aware ring lookup; typed native signed/unsigned methods remain available. Cells retain masks and source default color -1.",
+      "gap": "Family-level links do not certify each method/assertion. Native handles/borrows replace JS references. Full stale-line identity, raw Number/accessor/target/UTF-16/error/disposal/GC behavior and nonterminating-source safety divergences still need full-family reconciliation and final matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IFunctionIdentifier",
+      "implementation": [
+        "crates/xterm-core/src/public_api/parser.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_api.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier_bridge.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_parser_api.rs",
+        "crates/xterm-core/tests/public_parser_guard.rs",
+        "crates/xterm-core/tests/public_parser_reentrant.rs",
+        "crates/xterm-core/tests/public_streaming_apc.rs",
+        "crates/xterm-core/tests/public_streaming_dcs.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_parser_api --test public_parser_guard --test public_parser_reentrant --test public_streaming_apc --test public_streaming_dcs; WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs",
+      "binding": "IParser/IFunctionIdentifier use native with_parser/ParserApi and JS ParserApi with all five register*Handler methods over Rust registrars. Owned UTF-16/ParamValue snapshots and HandlerResult replace native JS callbacks/Promises; JS identifiers and Promise results are handled at the WASM boundary.",
+      "gap": "Native transient facade is not cached JS identity. Headless declarations omit Promise returns accepted by source runtime. Exact identifier property/coercion/error ordering, arbitrary async/reentry/disposal/GC and complete original Parser assertions require further execution, not filename inference."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IParser",
+      "implementation": [
+        "crates/xterm-core/src/public_api/parser.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_api.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier_bridge.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_parser_api.rs",
+        "crates/xterm-core/tests/public_parser_guard.rs",
+        "crates/xterm-core/tests/public_parser_reentrant.rs",
+        "crates/xterm-core/tests/public_streaming_apc.rs",
+        "crates/xterm-core/tests/public_streaming_dcs.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_parser_api --test public_parser_guard --test public_parser_reentrant --test public_streaming_apc --test public_streaming_dcs; WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs",
+      "binding": "IParser/IFunctionIdentifier use native with_parser/ParserApi and JS ParserApi with all five register*Handler methods over Rust registrars. Owned UTF-16/ParamValue snapshots and HandlerResult replace native JS callbacks/Promises; JS identifiers and Promise results are handled at the WASM boundary.",
+      "gap": "Native transient facade is not cached JS identity. Headless declarations omit Promise returns accepted by source runtime. Exact identifier property/coercion/error ordering, arbitrary async/reentry/disposal/GC and complete original Parser assertions require further execution, not filename inference."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IUnicodeVersionProvider",
+      "implementation": [
+        "crates/xterm-core/src/unicode_service.rs",
+        "crates/xterm-core/src/unicode_callbacks.rs",
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-wasm-support/src/public_api/unicode_api.rs",
+        "crates/xterm-wasm-support/src/public_api/unicode_service.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/unicode_service.rs",
+        "crates/xterm-core/tests/unicode_service_differential.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs",
+        "crates/xterm-web/tests/unicode_internal_service.rs"
+      ],
+      "evidence": [
+        "docs/unicode-service.md",
+        "docs/unicode-binding-contract.md",
+        "docs/unicode-browser-api.md",
+        "results/unicode-service/oracle.json",
+        "results/unicode-browser/oracle.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test unicode_service --test unicode_service_differential; WASM_TEST=unicode_public_api node scripts/browser-host-check.mjs",
+      "binding": "IUnicodeHandling/IUnicodeVersionProvider use shared UnicodeService/provider traits and callback providers. JS UnicodeApi creates fresh public wrappers, preserves version names through lossless UTF-16 boundary encoding, and exposes register/versions/activeVersion. Only obtaining the public view is gated.",
+      "gap": "Native String/vector/UnicodeCharWidth/UnicodeCharProperties representations differ from arbitrary JS values. Scoped native/provider and three-engine observations do not close all raw version/provider mutation/error/property/reentry or generated data assertions and final integration matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IUnicodeHandling",
+      "implementation": [
+        "crates/xterm-core/src/unicode_service.rs",
+        "crates/xterm-core/src/unicode_callbacks.rs",
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-wasm-support/src/public_api/unicode_api.rs",
+        "crates/xterm-wasm-support/src/public_api/unicode_service.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/unicode_service.rs",
+        "crates/xterm-core/tests/unicode_service_differential.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs",
+        "crates/xterm-web/tests/unicode_internal_service.rs"
+      ],
+      "evidence": [
+        "docs/unicode-service.md",
+        "docs/unicode-binding-contract.md",
+        "docs/unicode-browser-api.md",
+        "results/unicode-service/oracle.json",
+        "results/unicode-browser/oracle.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test unicode_service --test unicode_service_differential; WASM_TEST=unicode_public_api node scripts/browser-host-check.mjs",
+      "binding": "IUnicodeHandling/IUnicodeVersionProvider use shared UnicodeService/provider traits and callback providers. JS UnicodeApi creates fresh public wrappers, preserves version names through lossless UTF-16 boundary encoding, and exposes register/versions/activeVersion. Only obtaining the public view is gated.",
+      "gap": "Native String/vector/UnicodeCharWidth/UnicodeCharProperties representations differ from arbitrary JS values. Scoped native/provider and three-engine observations do not close all raw version/provider mutation/error/property/reentry or generated data assertions and final integration matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "ITerminalAddon",
+      "implementation": [
+        "crates/xterm-core/src/public_api/addon_manager.rs",
+        "crates/xterm-core/src/headless/terminal.rs",
+        "crates/xterm-wasm-support/src/public_api/addon_manager.rs",
+        "crates/xterm-wasm-support/src/public_api/addon_bridge.js",
+        "crates/xterm-web/src/terminal/addon_manager.rs",
+        "browser/xterm.mjs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_addon_manager.rs",
+        "crates/xterm-core/tests/public_addon_reentrancy.rs",
+        "crates/xterm-core/tests/public_adapter_terminal.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-api-acceptance.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_addon_manager --test public_addon_reentrancy --test public_adapter_terminal; WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs",
+      "binding": "ITerminalAddon maps to native TerminalAddon/AddonManager managed handles, and BrowserAddonManager plus a JS WeakMap facade passing the actual public Terminal to Rust activation. Native handles replace JS method mutation.",
+      "gap": "Historical two-case original and native component evidence does not close every raw structural addon, reactivation, LIFO/error/reentrant disposal, GC or cross-addon contract. Full addon families and final unchanged suites remain open."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IEvent",
+      "implementation": [
+        "crates/xterm-core/src/event.rs",
+        "crates/xterm-core/src/headless/events.rs",
+        "crates/xterm-wasm-support/src/events.rs",
+        "crates/xterm-web/src/terminal/event_functions.rs",
+        "crates/xterm-web/src/terminal/events.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/event.rs",
+        "crates/xterm-core/tests/event_context.rs",
+        "crates/xterm-core/tests/event_errors.rs",
+        "crates/xterm-core/tests/public_api_integration.rs",
+        "crates/xterm-web/tests/wasm_input_event.rs"
+      ],
+      "evidence": [
+        "docs/public-api-acceptance.md",
+        "results/public-api/integration-summary.json",
+        "results/events-circular-list/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test event --test event_context --test event_errors --test public_api_integration; WASM_TEST=wasm_input_event node scripts/browser-host-check.mjs",
+      "binding": "IEvent callable subscriptions map to Event<T>/Emitter and DisposableHandle natively, and Rust-backed JS callable event functions with listener receiver/disposable boundaries. UTF-16 strings and payload shapes are constructed by bindings.",
+      "gap": "Native Result/EmitError is not arbitrary JS throw identity. Latest public integration receipt is failed. All real-terminal event order, listener mutation/error/reentry/disposal and GC assertions need final execution; event helper evidence alone is insufficient."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IMarker",
+      "implementation": [
+        "crates/xterm-core/src/buffer/marker.rs",
+        "crates/xterm-core/src/headless/views.rs",
+        "crates/xterm-web/src/terminal/marker_api.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/marker_line.rs",
+        "crates/xterm-core/tests/marker_raw.rs",
+        "crates/xterm-core/tests/marker_resources.rs",
+        "crates/xterm-web/tests/wasm_terminal_markers.rs"
+      ],
+      "evidence": [
+        "docs/marker-line-contract.md",
+        "docs/marker-resources.md",
+        "docs/headless-declaration-map.md",
+        "results/marker-resources/checks.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test marker_line --test marker_raw --test marker_resources; WASM_TEST=wasm_terminal_markers node scripts/browser-host-check.mjs",
+      "binding": "IMarker/IDisposableWithEvent map to shared Marker with id/line/isDisposed/onDispose and Rust-backed JS Marker. Native markers() returns a snapshot of shared handles rather than the live JS Array; optional browser registerMarker defaults at its boundary.",
+      "gap": "Full raw resource/accessor/disposal/error/reentry/GC and line-number/buffer mutation assertion coverage remains open. Native integer conveniences do not establish every JS Number representation or actual source array identity."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IDisposableWithEvent",
+      "implementation": [
+        "crates/xterm-core/src/buffer/marker.rs",
+        "crates/xterm-core/src/headless/views.rs",
+        "crates/xterm-web/src/terminal/marker_api.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/marker_line.rs",
+        "crates/xterm-core/tests/marker_raw.rs",
+        "crates/xterm-core/tests/marker_resources.rs",
+        "crates/xterm-web/tests/wasm_terminal_markers.rs"
+      ],
+      "evidence": [
+        "docs/marker-line-contract.md",
+        "docs/marker-resources.md",
+        "docs/headless-declaration-map.md",
+        "results/marker-resources/checks.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test marker_line --test marker_raw --test marker_resources; WASM_TEST=wasm_terminal_markers node scripts/browser-host-check.mjs",
+      "binding": "IMarker/IDisposableWithEvent map to shared Marker with id/line/isDisposed/onDispose and Rust-backed JS Marker. Native markers() returns a snapshot of shared handles rather than the live JS Array; optional browser registerMarker defaults at its boundary.",
+      "gap": "Full raw resource/accessor/disposal/error/reentry/GC and line-number/buffer mutation assertion coverage remains open. Native integer conveniences do not establish every JS Number representation or actual source array identity."
+    },
+    {
+      "source": "source_repo/typings/xterm-headless.d.ts",
+      "owner": "IModes",
+      "implementation": [
+        "crates/xterm-core/src/headless/modes.rs",
+        "crates/xterm-web/src/terminal/modes_api.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_modes.rs",
+        "crates/xterm-core/tests/headless_upstream.rs",
+        "crates/xterm-web/tests/wasm_terminal_mouse_modes.rs"
+      ],
+      "evidence": [
+        "docs/public-api-acceptance.md",
+        "docs/headless-declaration-map.md",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_modes --test headless_upstream; WASM_TEST=wasm_terminal_mouse_modes node scripts/browser-host-check.mjs",
+      "binding": "IModes maps to owned ModesSnapshot and a fresh JS modes object with twelve projections, source mouse protocol naming and inverse showCursor. Holding a snapshot does not mutate engine state.",
+      "gap": "Historical synthetic mode combinations do not prove all real escape transitions, custom protocols, reset/alternate-buffer/exception/reentry behavior or final three-engine/native matrices. Latest numeric receipt changed during run."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "Terminal",
+      "implementation": [
+        "crates/xterm-web/src/terminal/mod.rs",
+        "crates/xterm-web/src/terminal/operations.rs",
+        "crates/xterm-web/src/terminal/browser_open.rs",
+        "crates/xterm-web/src/terminal/event_functions.rs",
+        "crates/xterm-web/src/terminal/selection_api.rs",
+        "crates/xterm-web/src/terminal/marker_api.rs",
+        "crates/xterm-web/src/terminal/joiner_api.rs",
+        "crates/xterm-web/src/terminal/link_api.rs",
+        "crates/xterm-web/src/terminal/runtime.rs",
+        "crates/xterm-wasm-support/src/options.rs",
+        "crates/xterm-core/src/public_api/validation.rs",
+        "browser/xterm.mjs"
+      ],
+      "tests": [
+        "crates/xterm-web/tests/wasm_host.rs",
+        "crates/xterm-web/tests/wasm_terminal_writer.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs",
+        "crates/xterm-wasm-support/tests/wasm_options.rs"
+      ],
+      "evidence": [
+        "docs/public-api-acceptance.md",
+        "docs/public-adapters.md",
+        "docs/unicode-browser-api.md",
+        "results/public-adapters/verification.json",
+        "results/full-suite-checkpoint/summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "WASM_TEST=wasm_host node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_writer node scripts/browser-host-check.mjs; WASM_TEST=unicode_public_api node scripts/browser-host-check.mjs",
+      "binding": "browser/xterm.mjs Terminal subclasses the Rust WASM Terminal for shared runtime strings and JS addon ownership only. Rust owns state/parsing/operations. Live options use OptionsBinding; only unicode getter is proposed-gated and cols/rows public writes reject.",
+      "gap": "Callable browser methods do not establish all raw JS arguments, descriptors, callback errors, event order, DOM/render/selection/link/decorations, disposal/GC or original-suite parity. Historical suite failures/skips and missing final stable three-engine matrix remain explicit; native helper evidence is not a browser pass."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "ITerminalOptions",
+      "implementation": [
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-core/src/public_api/validation.rs",
+        "crates/xterm-core/src/options/mod.rs",
+        "crates/xterm-core/src/options/defaults.rs",
+        "crates/xterm-core/src/options/validation.rs",
+        "crates/xterm-wasm-support/src/options.rs",
+        "crates/xterm-wasm-support/src/options_convert.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_options.rs",
+        "crates/xterm-core/tests/public_api_validation.rs",
+        "crates/xterm-core/tests/options_service.rs",
+        "crates/xterm-core/tests/options_host_store.rs",
+        "crates/xterm-wasm-support/tests/wasm_options.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs"
+      ],
+      "evidence": [
+        "docs/options-acceptance.md",
+        "docs/options-verification.md",
+        "docs/public-api-acceptance.md",
+        "results/options/summary.json",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_options --test options_service --test options_host_store; WASM_PACKAGE=xterm-wasm-support WASM_TEST=wasm_options node scripts/browser-host-check.mjs",
+      "binding": "ITerminalOptions/ITerminalInitOnlyOptions use OptionsService and PublicOptions with OptionValue. Browser OptionsBinding preserves live descriptors and sequential assignment. verify_mutable_option rejects cols/rows; unicode access alone checks allowProposedApi.",
+      "gap": "Option storage/validation is not every renderer/input/protocol side effect. Native unknown keys error instead of detached expandos; native dimensions are typed. Full descriptor/prototype/accessor/coercion/error ordering, source option assertions and current native/browser matrices remain unproved."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "ITerminalInitOnlyOptions",
+      "implementation": [
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-core/src/public_api/validation.rs",
+        "crates/xterm-core/src/options/mod.rs",
+        "crates/xterm-core/src/options/defaults.rs",
+        "crates/xterm-core/src/options/validation.rs",
+        "crates/xterm-wasm-support/src/options.rs",
+        "crates/xterm-wasm-support/src/options_convert.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_options.rs",
+        "crates/xterm-core/tests/public_api_validation.rs",
+        "crates/xterm-core/tests/options_service.rs",
+        "crates/xterm-core/tests/options_host_store.rs",
+        "crates/xterm-wasm-support/tests/wasm_options.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs"
+      ],
+      "evidence": [
+        "docs/options-acceptance.md",
+        "docs/options-verification.md",
+        "docs/public-api-acceptance.md",
+        "results/options/summary.json",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_options --test options_service --test options_host_store; WASM_PACKAGE=xterm-wasm-support WASM_TEST=wasm_options node scripts/browser-host-check.mjs",
+      "binding": "ITerminalOptions/ITerminalInitOnlyOptions use OptionsService and PublicOptions with OptionValue. Browser OptionsBinding preserves live descriptors and sequential assignment. verify_mutable_option rejects cols/rows; unicode access alone checks allowProposedApi.",
+      "gap": "Option storage/validation is not every renderer/input/protocol side effect. Native unknown keys error instead of detached expandos; native dimensions are typed. Full descriptor/prototype/accessor/coercion/error ordering, source option assertions and current native/browser matrices remain unproved."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IBuffer",
+      "implementation": [
+        "crates/xterm-core/src/public_api/buffer.rs",
+        "crates/xterm-core/src/public_api/line_numbers.rs",
+        "crates/xterm-core/src/public_api/line_translation.rs",
+        "crates/xterm-core/src/buffer/line.rs",
+        "crates/xterm-core/src/buffer/cell.rs",
+        "crates/xterm-core/src/buffer/attributes.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_api.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell_extended.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_shape.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_buffer_api.rs",
+        "crates/xterm-core/tests/public_cell_numbers.rs",
+        "crates/xterm-core/tests/public_cell_numbers_differential.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/public_buffer_numbers_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-buffer-numbers.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_buffer_api --test public_cell_numbers --test public_cell_numbers_differential; WASM_TEST=public_buffer_numbers_wasm node scripts/browser-host-check.mjs",
+      "binding": "IBuffer/IBufferNamespace/IBufferLine/IBufferCell map to BufferApiView/BufferNamespaceApi/BufferLine/CellData and exported BufferView/BufferNamespace/BufferLine/BufferCell. getLine uses Number-aware ring lookup; typed native signed/unsigned methods remain available. Cells retain masks and source default color -1.",
+      "gap": "Family-level links do not certify each method/assertion. Native handles/borrows replace JS references. Full stale-line identity, raw Number/accessor/target/UTF-16/error/disposal/GC behavior and nonterminating-source safety divergences still need full-family reconciliation and final matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IBufferNamespace",
+      "implementation": [
+        "crates/xterm-core/src/public_api/buffer.rs",
+        "crates/xterm-core/src/public_api/line_numbers.rs",
+        "crates/xterm-core/src/public_api/line_translation.rs",
+        "crates/xterm-core/src/buffer/line.rs",
+        "crates/xterm-core/src/buffer/cell.rs",
+        "crates/xterm-core/src/buffer/attributes.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_api.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell_extended.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_shape.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_buffer_api.rs",
+        "crates/xterm-core/tests/public_cell_numbers.rs",
+        "crates/xterm-core/tests/public_cell_numbers_differential.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/public_buffer_numbers_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-buffer-numbers.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_buffer_api --test public_cell_numbers --test public_cell_numbers_differential; WASM_TEST=public_buffer_numbers_wasm node scripts/browser-host-check.mjs",
+      "binding": "IBuffer/IBufferNamespace/IBufferLine/IBufferCell map to BufferApiView/BufferNamespaceApi/BufferLine/CellData and exported BufferView/BufferNamespace/BufferLine/BufferCell. getLine uses Number-aware ring lookup; typed native signed/unsigned methods remain available. Cells retain masks and source default color -1.",
+      "gap": "Family-level links do not certify each method/assertion. Native handles/borrows replace JS references. Full stale-line identity, raw Number/accessor/target/UTF-16/error/disposal/GC behavior and nonterminating-source safety divergences still need full-family reconciliation and final matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IBufferLine",
+      "implementation": [
+        "crates/xterm-core/src/public_api/buffer.rs",
+        "crates/xterm-core/src/public_api/line_numbers.rs",
+        "crates/xterm-core/src/public_api/line_translation.rs",
+        "crates/xterm-core/src/buffer/line.rs",
+        "crates/xterm-core/src/buffer/cell.rs",
+        "crates/xterm-core/src/buffer/attributes.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_api.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell_extended.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_shape.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_buffer_api.rs",
+        "crates/xterm-core/tests/public_cell_numbers.rs",
+        "crates/xterm-core/tests/public_cell_numbers_differential.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/public_buffer_numbers_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-buffer-numbers.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_buffer_api --test public_cell_numbers --test public_cell_numbers_differential; WASM_TEST=public_buffer_numbers_wasm node scripts/browser-host-check.mjs",
+      "binding": "IBuffer/IBufferNamespace/IBufferLine/IBufferCell map to BufferApiView/BufferNamespaceApi/BufferLine/CellData and exported BufferView/BufferNamespace/BufferLine/BufferCell. getLine uses Number-aware ring lookup; typed native signed/unsigned methods remain available. Cells retain masks and source default color -1.",
+      "gap": "Family-level links do not certify each method/assertion. Native handles/borrows replace JS references. Full stale-line identity, raw Number/accessor/target/UTF-16/error/disposal/GC behavior and nonterminating-source safety divergences still need full-family reconciliation and final matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IBufferCell",
+      "implementation": [
+        "crates/xterm-core/src/public_api/buffer.rs",
+        "crates/xterm-core/src/public_api/line_numbers.rs",
+        "crates/xterm-core/src/public_api/line_translation.rs",
+        "crates/xterm-core/src/buffer/line.rs",
+        "crates/xterm-core/src/buffer/cell.rs",
+        "crates/xterm-core/src/buffer/attributes.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_api.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_cell_extended.rs",
+        "crates/xterm-wasm-support/src/public_api/buffer_shape.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_buffer_api.rs",
+        "crates/xterm-core/tests/public_cell_numbers.rs",
+        "crates/xterm-core/tests/public_cell_numbers_differential.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/public_buffer_numbers_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-buffer-numbers.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_buffer_api --test public_cell_numbers --test public_cell_numbers_differential; WASM_TEST=public_buffer_numbers_wasm node scripts/browser-host-check.mjs",
+      "binding": "IBuffer/IBufferNamespace/IBufferLine/IBufferCell map to BufferApiView/BufferNamespaceApi/BufferLine/CellData and exported BufferView/BufferNamespace/BufferLine/BufferCell. getLine uses Number-aware ring lookup; typed native signed/unsigned methods remain available. Cells retain masks and source default color -1.",
+      "gap": "Family-level links do not certify each method/assertion. Native handles/borrows replace JS references. Full stale-line identity, raw Number/accessor/target/UTF-16/error/disposal/GC behavior and nonterminating-source safety divergences still need full-family reconciliation and final matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IFunctionIdentifier",
+      "implementation": [
+        "crates/xterm-core/src/public_api/parser.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_api.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier_bridge.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_parser_api.rs",
+        "crates/xterm-core/tests/public_parser_guard.rs",
+        "crates/xterm-core/tests/public_parser_reentrant.rs",
+        "crates/xterm-core/tests/public_streaming_apc.rs",
+        "crates/xterm-core/tests/public_streaming_dcs.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_parser_api --test public_parser_guard --test public_parser_reentrant --test public_streaming_apc --test public_streaming_dcs; WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs",
+      "binding": "IParser/IFunctionIdentifier use native with_parser/ParserApi and JS ParserApi with all five register*Handler methods over Rust registrars. Owned UTF-16/ParamValue snapshots and HandlerResult replace native JS callbacks/Promises; JS identifiers and Promise results are handled at the WASM boundary.",
+      "gap": "Native transient facade is not cached JS identity. Headless declarations omit Promise returns accepted by source runtime. Exact identifier property/coercion/error ordering, arbitrary async/reentry/disposal/GC and complete original Parser assertions require further execution, not filename inference."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IParser",
+      "implementation": [
+        "crates/xterm-core/src/public_api/parser.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_api.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier_bridge.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_parser_api.rs",
+        "crates/xterm-core/tests/public_parser_guard.rs",
+        "crates/xterm-core/tests/public_parser_reentrant.rs",
+        "crates/xterm-core/tests/public_streaming_apc.rs",
+        "crates/xterm-core/tests/public_streaming_dcs.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_parser_api --test public_parser_guard --test public_parser_reentrant --test public_streaming_apc --test public_streaming_dcs; WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs",
+      "binding": "IParser/IFunctionIdentifier use native with_parser/ParserApi and JS ParserApi with all five register*Handler methods over Rust registrars. Owned UTF-16/ParamValue snapshots and HandlerResult replace native JS callbacks/Promises; JS identifiers and Promise results are handled at the WASM boundary.",
+      "gap": "Native transient facade is not cached JS identity. Headless declarations omit Promise returns accepted by source runtime. Exact identifier property/coercion/error ordering, arbitrary async/reentry/disposal/GC and complete original Parser assertions require further execution, not filename inference."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IUnicodeVersionProvider",
+      "implementation": [
+        "crates/xterm-core/src/unicode_service.rs",
+        "crates/xterm-core/src/unicode_callbacks.rs",
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-wasm-support/src/public_api/unicode_api.rs",
+        "crates/xterm-wasm-support/src/public_api/unicode_service.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/unicode_service.rs",
+        "crates/xterm-core/tests/unicode_service_differential.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs",
+        "crates/xterm-web/tests/unicode_internal_service.rs"
+      ],
+      "evidence": [
+        "docs/unicode-service.md",
+        "docs/unicode-binding-contract.md",
+        "docs/unicode-browser-api.md",
+        "results/unicode-service/oracle.json",
+        "results/unicode-browser/oracle.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test unicode_service --test unicode_service_differential; WASM_TEST=unicode_public_api node scripts/browser-host-check.mjs",
+      "binding": "IUnicodeHandling/IUnicodeVersionProvider use shared UnicodeService/provider traits and callback providers. JS UnicodeApi creates fresh public wrappers, preserves version names through lossless UTF-16 boundary encoding, and exposes register/versions/activeVersion. Only obtaining the public view is gated.",
+      "gap": "Native String/vector/UnicodeCharWidth/UnicodeCharProperties representations differ from arbitrary JS values. Scoped native/provider and three-engine observations do not close all raw version/provider mutation/error/property/reentry or generated data assertions and final integration matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IUnicodeHandling",
+      "implementation": [
+        "crates/xterm-core/src/unicode_service.rs",
+        "crates/xterm-core/src/unicode_callbacks.rs",
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-wasm-support/src/public_api/unicode_api.rs",
+        "crates/xterm-wasm-support/src/public_api/unicode_service.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/unicode_service.rs",
+        "crates/xterm-core/tests/unicode_service_differential.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs",
+        "crates/xterm-web/tests/unicode_internal_service.rs"
+      ],
+      "evidence": [
+        "docs/unicode-service.md",
+        "docs/unicode-binding-contract.md",
+        "docs/unicode-browser-api.md",
+        "results/unicode-service/oracle.json",
+        "results/unicode-browser/oracle.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test unicode_service --test unicode_service_differential; WASM_TEST=unicode_public_api node scripts/browser-host-check.mjs",
+      "binding": "IUnicodeHandling/IUnicodeVersionProvider use shared UnicodeService/provider traits and callback providers. JS UnicodeApi creates fresh public wrappers, preserves version names through lossless UTF-16 boundary encoding, and exposes register/versions/activeVersion. Only obtaining the public view is gated.",
+      "gap": "Native String/vector/UnicodeCharWidth/UnicodeCharProperties representations differ from arbitrary JS values. Scoped native/provider and three-engine observations do not close all raw version/provider mutation/error/property/reentry or generated data assertions and final integration matrices."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "ITerminalAddon",
+      "implementation": [
+        "crates/xterm-core/src/public_api/addon_manager.rs",
+        "crates/xterm-core/src/headless/terminal.rs",
+        "crates/xterm-wasm-support/src/public_api/addon_manager.rs",
+        "crates/xterm-wasm-support/src/public_api/addon_bridge.js",
+        "crates/xterm-web/src/terminal/addon_manager.rs",
+        "browser/xterm.mjs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_addon_manager.rs",
+        "crates/xterm-core/tests/public_addon_reentrancy.rs",
+        "crates/xterm-core/tests/public_adapter_terminal.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-api-acceptance.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_addon_manager --test public_addon_reentrancy --test public_adapter_terminal; WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs",
+      "binding": "ITerminalAddon maps to native TerminalAddon/AddonManager managed handles, and BrowserAddonManager plus a JS WeakMap facade passing the actual public Terminal to Rust activation. Native handles replace JS method mutation.",
+      "gap": "Historical two-case original and native component evidence does not close every raw structural addon, reactivation, LIFO/error/reentrant disposal, GC or cross-addon contract. Full addon families and final unchanged suites remain open."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IEvent",
+      "implementation": [
+        "crates/xterm-core/src/event.rs",
+        "crates/xterm-core/src/headless/events.rs",
+        "crates/xterm-wasm-support/src/events.rs",
+        "crates/xterm-web/src/terminal/event_functions.rs",
+        "crates/xterm-web/src/terminal/events.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/event.rs",
+        "crates/xterm-core/tests/event_context.rs",
+        "crates/xterm-core/tests/event_errors.rs",
+        "crates/xterm-core/tests/public_api_integration.rs",
+        "crates/xterm-web/tests/wasm_input_event.rs"
+      ],
+      "evidence": [
+        "docs/public-api-acceptance.md",
+        "results/public-api/integration-summary.json",
+        "results/events-circular-list/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test event --test event_context --test event_errors --test public_api_integration; WASM_TEST=wasm_input_event node scripts/browser-host-check.mjs",
+      "binding": "IEvent callable subscriptions map to Event<T>/Emitter and DisposableHandle natively, and Rust-backed JS callable event functions with listener receiver/disposable boundaries. UTF-16 strings and payload shapes are constructed by bindings.",
+      "gap": "Native Result/EmitError is not arbitrary JS throw identity. Latest public integration receipt is failed. All real-terminal event order, listener mutation/error/reentry/disposal and GC assertions need final execution; event helper evidence alone is insufficient."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IMarker",
+      "implementation": [
+        "crates/xterm-core/src/buffer/marker.rs",
+        "crates/xterm-core/src/headless/views.rs",
+        "crates/xterm-web/src/terminal/marker_api.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/marker_line.rs",
+        "crates/xterm-core/tests/marker_raw.rs",
+        "crates/xterm-core/tests/marker_resources.rs",
+        "crates/xterm-web/tests/wasm_terminal_markers.rs"
+      ],
+      "evidence": [
+        "docs/marker-line-contract.md",
+        "docs/marker-resources.md",
+        "docs/headless-declaration-map.md",
+        "results/marker-resources/checks.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test marker_line --test marker_raw --test marker_resources; WASM_TEST=wasm_terminal_markers node scripts/browser-host-check.mjs",
+      "binding": "IMarker/IDisposableWithEvent map to shared Marker with id/line/isDisposed/onDispose and Rust-backed JS Marker. Native markers() returns a snapshot of shared handles rather than the live JS Array; optional browser registerMarker defaults at its boundary.",
+      "gap": "Full raw resource/accessor/disposal/error/reentry/GC and line-number/buffer mutation assertion coverage remains open. Native integer conveniences do not establish every JS Number representation or actual source array identity."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IDisposableWithEvent",
+      "implementation": [
+        "crates/xterm-core/src/buffer/marker.rs",
+        "crates/xterm-core/src/headless/views.rs",
+        "crates/xterm-web/src/terminal/marker_api.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/marker_line.rs",
+        "crates/xterm-core/tests/marker_raw.rs",
+        "crates/xterm-core/tests/marker_resources.rs",
+        "crates/xterm-web/tests/wasm_terminal_markers.rs"
+      ],
+      "evidence": [
+        "docs/marker-line-contract.md",
+        "docs/marker-resources.md",
+        "docs/headless-declaration-map.md",
+        "results/marker-resources/checks.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test marker_line --test marker_raw --test marker_resources; WASM_TEST=wasm_terminal_markers node scripts/browser-host-check.mjs",
+      "binding": "IMarker/IDisposableWithEvent map to shared Marker with id/line/isDisposed/onDispose and Rust-backed JS Marker. Native markers() returns a snapshot of shared handles rather than the live JS Array; optional browser registerMarker defaults at its boundary.",
+      "gap": "Full raw resource/accessor/disposal/error/reentry/GC and line-number/buffer mutation assertion coverage remains open. Native integer conveniences do not establish every JS Number representation or actual source array identity."
+    },
+    {
+      "source": "source_repo/typings/xterm.d.ts",
+      "owner": "IModes",
+      "implementation": [
+        "crates/xterm-core/src/headless/modes.rs",
+        "crates/xterm-web/src/terminal/modes_api.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_modes.rs",
+        "crates/xterm-core/tests/headless_upstream.rs",
+        "crates/xterm-web/tests/wasm_terminal_mouse_modes.rs"
+      ],
+      "evidence": [
+        "docs/public-api-acceptance.md",
+        "docs/headless-declaration-map.md",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_modes --test headless_upstream; WASM_TEST=wasm_terminal_mouse_modes node scripts/browser-host-check.mjs",
+      "binding": "IModes maps to owned ModesSnapshot and a fresh JS modes object with twelve projections, source mouse protocol naming and inverse showCursor. Holding a snapshot does not mutate engine state.",
+      "gap": "Historical synthetic mode combinations do not prove all real escape transitions, custom protocols, reset/alternate-buffer/exception/reentry behavior or final three-engine/native matrices. Latest numeric receipt changed during run."
+    }
+  ],
+  "suites": [
+    {
+      "source": "source_repo/src/headless/public/Terminal.test.ts",
+      "implementation": [
+        "crates/xterm-core/src/headless/terminal.rs",
+        "crates/xterm-core/src/headless/views.rs",
+        "crates/xterm-core/src/headless/queued.rs",
+        "crates/xterm-core/src/headless/native_queue.rs",
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-core/src/public_api/validation.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_upstream.rs",
+        "crates/xterm-core/tests/headless_contract.rs",
+        "crates/xterm-core/tests/public_api_integration.rs",
+        "crates/xterm-core/tests/public_api_validation.rs",
+        "crates/xterm-core/tests/headless_options.rs"
+      ],
+      "evidence": [
+        "docs/headless.md",
+        "docs/headless-declaration-map.md",
+        "docs/public-api-acceptance.md",
+        "results/headless/latest.json",
+        "results/public-api/headless-case-map.json",
+        "results/public-api/headless-native-run.json",
+        "results/public-api/integration-summary.json",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_upstream --test headless_contract --test public_api_integration --test headless_options --test public_api_validation",
+      "binding": "Native xterm_core::headless::Terminal uses typed dimensions, Result and UTF-16/byte writes. QueuedTerminal/NativeWritePump are host-driven queue adapters. Only unicode() checks allowProposedApi; PublicOptions guards cols/rows. This is not an @xterm/headless npm constructor.",
+      "gap": "Native synchronous/pending writes, usize dimensions, borrowed parser and marker snapshots are explicit representation differences, not JS event-loop or Number ABI equivalence. Headless strings is declared but absent upstream runtime. Latest retained headless/integration receipts fail and numeric receipt changed during run. All callback/reentry/lifecycle/platform and assertion-level gaps remain parent328/family312 work."
+    },
+    {
+      "source": "source_repo/src/common/public/AddonManager.test.ts",
+      "implementation": [
+        "crates/xterm-core/src/public_api/addon_manager.rs",
+        "crates/xterm-core/src/headless/terminal.rs",
+        "crates/xterm-wasm-support/src/public_api/addon_manager.rs",
+        "crates/xterm-wasm-support/src/public_api/addon_bridge.js",
+        "crates/xterm-web/src/terminal/addon_manager.rs",
+        "browser/xterm.mjs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_addon_manager.rs",
+        "crates/xterm-core/tests/public_addon_reentrancy.rs",
+        "crates/xterm-core/tests/public_adapter_terminal.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/public-api-acceptance.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_addon_manager --test public_addon_reentrancy --test public_adapter_terminal; WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs",
+      "binding": "ITerminalAddon maps to native TerminalAddon/AddonManager managed handles, and BrowserAddonManager plus a JS WeakMap facade passing the actual public Terminal to Rust activation. Native handles replace JS method mutation.",
+      "gap": "Historical two-case original and native component evidence does not close every raw structural addon, reactivation, LIFO/error/reentrant disposal, GC or cross-addon contract. Full addon families and final unchanged suites remain open."
+    },
+    {
+      "source": "source_repo/src/common/services/OptionsService.test.ts",
+      "implementation": [
+        "crates/xterm-core/src/headless/options_view.rs",
+        "crates/xterm-core/src/public_api/validation.rs",
+        "crates/xterm-core/src/options/mod.rs",
+        "crates/xterm-core/src/options/defaults.rs",
+        "crates/xterm-core/src/options/validation.rs",
+        "crates/xterm-wasm-support/src/options.rs",
+        "crates/xterm-wasm-support/src/options_convert.rs"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/headless_options.rs",
+        "crates/xterm-core/tests/public_api_validation.rs",
+        "crates/xterm-core/tests/options_service.rs",
+        "crates/xterm-core/tests/options_host_store.rs",
+        "crates/xterm-wasm-support/tests/wasm_options.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs"
+      ],
+      "evidence": [
+        "docs/options-acceptance.md",
+        "docs/options-verification.md",
+        "docs/public-api-acceptance.md",
+        "results/options/summary.json",
+        "results/public-api/numeric-summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test headless_options --test options_service --test options_host_store; WASM_PACKAGE=xterm-wasm-support WASM_TEST=wasm_options node scripts/browser-host-check.mjs",
+      "binding": "ITerminalOptions/ITerminalInitOnlyOptions use OptionsService and PublicOptions with OptionValue. Browser OptionsBinding preserves live descriptors and sequential assignment. verify_mutable_option rejects cols/rows; unicode access alone checks allowProposedApi.",
+      "gap": "Option storage/validation is not every renderer/input/protocol side effect. Native unknown keys error instead of detached expandos; native dimensions are typed. Full descriptor/prototype/accessor/coercion/error ordering, source option assertions and current native/browser matrices remain unproved."
+    },
+    {
+      "source": "source_repo/test/playwright/Parser.test.ts",
+      "implementation": [
+        "crates/xterm-core/src/public_api/parser.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_api.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier.rs",
+        "crates/xterm-wasm-support/src/public_api/parser_identifier_bridge.js"
+      ],
+      "tests": [
+        "crates/xterm-core/tests/public_parser_api.rs",
+        "crates/xterm-core/tests/public_parser_guard.rs",
+        "crates/xterm-core/tests/public_parser_reentrant.rs",
+        "crates/xterm-core/tests/public_streaming_apc.rs",
+        "crates/xterm-core/tests/public_streaming_dcs.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs"
+      ],
+      "evidence": [
+        "docs/public-adapters.md",
+        "docs/headless-declaration-map.md",
+        "results/public-adapters/verification.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "cargo test -p xterm-core --test public_parser_api --test public_parser_guard --test public_parser_reentrant --test public_streaming_apc --test public_streaming_dcs; WASM_TEST=public_adapters_wasm node scripts/browser-host-check.mjs",
+      "binding": "IParser/IFunctionIdentifier use native with_parser/ParserApi and JS ParserApi with all five register*Handler methods over Rust registrars. Owned UTF-16/ParamValue snapshots and HandlerResult replace native JS callbacks/Promises; JS identifiers and Promise results are handled at the WASM boundary.",
+      "gap": "Native transient facade is not cached JS identity. Headless declarations omit Promise returns accepted by source runtime. Exact identifier property/coercion/error ordering, arbitrary async/reentry/disposal/GC and complete original Parser assertions require further execution, not filename inference."
+    },
+    {
+      "source": "source_repo/test/playwright/Terminal.test.ts",
+      "implementation": [
+        "crates/xterm-web/src/terminal/mod.rs",
+        "crates/xterm-web/src/terminal/operations.rs",
+        "crates/xterm-web/src/terminal/browser_open.rs",
+        "crates/xterm-web/src/terminal/event_functions.rs",
+        "crates/xterm-web/src/terminal/selection_api.rs",
+        "crates/xterm-web/src/terminal/marker_api.rs",
+        "crates/xterm-web/src/terminal/joiner_api.rs",
+        "crates/xterm-web/src/terminal/link_api.rs",
+        "crates/xterm-web/src/terminal/runtime.rs",
+        "crates/xterm-wasm-support/src/options.rs",
+        "crates/xterm-core/src/public_api/validation.rs",
+        "browser/xterm.mjs"
+      ],
+      "tests": [
+        "crates/xterm-web/tests/wasm_host.rs",
+        "crates/xterm-web/tests/wasm_terminal_writer.rs",
+        "crates/xterm-web/tests/public_adapters_wasm.rs",
+        "crates/xterm-web/tests/unicode_public_api.rs",
+        "crates/xterm-wasm-support/tests/wasm_options.rs"
+      ],
+      "evidence": [
+        "docs/public-api-acceptance.md",
+        "docs/public-adapters.md",
+        "docs/unicode-browser-api.md",
+        "results/public-adapters/verification.json",
+        "results/full-suite-checkpoint/summary.json",
+        "docs/public-api-coverage-audit.md"
+      ],
+      "command": "WASM_TEST=wasm_host node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_writer node scripts/browser-host-check.mjs; WASM_TEST=unicode_public_api node scripts/browser-host-check.mjs",
+      "binding": "browser/xterm.mjs Terminal subclasses the Rust WASM Terminal for shared runtime strings and JS addon ownership only. Rust owns state/parsing/operations. Live options use OptionsBinding; only unicode getter is proposed-gated and cols/rows public writes reject.",
+      "gap": "Callable browser methods do not establish all raw JS arguments, descriptors, callback errors, event order, DOM/render/selection/link/decorations, disposal/GC or original-suite parity. Historical suite failures/skips and missing final stable three-engine matrix remain explicit; native helper evidence is not a browser pass."
+    }
+  ]
+}

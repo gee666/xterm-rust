@@ -9,8 +9,39 @@
       "cols",
       "rows"
     ],
-    "status": "missing",
-    "gap": "No Rust public Terminal option mutation or proposed-API gating implementation mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-web/src/terminal/mod.rs",
+      "crates/xterm-web/src/terminal/operations.rs",
+      "crates/xterm-web/src/terminal/browser_open.rs",
+      "crates/xterm-web/src/terminal/event_functions.rs",
+      "crates/xterm-web/src/terminal/selection_api.rs",
+      "crates/xterm-web/src/terminal/marker_api.rs",
+      "crates/xterm-web/src/terminal/joiner_api.rs",
+      "crates/xterm-web/src/terminal/link_api.rs",
+      "crates/xterm-web/src/terminal/runtime.rs",
+      "crates/xterm-wasm-support/src/options.rs",
+      "crates/xterm-core/src/public_api/validation.rs",
+      "browser/xterm.mjs"
+    ],
+    "tests": [
+      "crates/xterm-web/tests/wasm_host.rs",
+      "crates/xterm-web/tests/wasm_terminal_writer.rs",
+      "crates/xterm-web/tests/public_adapters_wasm.rs",
+      "crates/xterm-web/tests/unicode_public_api.rs",
+      "crates/xterm-wasm-support/tests/wasm_options.rs"
+    ],
+    "evidence": [
+      "docs/public-api-acceptance.md",
+      "docs/public-adapters.md",
+      "docs/unicode-browser-api.md",
+      "results/public-adapters/verification.json",
+      "results/full-suite-checkpoint/summary.json",
+      "docs/public-api-coverage-audit.md"
+    ],
+    "command": "WASM_TEST=wasm_host node scripts/browser-host-check.mjs; WASM_TEST=wasm_terminal_writer node scripts/browser-host-check.mjs; WASM_TEST=unicode_public_api node scripts/browser-host-check.mjs",
+    "binding": "browser/xterm.mjs Terminal subclasses the Rust WASM Terminal for shared runtime strings and JS addon ownership only. Rust owns state/parsing/operations. Live options use OptionsBinding; only unicode getter is proposed-gated and cols/rows public writes reject.",
+    "gap": "Callable browser methods do not establish all raw JS arguments, descriptors, callback errors, event order, DOM/render/selection/link/decorations, disposal/GC or original-suite parity. Historical suite failures/skips and missing final stable three-engine matrix remain explicit; native helper evidence is not a browser pass."
   },
   {
     "source": "source_repo/src/headless/public/Terminal.ts",
@@ -22,7 +53,35 @@
       "cols",
       "rows"
     ],
-    "status": "missing",
-    "gap": "No Rust public Terminal option mutation or proposed-API gating implementation mapped."
+    "status": "partial",
+    "implementation": [
+      "crates/xterm-core/src/headless/terminal.rs",
+      "crates/xterm-core/src/headless/views.rs",
+      "crates/xterm-core/src/headless/queued.rs",
+      "crates/xterm-core/src/headless/native_queue.rs",
+      "crates/xterm-core/src/headless/options_view.rs",
+      "crates/xterm-core/src/public_api/validation.rs"
+    ],
+    "tests": [
+      "crates/xterm-core/tests/headless_upstream.rs",
+      "crates/xterm-core/tests/headless_contract.rs",
+      "crates/xterm-core/tests/public_api_integration.rs",
+      "crates/xterm-core/tests/public_api_validation.rs",
+      "crates/xterm-core/tests/headless_options.rs"
+    ],
+    "evidence": [
+      "docs/headless.md",
+      "docs/headless-declaration-map.md",
+      "docs/public-api-acceptance.md",
+      "results/headless/latest.json",
+      "results/public-api/headless-case-map.json",
+      "results/public-api/headless-native-run.json",
+      "results/public-api/integration-summary.json",
+      "results/public-api/numeric-summary.json",
+      "docs/public-api-coverage-audit.md"
+    ],
+    "command": "cargo test -p xterm-core --test headless_upstream --test headless_contract --test public_api_integration --test headless_options --test public_api_validation",
+    "binding": "Native xterm_core::headless::Terminal uses typed dimensions, Result and UTF-16/byte writes. QueuedTerminal/NativeWritePump are host-driven queue adapters. Only unicode() checks allowProposedApi; PublicOptions guards cols/rows. This is not an @xterm/headless npm constructor.",
+    "gap": "Native synchronous/pending writes, usize dimensions, borrowed parser and marker snapshots are explicit representation differences, not JS event-loop or Number ABI equivalence. Headless strings is declared but absent upstream runtime. Latest retained headless/integration receipts fail and numeric receipt changed during run. All callback/reentry/lifecycle/platform and assertion-level gaps remain parent328/family312 work."
   }
 ]

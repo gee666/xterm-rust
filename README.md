@@ -2,7 +2,7 @@
 
 A Rust port of the supplied xterm.js 6.0.0 tree. Terminal state, parsing and buffers run in Rust. Browser bindings use WASM and browser APIs, not the original JavaScript terminal engine.
 
-**Full functional equivalence is NOT PROVEN.** Implementation, integration and verification are still in progress. A working component test is not evidence that every terminal, renderer or addon contract is complete. See [the requirements](PORT_REQUIREMENTS.md), [compatibility inventory](docs/compatibility.md), [verification report](docs/verification.md) and [comparison report](docs/comparison.md).
+**Full functional equivalence is NOT PROVEN.** Implementation, integration and verification are still in progress. A working component test is not evidence that every terminal, renderer or addon contract is complete. See [the requirements](PORT_REQUIREMENTS.md), [compatibility inventory](docs/compatibility.md), [verification report](docs/verification.md) and [comparison report](docs/comparison.md). The [public API audit](docs/public-api-coverage-audit.md) distinguishes callable native/browser contracts, representation changes and declared-but-absent members from unexecuted assertion families.
 
 ## Prerequisites
 

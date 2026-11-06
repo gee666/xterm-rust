@@ -140,7 +140,9 @@ test('mapping/evidence hashes and public gating explicitly preserve unproven sta
   for (const contract of await load('runtime-contracts')) {
     assert.deepEqual(contract.proposedMembers, ['unicode']);
     assert.deepEqual(contract.constructorOnlyOptions, ['cols', 'rows']);
-    assert.equal(contract.status, 'missing');
+    assert.equal(contract.status, 'partial');
+    assert(contract.implementation.length && contract.tests.length && contract.evidence.length);
+    assert(contract.binding && contract.command && contract.gap);
   }
   assert.equal((await load('summary')).equivalence, 'NOT PROVEN');
 });
