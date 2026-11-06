@@ -15,3 +15,5 @@ The initial worktree creator exceeded its 60-second tool deadline during checkou
 Owned temporary root is `O:/xterm-rust-swarm-16/tmp/worktrees/KarnaBackspace`. It contains a physical reference copy, no dependency junctions and no compiled target artifacts. Review will inspect the reconciliation, exact restored production bytes and retained source-only hashes. Normal Git worktree removal follows commit/archive preservation and a scan for links, redirects and live workers. No accepted worktree or reference cleanup is repeated. Final cleanup outcome is recorded separately in the continuation receipt.
 
 The next worker must inspect both accepted 555 and 565 as well as current main before selecting core work. A repair missing from main is not necessarily unowned or unfinished producer work.
+
+Final cleanup passed. Normal Git worktree removal exited zero. The owned O: root is absent and unregistered; all 776 original reference files and four retained probe artifacts were verified afterward. No owned temporary paths or jobs remain. See `results/duplicate-backspace572/cleanup.json`. No new application behavior or native test pass is claimed.
