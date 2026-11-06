@@ -8,4 +8,6 @@ Initial test type error and sparse-checkout missing fixture Clippy failure are r
 
 Owned temporary root is `O:/xterm-rust-swarm-16/tmp/worktrees/ParkerPrint579`, sparse checkout with regular files and no copied source reference or junctions. Source runner reads the original P: reference without modifying it. All source/compiler resources were released on post 409 comment 5194. No servers or browsers were launched. Cached native executables are only usable until cleanup; reviewers must not infer a fresh compiler grant.
 
-Review and cleanup are pending. Preserve the branch and evidence before removing only this owned worktree. Inspect all paths, reparse points and live workers, use normal git removal, then verify the original 776 reference hashes and absence/unregistration. A later receipt must record actual removal. Do not replay cleanup from this preparation note.
+Task 579 is accepted without findings. The independent reviewer verified 18 input hashes, 16 receipt hashes, six cached executable hashes, 51 source dependency hashes and all 776 reference entries, then ran the six cached executables. All 21 integration and five print unit tests passed. No compiler or source bundle was launched in review.
+
+Cleanup is pending. Preserve the branch and evidence before removing only this owned worktree. Inspect all paths, reparse points and live workers, use normal git removal, then verify the original 776 reference hashes and absence/unregistration. A later receipt must record actual removal. Do not replay cleanup from this preparation note.
