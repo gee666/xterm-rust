@@ -25,9 +25,13 @@ mod atlas_styles;
 pub mod browser_cache;
 pub mod cache;
 #[cfg(target_arch = "wasm32")]
+pub mod canvas_context;
+#[cfg(target_arch = "wasm32")]
 pub mod canvas_layer;
 pub mod cell_colors;
 pub mod config;
+#[cfg(target_arch = "wasm32")]
+pub mod context_lifecycle;
 #[cfg(target_arch = "wasm32")]
 pub mod cursor_blink;
 pub mod custom_glyphs;

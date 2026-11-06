@@ -1,0 +1,73 @@
+{
+  "scope": "Canvas/context component only. Full306 renderer/Addon/Root, full suites and first-runtime burst/GC diagnosis remain open. Full equivalence NOT PROVEN.",
+  "platform": "win32",
+  "node": "v24.15.0",
+  "rustc": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "cargo": "cargo 1.85.1 (d73d2caf9 2024-12-31)",
+  "esbuild": "0.28.1",
+  "base": "0442e357",
+  "privatePrerequisites": [],
+  "sourceInputs": 126,
+  "sourceScenarios": 29,
+  "browserFunctions": 4,
+  "browsers": [
+    {
+      "name": "chromium",
+      "version": "148.0.7778.96",
+      "counts": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "pageErrors": 0
+    },
+    {
+      "name": "firefox",
+      "version": "150.0.2",
+      "counts": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "pageErrors": 0
+    },
+    {
+      "name": "webkit",
+      "version": "26.4",
+      "counts": {
+        "passed": 4,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      },
+      "pageErrors": 0
+    }
+  ],
+  "native": {
+    "command": "cargo test -p xterm-web --test webgl --all-features -j2",
+    "passed": 46,
+    "failed": 0
+  },
+  "wasmCompile": "cargo test -p xterm-web --test wasm_webgl_context --target wasm32-unknown-unknown --all-features --no-run -j2",
+  "wasmClippy": "cargo clippy -p xterm-web --lib --test wasm_webgl_context --target wasm32-unknown-unknown --all-features -j2 -- -D warnings",
+  "nativeClippy": "cargo clippy -p xterm-web --lib --test webgl --all-features -j2 -- -D warnings",
+  "workspaceFmt": "FAILED Windows OS206",
+  "memberFmt": "PASS",
+  "grants": {
+    "compiler": [
+      4413,
+      4473
+    ],
+    "browser": 4542,
+    "allReleased": [
+      4443,
+      4483,
+      4581
+    ]
+  },
+  "newDependencies": 0,
+  "unsafe": 0,
+  "jsEngineDelegation": false
+}

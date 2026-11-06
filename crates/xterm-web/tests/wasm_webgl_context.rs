@@ -1,0 +1,257 @@
+// Copyright (c) 2018-2026 The xterm.js authors. All rights reserved. MIT license.
+#![cfg(target_arch = "wasm32")]
+use js_sys::{Function, Object, Reflect};
+use std::{cell::Cell, rc::Rc};
+use wasm_bindgen::{closure::Closure, prelude::*, JsCast};
+use wasm_bindgen_futures::JsFuture;
+use wasm_bindgen_test::*;
+use xterm_core::lifecycle::{Disposable, DisposableStore};
+use xterm_web::{
+    core_browser::CoreBrowserService,
+    webgl::{
+        canvas_context::CanvasContext,
+        context_lifecycle::{ContextCallbacks, ContextLifecycle, ContextLog},
+    },
+};
+wasm_bindgen_test_configure!(run_in_browser);
+#[wasm_bindgen(module = "/tests/support/webgl_context.js")]
+extern "C" {
+    #[wasm_bindgen(js_name = caseNames)]
+    fn case_names() -> String;
+    #[wasm_bindgen(js_name = settleTestContexts)]
+    fn settle_test_contexts() -> js_sys::Promise;
+    #[wasm_bindgen(js_name = finishContextCases)]
+    fn finish_context_cases();
+    #[wasm_bindgen(catch, js_name = contextCase)]
+    fn context_case(factory: &Function, name: &str) -> Result<String, JsValue>;
+    #[wasm_bindgen(catch, js_name = oracleCase)]
+    fn oracle_case(name: &str) -> Result<String, JsValue>;
+    #[wasm_bindgen(catch, js_name = nativeCanvas)]
+    fn native_canvas(factory: &Function, preserve: bool) -> Result<String, JsValue>;
+    #[wasm_bindgen(catch, js_name = oracleNative)]
+    fn oracle_native(preserve: bool) -> Result<String, JsValue>;
+}
+#[wasm_bindgen(module = "/tests/support/webgl_context_native.js")]
+extern "C" {
+    #[wasm_bindgen(js_name = nativeContextCycle)]
+    fn native_context_cycle(factory: &Function) -> js_sys::Promise;
+    #[wasm_bindgen(js_name = oracleContextCycle)]
+    fn oracle_context_cycle() -> js_sys::Promise;
+    #[wasm_bindgen(catch, js_name = dropProbe)]
+    fn drop_probe(callback: &Function) -> Result<String, JsValue>;
+}
+fn property(object: &JsValue, name: &str) -> Function {
+    Reflect::get(object, &name.into()).unwrap().unchecked_into()
+}
+fn action(host: &JsValue, name: &str) -> Rc<dyn Fn() -> Result<(), JsValue>> {
+    let method = property(host, name);
+    let host = host.clone();
+    Rc::new(move || method.call0(&host).map(|_| ()))
+}
+fn factory() -> Function {
+    Closure::wrap(Box::new(
+        move |document: web_sys::Document,
+              preserve: JsValue,
+              host: JsValue,
+              parent: web_sys::HtmlElement| {
+            let context = Rc::new(CanvasContext::new(&document, preserve.as_bool())?);
+            let textarea: web_sys::HtmlTextAreaElement =
+                document.create_element("textarea")?.unchecked_into();
+            parent.append_child(&textarea)?;
+            let browser =
+                CoreBrowserService::new(&textarea, &document.default_view().unwrap(), &document)?;
+            let rows = property(&host, "rows");
+            let row_host = host.clone();
+            let log = property(&host, "log");
+            let log_host = host.clone();
+            let lifecycle = Rc::new(ContextLifecycle::new(
+                Rc::clone(&context),
+                browser.as_ref(),
+                ContextCallbacks {
+                    rows: Rc::new(move || {
+                        rows.call0(&row_host)?
+                            .as_f64()
+                            .ok_or_else(|| js_sys::TypeError::new("rows is not a number").into())
+                    }),
+                    log: Rc::new(move |kind| {
+                        log.call1(
+                            &log_host,
+                            &match kind {
+                                ContextLog::Lost => "lost",
+                                ContextLog::Restored => "restored",
+                                ContextLog::NotRestored => "not-restored",
+                            }
+                            .into(),
+                        )
+                        .map(|_| ())
+                    }),
+                    restore: action(&host, "restore"),
+                    restart_cursor: action(&host, "cursor"),
+                },
+            )?);
+            context.attach(&parent)?;
+            let subscriptions = Rc::new(DisposableStore::new());
+            let callback = property(&host, "redraw");
+            let receiver = host.clone();
+            subscriptions.add(lifecycle.on_request_redraw().try_subscribe(move |request| {
+                callback
+                    .call3(
+                        &receiver,
+                        &request.start.into(),
+                        &request.end.into(),
+                        &request.sync.into(),
+                    )
+                    .map(|_| ())
+                    .map_err(xterm_web::js_error::callback_error)
+            }));
+            let callback = property(&host, "loss");
+            subscriptions.add(lifecycle.on_context_loss().try_subscribe(move |event| {
+                callback
+                    .call1(&host, event.as_ref())
+                    .map(|_| ())
+                    .map_err(xterm_web::js_error::callback_error)
+            }));
+            let object = Object::new();
+            Reflect::set(&object, &"canvas".into(), context.canvas())?;
+            Reflect::set(&object, &"gl".into(), context.gl())?;
+            let retained = Rc::clone(&lifecycle);
+            let resize = Closure::<dyn Fn(JsValue, JsValue) -> Result<(), JsValue>>::new(
+                move |width, height| retained.set_device_pixel_dimensions(&width, &height),
+            );
+            Reflect::set(&object, &"resize".into(), &resize.into_js_value())?;
+            let retained = Rc::clone(&browser);
+            let window =
+                Closure::<dyn Fn(web_sys::Window) -> Result<(), JsValue>>::new(move |window| {
+                    retained.set_window(&window)
+                });
+            Reflect::set(&object, &"window".into(), &window.into_js_value())?;
+            let retained = Rc::clone(&lifecycle);
+            let dispose_context = Rc::clone(&context);
+            let dispose = Closure::<dyn Fn() -> Result<(), JsValue>>::new(move || {
+                retained.dispose()?;
+                dispose_context.detach()
+            });
+            Reflect::set(&object, &"dispose".into(), &dispose.into_js_value())?;
+            let cleanup = Closure::<dyn Fn() -> Result<(), JsValue>>::new(move || {
+                lifecycle.dispose()?;
+                context.detach()?;
+                subscriptions.dispose();
+                browser.dispose()?;
+                textarea.remove();
+                Ok(())
+            });
+            Reflect::set(&object, &"cleanup".into(), &cleanup.into_js_value())?;
+            Ok(JsValue::from(object))
+        },
+    )
+        as Box<
+            dyn Fn(
+                web_sys::Document,
+                JsValue,
+                JsValue,
+                web_sys::HtmlElement,
+            ) -> Result<JsValue, JsValue>,
+        >)
+    .into_js_value()
+    .unchecked_into()
+}
+#[wasm_bindgen_test]
+async fn controlled_context_lifecycle_matches_unchanged_source() {
+    let names: Vec<String> = serde_json::from_str(&case_names()).unwrap();
+    assert_eq!(names.len(), 29);
+    let factory = factory();
+    for name in names {
+        let expected = oracle_case(&name).unwrap();
+        let actual = context_case(&factory, &name).unwrap();
+        assert_eq!(actual, expected, "context case {name}");
+        // Let native DOM/observer cleanup finish between the controlled host
+        // scenarios. Actual new GPU contexts have separate native tests.
+        JsFuture::from(settle_test_contexts()).await.unwrap();
+    }
+    finish_context_cases();
+}
+#[wasm_bindgen_test]
+async fn native_context_loss_and_restoration_deliver_real_browser_events() {
+    let expected = JsFuture::from(oracle_context_cycle()).await.unwrap();
+    let actual = JsFuture::from(native_context_cycle(&factory()))
+        .await
+        .unwrap();
+    assert_eq!(actual, expected);
+    let result: serde_json::Value = serde_json::from_str(&actual.as_string().unwrap()).unwrap();
+    assert_eq!(
+        result["trace"],
+        serde_json::json!(["lost", "restored", "restore", "redraw"])
+    );
+    assert_eq!(result["prevented"], true);
+    assert_eq!(result["lost"], false);
+    assert_eq!(result["error"], 0);
+}
+#[wasm_bindgen_test]
+fn last_owner_drop_disconnects_cancels_and_rejects_late_callbacks() {
+    let calls = Rc::new(Cell::new(0));
+    let count = Rc::clone(&calls);
+    let callback = Closure::<dyn Fn(Function, Function) -> Result<(), JsValue>>::new(
+        move |trigger: Function, late: Function| {
+            let window = web_sys::window().unwrap();
+            let document = window.document().unwrap();
+            let textarea = document.create_element("textarea")?.unchecked_into();
+            let browser = CoreBrowserService::new(&textarea, &window, &document)?;
+            let context = Rc::new(CanvasContext::new(&document, None)?);
+            context.attach(&document.body().unwrap())?;
+            let canvas = context.canvas().clone();
+            let count = Rc::clone(&count);
+            let lifecycle = ContextLifecycle::new(
+                Rc::clone(&context),
+                browser.as_ref(),
+                ContextCallbacks {
+                    rows: Rc::new(|| Ok(3.0)),
+                    log: Rc::new(move |_| {
+                        count.set(count.get() + 1);
+                        Ok(())
+                    }),
+                    restore: Rc::new(|| Ok(())),
+                    restart_cursor: Rc::new(|| Ok(())),
+                },
+            )?;
+            trigger.call1(&JsValue::UNDEFINED, context.canvas())?;
+            drop(lifecycle);
+            late.call0(&JsValue::UNDEFINED)?;
+            assert_eq!(
+                [canvas.width(), canvas.height()],
+                [300, 150],
+                "late observer must not resize"
+            );
+            browser.dispose()?;
+            drop(context);
+            assert!(
+                !canvas.is_connected(),
+                "last context owner must detach its canvas"
+            );
+            Ok(())
+        },
+    );
+    let result = drop_probe(callback.as_ref().unchecked_ref()).unwrap();
+    assert_eq!(result, r#"{"disconnects":1,"clears":1,"pending":false}"#);
+    assert_eq!(
+        calls.get(),
+        1,
+        "late timer must not log or fire events after drop"
+    );
+}
+#[wasm_bindgen_test]
+fn actual_webgl2_context_draws_rgba_and_preserves_buffer_option() {
+    let factory = factory();
+    for preserve in [false, true] {
+        let expected = oracle_native(preserve).unwrap();
+        let actual = native_canvas(&factory, preserve).unwrap();
+        assert_eq!(actual, expected);
+        let result: serde_json::Value = serde_json::from_str(&actual).unwrap();
+        assert_eq!(result["pixels"], serde_json::json!([51, 102, 153, 255]));
+        assert_eq!(result["size"], serde_json::json!([8, 6]));
+        assert_eq!(result["redraw"], 1);
+        assert_eq!(result["attached"], true);
+        assert_eq!(result["sameContext"], true);
+        assert_eq!(result["preserve"], preserve);
+        assert_eq!(result["error"], 0);
+    }
+}
