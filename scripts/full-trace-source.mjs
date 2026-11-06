@@ -41,7 +41,7 @@ export function richSnapshot(terminal, charsets) {
   return ['RICH2', baseSnapshot(terminal), saved(core.buffers.normal, charsets), saved(core.buffers.alt, charsets),
     meta, +(core.buffers.active === core.buffers.alt)].join('|');
 }
-function observers(terminal, events) {
+export function observers(terminal, events) {
   const core = terminal._core, input = core._inputHandler;
   terminal.onBell(() => events.push('B'));
   terminal.onCursorMove(() => events.push('C'));
