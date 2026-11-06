@@ -1,0 +1,16 @@
+{
+  "task": 525,
+  "reviewedHead": "008e24ce",
+  "status": "accepted",
+  "review": {
+    "id": 4312,
+    "swarmId": 2,
+    "taskId": 525,
+    "actor": "Paul",
+    "kind": "review_accepted",
+    "body": "VERDICT: accept\n\nConcrete problems: none.\n\nThe three-file production patch matches the source ordering: it repeats the range check unless a bound is falsey, rereads the current link before each endpoint, and samples the link and leave event after getter execution. Exceptions stop provider requery; a false second check preserves the link but still allows requery. No state borrow spans JavaScript execution.\n\nVerified:\n- Reran all 12 unchanged-source cases in memory. Results and source hashes match the retained receipt.\n- Reran 11 pinned native test executables: 47 tests passed.\n- `cargo fmt -p xterm-web -- --check` passed.\n- All indexed source, receipt, runtime-artifact and native-binary hashes match. Committed source and receipt bytes also match after accounting for checkout newline conversion.\n- Retained Chromium, Firefox and WebKit evidence covers the shared eight-case original/Rust Terminal trace and twelve-case controller test.\n- The exact pre-repair negative control failed both tests at the missing second reads. Repaired source restoration and initial/final artifact identity check out.\n- Eight retained browser suites passed 20 functions per engine, including task 500 underline geometry.\n\nI did not rerun browsers or builds, as requested. Windows-only evidence and broader task 321 gaps remain explicitly documented. Task 514 integration is correctly left separate.",
+    "evidence": "",
+    "createdAt": 1793923323420
+  },
+  "heavyJobsRerun": false
+}
