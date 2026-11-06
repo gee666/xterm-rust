@@ -1,0 +1,21 @@
+import {runCommand} from '../scripts/quality-process.mjs';
+import {readFile,writeFile,copyFile,statfs} from 'node:fs/promises';
+import {resolve,dirname} from 'node:path';
+import os from 'node:os';
+const root=resolve(import.meta.dirname,'..'),out=resolve(root,'results/accessibility-dimensions547');
+const phase=process.argv[2],browsers=process.argv[3]??'chromium,firefox,webkit';
+if(!['initial','old','final'].includes(phase))throw new Error('Invalid phase');
+async function guard(){const d=await statfs(root);if(os.freemem()<8*1024**3||d.bavail*d.bsize<10*1024**3)throw new Error('8GiB RAM/10GiB O guard');}
+const records=[];
+for(const testName of ['wasm_accessibility','wasm_accessibility_terminal']){
+ await guard();
+ const result=await runCommand('node',['scripts/browser-host-check.mjs'],{cwd:root,env:{...process.env,CARGO_FEATURES:'acceptance-hooks',WASM_TEST:testName,BROWSERS:browsers},timeoutMs:240000,log:resolve(out,`${phase}-${testName}-runner.log`),resourceCheck:guard});
+ const latest=resolve(root,`results/browser-host/${testName}-results.json`);
+ const report=JSON.parse(await readFile(latest,'utf8'));
+ await copyFile(latest,resolve(out,`${phase}-${testName}.json`));
+ if(report.artifacts){const run=dirname(dirname(report.artifacts.wasm.path));for(const browser of report.browsers)await copyFile(resolve(run,`${testName}-${browser.name}.log`),resolve(out,`${phase}-${testName}-${browser.name}.log`));}
+ records.push({testName,result,report:report.status,browsers:report.browsers.map(b=>({name:b.name,status:b.status,counts:b.counts,errors:b.errors}))});
+ await writeFile(resolve(out,`${phase}-browser.json`),JSON.stringify(records,null,2)+'\n');
+ console.log(JSON.stringify(records.at(-1)));
+ if(result.status!=='passed'&&phase!=='old'){process.exitCode=1;break;}
+}

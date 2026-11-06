@@ -1,0 +1,24 @@
+import {readFile,writeFile,readdir,lstat} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {resolve,dirname,relative} from 'node:path';
+import {execFileSync} from 'node:child_process';
+const root=resolve(import.meta.dirname,'..'),out=resolve(root,'results/accessibility-dimensions547');
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8',timeout:30000}).trim();
+const sourcePaths=git('diff','--name-only','0442e357..HEAD').split(/\r?\n/).filter(p=>!p.endsWith('.md'));
+const source=[];for(const path of sourcePaths)source.push({path,sha256:hash(await readFile(resolve(root,path)))});
+await writeFile(resolve(out,'source-pins.json'),JSON.stringify({head:git('rev-parse','HEAD'),files:source},null,2)+'\n');
+const pins=new Map();
+async function pin(path,kind){const s=await lstat(path);if(s.isSymbolicLink()||!s.isFile())throw new Error('Nonregular runtime file '+path);const b=await readFile(path);pins.set(path,{path,kind,bytes:b.length,sha256:hash(b)});}
+async function tree(path){for(const e of await readdir(path,{withFileTypes:true})){if(e.isSymbolicLink())throw new Error('Runtime link '+e.name);const p=resolve(path,e.name);if(e.isDirectory())await tree(p);else await pin(p,'served-test-artifact');}}
+const reports=[];for(const e of await readdir(out))if(/^(initial|old|final)-wasm_accessibility(_terminal)?\.json$/.test(e))reports.push(resolve(out,e));
+reports.push(resolve(out,'import-failure/initial-wasm_accessibility.json'));
+for(const path of reports){const r=JSON.parse(await readFile(path,'utf8'));await pin(resolve(root,r.artifacts.compiler.path),'compiler-wasm');await tree(dirname(r.artifacts.wasm.path));}
+for(const name of ['accessibility_differential-cbeb52c6be02999a.exe','accessibility_state-7c394f27bc981b47.exe'])await pin(resolve(root,'target/debug/deps',name),'cached-native-test');
+await writeFile(resolve(out,'runtime-pins.json'),JSON.stringify({files:[...pins.values()]},null,2)+'\n');
+const versions={};for(const [name,args]of [['rustc',['-vV']],['cargo',['--version']],['node',['--version']]])versions[name]=execFileSync(name,args,{cwd:root,encoding:'utf8',timeout:30000});
+await writeFile(resolve(out,'summary.json'),JSON.stringify({overallEquivalence:'NOT PROVEN',sourceHead:git('rev-parse','HEAD'),base:'0442e3578a7f57d35c2ae6ff20d7186820983065',versions,nativeTests:{passed:11,failed:0,ignored:0},fixedBrowsers:{phases:['initial','final'],engines:['chromium','firefox','webkit'],component:33,actualTerminal:8,failures:0,ignored:0,filtered:0,pageErrors:0,expectedComponentWarnings:4},oldChromium:{component:{passed:26,failed:7},actualTerminal:{passed:7,failed:1}},fullFmt:{exitCode:1,status:'OS206 failure'},strictNative:'passed focused lib/native accessibility tests',strictWasm:'passed current all-feature lib/both actual tests; final command exit0',sourceMethods:{originalSha256:'6519cc3ee85382a7da9b42a112010044f78f3a1cd4d02fe4fcb37bea36f526ec',sourceOnlyProbes:8,upstreamCasesClaimed:0},runtimeFiles:pins.size,sourceFiles:source.length},null,2)+'\n');
+const checks=[];
+async function evidence(path){for(const e of await readdir(path,{withFileTypes:true})){const p=resolve(path,e.name);if(e.isDirectory())await evidence(p);else if(!['SHA256SUMS','audit-summary.json','review.md'].includes(e.name)){const b=await readFile(p);checks.push(`${hash(b)}  ${relative(out,p).replaceAll('\\','/')}`);}}}
+await evidence(out);await writeFile(resolve(out,'SHA256SUMS'),checks.sort().join('\n')+'\n');
+console.log(JSON.stringify({source:source.length,runtime:pins.size,evidence:checks.length,head:git('rev-parse','HEAD')}));

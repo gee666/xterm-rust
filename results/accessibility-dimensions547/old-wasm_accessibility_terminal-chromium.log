@@ -1,0 +1,32 @@
+running 8 tests
+test runtime_strings_keep_raw_values_share_across_terminals_and_apply_prompt_only_on_open ... ok
+test reentry::selection_clamps_to_live_last_row_after_comparison_resizes_terminal ... ok
+test reentry::reset_from_first_row_setter_keeps_original_buffer_for_the_whole_render ... ok
+test reentry::failed_row_creation_during_resize_preserves_listeners_and_recovers ... ok
+test reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors ... ok
+test real_terminal_writes_deliver_utf16_to_tree_and_live_region_then_toggle_cleanly ... ok
+test dimensions::actual_terminal_resize_propagates_accessibility_css_assignment_error ... FAIL
+test actual_keyboard_on_key_suppresses_only_the_following_matching_output_echo ... ok
+
+failures:
+
+---- dimensions::actual_terminal_resize_propagates_accessibility_css_assignment_error output ----
+    JS exception that was thrown:
+        RuntimeError: unreachable
+            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.__rust_start_panic (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[47696]:0xb3edc5)
+            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.rust_panic (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[42735]:0xb332a1)
+            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[13375]:0x8f6347)
+            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[16904]:0x98a2d1)
+            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[47151]:0xb3e02c)
+            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.rust_begin_unwind (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[32223]:0xaf329d)
+            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[32224]:0xaf32ca)
+            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[6026]:0x70ac15)
+            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.core::panicking::assert_failed::hb5c91e954ea0d7fd (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[24175]:0xa68250)
+            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.wasm_accessibility_terminal::dimensions::actual_terminal_resize_propagates_accessibility_css_assignment_error::ha3270ff8e86a6ed2 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[1439]:0x3cf942)
+
+failures:
+
+    dimensions::actual_terminal_resize_propagates_accessibility_css_assignment_error
+
+test result: FAILED. 7 passed; 1 failed; 0 ignored; 0 filtered out; finished in 7.99s
+

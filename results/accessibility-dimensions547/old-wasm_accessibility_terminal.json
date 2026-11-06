@@ -1,0 +1,136 @@
+{
+  "package": "xterm-web",
+  "testName": "wasm_accessibility_terminal",
+  "testTimeoutMs": 60000,
+  "features": [
+    "acceptance-hooks"
+  ],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-06T01:57:49.582Z",
+  "componentOnly": true,
+  "status": "failed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "wasm_accessibility_terminal",
+        "--features",
+        "acceptance-hooks",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1207.8246,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 9.60329999999999,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\Victor547\\results\\acceptance-artifacts\\c7f1b98542bd2a469de14ca2a5b668f524b2cd679cf9b99565f50e4ee47da6c1\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\Victor547\\results\\browser-host\\wasm_accessibility_terminal\\2026-11-06T01-57-49-535Z-6b5b61bb-9128-4f0d-8a52-909db5149f72\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1197.5955000000001,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "failed",
+      "tests": [
+        "__wbgt__wasm_accessibility_terminal::actual_keyboard_on_key_suppresses_only_the_following_matching_output_echo",
+        "__wbgt__wasm_accessibility_terminal::dimensions::actual_terminal_resize_propagates_accessibility_css_assignment_error",
+        "__wbgt__wasm_accessibility_terminal::real_terminal_writes_deliver_utf16_to_tree_and_live_region_then_toggle_cleanly",
+        "__wbgt__wasm_accessibility_terminal::reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors",
+        "__wbgt__wasm_accessibility_terminal::reentry::failed_row_creation_during_resize_preserves_listeners_and_recovers",
+        "__wbgt__wasm_accessibility_terminal::reentry::reset_from_first_row_setter_keeps_original_buffer_for_the_whole_render",
+        "__wbgt__wasm_accessibility_terminal::reentry::selection_clamps_to_live_last_row_after_comparison_resizes_terminal",
+        "__wbgt__wasm_accessibility_terminal::runtime_strings_keep_raw_values_share_across_terminals_and_apply_prompt_only_on_open"
+      ],
+      "errors": [],
+      "console": [
+        {
+          "type": "error",
+          "text": "panicked at crates\\xterm-web\\tests\\accessibility_cases\\terminal_dimensions.rs:43:5:\nassertion `left == right` failed\n  left: Some(\"none\")\n right: Some(\"marker\")\n\nStack:\n\nError\n    at imports.wbg.__wbg_new_78093c5bd701d017 (http://127.0.0.1:52531/suite.js:6034:21)\n    at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.__wbg_new_78093c5bd701d017 externref shim (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[39082]:0xb252e2)\n    at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::Error::new::h1af6b318da60b284 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[25181]:0xa7e8e5)\n    at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.wasm_bindgen_test::__rt::Context::new::panic_handling::h551efb0ffd372c01 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[8491]:0x7d4cea)\n    at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.wasm_bindgen_test::__rt::Context::new::{{closure}}::{{closure}}::h4e6247e1fa406777 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[25182]:0xa7e969)\n    at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[13375]:0x8f631c)\n    at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[16904]:0x98a2d1)\n    at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[47151]:0xb3e02c)\n    at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.rust_begin_unwind (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[32223]:0xaf329d)\n    at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[32224]:0xaf32ca)\n\n"
+        }
+      ],
+      "version": "148.0.7778.96",
+      "output": "running 8 tests\ntest runtime_strings_keep_raw_values_share_across_terminals_and_apply_prompt_only_on_open ... ok\ntest reentry::selection_clamps_to_live_last_row_after_comparison_resizes_terminal ... ok\ntest reentry::reset_from_first_row_setter_keeps_original_buffer_for_the_whole_render ... ok\ntest reentry::failed_row_creation_during_resize_preserves_listeners_and_recovers ... ok\ntest reentry::clamped_selection_uses_optional_raw_text_length_and_preserves_getter_errors ... ok\ntest real_terminal_writes_deliver_utf16_to_tree_and_live_region_then_toggle_cleanly ... ok\ntest dimensions::actual_terminal_resize_propagates_accessibility_css_assignment_error ... FAIL\ntest actual_keyboard_on_key_suppresses_only_the_following_matching_output_echo ... ok\n\nfailures:\n\n---- dimensions::actual_terminal_resize_propagates_accessibility_css_assignment_error output ----\n    JS exception that was thrown:\n        RuntimeError: unreachable\n            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.__rust_start_panic (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[47696]:0xb3edc5)\n            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.rust_panic (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[42735]:0xb332a1)\n            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.std::panicking::rust_panic_with_hook::h9ea01914b5d92659 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[13375]:0x8f6347)\n            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.std::panicking::begin_panic_handler::{{closure}}::h96f1a35411d9346b (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[16904]:0x98a2d1)\n            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.std::sys::backtrace::__rust_end_short_backtrace::he7b9208ee44387d6 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[47151]:0xb3e02c)\n            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.rust_begin_unwind (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[32223]:0xaf329d)\n            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.core::panicking::panic_fmt::hb91badace6ee8287 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[32224]:0xaf32ca)\n            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.core::panicking::assert_failed_inner::h6998f65e0460b9f2 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[6026]:0x70ac15)\n            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.core::panicking::assert_failed::hb5c91e954ea0d7fd (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[24175]:0xa68250)\n            at wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm.wasm_accessibility_terminal::dimensions::actual_terminal_resize_propagates_accessibility_css_assignment_error::ha3270ff8e86a6ed2 (http://127.0.0.1:52531/suite_bg.wasm:wasm-function[1439]:0x3cf942)\n\nfailures:\n\n    dimensions::actual_terminal_resize_propagates_accessibility_css_assignment_error\n\ntest result: FAILED. 7 passed; 1 failed; 0 ignored; 0 filtered out; finished in 7.99s\n\n",
+      "counts": {
+        "passed": 7,
+        "failed": 1,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/c7f1b98542bd2a469de14ca2a5b668f524b2cd679cf9b99565f50e4ee47da6c1/artifact.wasm",
+      "sha256": "c7f1b98542bd2a469de14ca2a5b668f524b2cd679cf9b99565f50e4ee47da6c1",
+      "bytes": 20226619,
+      "originalPath": "O:\\xterm-rust-swarm-16\\tmp\\Victor547\\target\\wasm32-unknown-unknown\\debug\\deps\\wasm_accessibility_terminal-a6dcbf46cd3d39a4.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\Victor547\\results\\browser-host\\wasm_accessibility_terminal\\2026-11-06T01-57-49-535Z-6b5b61bb-9128-4f0d-8a52-909db5149f72\\artifacts\\suite_bg.wasm",
+      "bytes": 17005355,
+      "sha256": "504e2c3bf7b11fe37d83741571d78a3d9a3651ab628bd7b2d9c870db5613686c"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\Victor547\\results\\browser-host\\wasm_accessibility_terminal\\2026-11-06T01-57-49-535Z-6b5b61bb-9128-4f0d-8a52-909db5149f72\\artifacts\\suite.js",
+      "bytes": 254773,
+      "sha256": "8eaef802a0fcb736e2480d9a3e8a5aa56398b2b2bc6621c98d91e71ef96f0ca3"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "cd7a7975d42e14279013d3482b7018f18f2c5404f10957f5708820ca73d3664e"
+  },
+  "finishedAt": "2026-11-06T01:58:00.815Z"
+}

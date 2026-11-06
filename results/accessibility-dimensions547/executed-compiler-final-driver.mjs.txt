@@ -1,0 +1,14 @@
+import {runCommand} from '../scripts/quality-process.mjs';
+import {writeFile,statfs} from 'node:fs/promises';
+import os from 'node:os';
+import {resolve} from 'node:path';
+const root=resolve(import.meta.dirname,'..'),out=resolve(root,'results/accessibility-dimensions547');
+async function guard(){const d=await statfs(root);if(os.freemem()<8*1024**3||d.bavail*d.bsize<10*1024**3)throw new Error('8GiB RAM/10GiB O headroom guard');}
+const commands=[
+['native11',['test','--locked','-p','xterm-web','--test','accessibility_state','--test','accessibility_differential','-j2']],
+['native-clippy',['clippy','--locked','-p','xterm-web','--lib','--test','accessibility_state','--test','accessibility_differential','--all-features','-j2','--','-D','warnings']],
+['wasm-clippy',['clippy','--locked','-p','xterm-web','--target','wasm32-unknown-unknown','--lib','--test','wasm_accessibility','--test','wasm_accessibility_terminal','--all-features','-j2','--','-D','warnings']],
+['wasm-no-run',['test','--locked','-p','xterm-web','--target','wasm32-unknown-unknown','--test','wasm_accessibility','--test','wasm_accessibility_terminal','--all-features','-j2','--no-run','--message-format=json']]
+];
+const records=[];
+for(const [name,args] of commands.slice(2)){await guard();const r=await runCommand('cargo',args,{cwd:root,env:process.env,timeoutMs:240000,log:resolve(out,name+'.log'),resourceCheck:guard});records.push({name,...r});await writeFile(resolve(out,'compiler.json'),JSON.stringify(records,null,2)+'\n');console.log(name,r.status,r.exitCode);if(r.status!=='passed'){process.exitCode=1;break;}}

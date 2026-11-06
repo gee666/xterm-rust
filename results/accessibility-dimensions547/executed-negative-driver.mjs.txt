@@ -1,0 +1,22 @@
+import {readFile,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+import {resolve} from 'node:path';
+import {runCommand} from '../scripts/quality-process.mjs';
+const root=resolve(import.meta.dirname,'..'),out=resolve(root,'results/accessibility-dimensions547');
+const files=['crates/xterm-web/src/accessibility/browser.rs','crates/xterm-web/src/accessibility/browser_rows.rs','crates/xterm-web/src/accessibility/mod.rs','crates/xterm-web/src/terminal/accessibility_host.rs'];
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const originals=new Map();for(const f of files)originals.set(f,await readFile(resolve(root,f)));
+const receipt={base:'0442e3578a7f57d35c2ae6ff20d7186820983065',files:[],restored:false};
+try {
+ for(const f of files){const r=spawnSync('git',['show',`${receipt.base}:${f}`],{cwd:root,timeout:30000,maxBuffer:2*1024*1024});if(r.error||r.status!==0)throw new Error('Cannot read old source '+f);await writeFile(resolve(root,f),r.stdout);receipt.files.push({path:f,fixedSha256:hash(originals.get(f)),oldSha256:hash(r.stdout)});}
+ receipt.run=await runCommand('node',['tmp/browser547.mjs','old','chromium'],{cwd:root,env:process.env,timeoutMs:360000,log:resolve(out,'old-driver.log')});
+} finally {
+ for(const [f,bytes]of originals)await writeFile(resolve(root,f),bytes);
+ receipt.restored=await Promise.all([...originals].map(async([f,b])=>hash(await readFile(resolve(root,f)))===hash(b))).then(r=>r.every(Boolean));
+ await writeFile(resolve(out,'negative-restore.json'),JSON.stringify(receipt,null,2)+'\n');
+ if(!receipt.restored)throw new Error('Fixed source restore mismatch');
+}
+const records=JSON.parse(await readFile(resolve(out,'old-browser.json'),'utf8'));
+for(const [index,expected]of [[0,{passed:26,failed:7}],[1,{passed:7,failed:1}]]){const r=records[index]?.browsers?.[0];if(r?.counts?.passed!==expected.passed||r?.counts?.failed!==expected.failed||r?.errors?.length)throw new Error('Unexpected old control result '+JSON.stringify(r));}
+console.log(JSON.stringify({restored:receipt.restored,old:records.map(r=>({name:r.testName,browsers:r.browsers}))}));

@@ -1,0 +1,43 @@
+[
+  {
+    "testName": "wasm_accessibility",
+    "result": {
+      "command": [
+        "node",
+        "scripts/browser-host-check.mjs"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 10783.5187,
+      "status": "failed"
+    },
+    "report": "failed",
+    "browsers": [
+      {
+        "name": "chromium",
+        "status": "failed",
+        "errors": [
+          "TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:52910/suite.js"
+        ]
+      },
+      {
+        "name": "firefox",
+        "status": "failed",
+        "errors": []
+      },
+      {
+        "name": "webkit",
+        "status": "failed",
+        "errors": [
+          "TypeError: Importing a module script failed."
+        ]
+      }
+    ]
+  }
+]
