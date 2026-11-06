@@ -1,0 +1,172 @@
+{
+  "package": "xterm-web",
+  "testName": "mouse_routing",
+  "testTimeoutMs": 60000,
+  "features": [],
+  "platform": "win32",
+  "node": "v24.15.0",
+  "date": "2026-11-06T00:19:39.765Z",
+  "componentOnly": true,
+  "status": "passed",
+  "commands": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "xterm-web",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--test",
+        "mouse_routing",
+        "--no-run",
+        "--message-format=json"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 756.9956999999999,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "--version"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 12.71550000000002,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "P:/workshop/Windows_Worshop/oira666/xterm-rust/tmp/wasm-tools/wasm-bindgen-0.2.100-x86_64-pc-windows-msvc/wasm-bindgen.exe",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\KaylaMouseZero\\results\\acceptance-artifacts\\cd9a6916e6c1390f9efbc327a45b92939f06ac858c2b2847c798d0bf80cb933a\\artifact.wasm",
+        "--target",
+        "web",
+        "--out-dir",
+        "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\KaylaMouseZero\\results\\browser-host\\mouse_routing\\2026-11-06T00-19-39-764Z-5171b1fd-192c-4c8e-9ca9-4ca7914ec995\\artifacts",
+        "--out-name",
+        "suite"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "aborted": false,
+      "abortError": null,
+      "timedOut": false,
+      "terminationError": null,
+      "resourceError": null,
+      "elapsedMs": 1269.967,
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "status": "passed",
+      "tests": [
+        "__wbgt__mouse_routing::empty_encoding_still_commits_last_event_and_reset_clears_it",
+        "__wbgt__mouse_routing::move_buttons_priority_fallback_override_and_invalid_button_pairs",
+        "__wbgt__mouse_routing::output_failure_does_not_commit_cache_and_nested_output_sees_old_cache",
+        "__wbgt__mouse_routing::source_mutable_encoder_updates_event_before_cache_commit",
+        "__wbgt__mouse_routing::touch_assignment_commits_captured_accumulator_after_reentrant_reset",
+        "__wbgt__mouse_routing::upstream_alt_required_report_strips_only_nonwheel_alt",
+        "__wbgt__mouse_routing::wheel_veto_zero_shift_and_missing_coordinates_do_not_consume_state"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "148.0.7778.96",
+      "output": "running 7 tests\ntest wheel_veto_zero_shift_and_missing_coordinates_do_not_consume_state ... ok\ntest upstream_alt_required_report_strips_only_nonwheel_alt ... ok\ntest touch_assignment_commits_captured_accumulator_after_reentrant_reset ... ok\ntest source_mutable_encoder_updates_event_before_cache_commit ... ok\ntest output_failure_does_not_commit_cache_and_nested_output_sees_old_cache ... ok\ntest move_buttons_priority_fallback_override_and_invalid_button_pairs ... ok\ntest empty_encoding_still_commits_last_event_and_reset_clears_it ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.01s\n\n",
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "firefox",
+      "status": "passed",
+      "tests": [
+        "__wbgt__mouse_routing::empty_encoding_still_commits_last_event_and_reset_clears_it",
+        "__wbgt__mouse_routing::move_buttons_priority_fallback_override_and_invalid_button_pairs",
+        "__wbgt__mouse_routing::output_failure_does_not_commit_cache_and_nested_output_sees_old_cache",
+        "__wbgt__mouse_routing::source_mutable_encoder_updates_event_before_cache_commit",
+        "__wbgt__mouse_routing::touch_assignment_commits_captured_accumulator_after_reentrant_reset",
+        "__wbgt__mouse_routing::upstream_alt_required_report_strips_only_nonwheel_alt",
+        "__wbgt__mouse_routing::wheel_veto_zero_shift_and_missing_coordinates_do_not_consume_state"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "150.0.2",
+      "output": "running 7 tests\ntest wheel_veto_zero_shift_and_missing_coordinates_do_not_consume_state ... ok\ntest upstream_alt_required_report_strips_only_nonwheel_alt ... ok\ntest touch_assignment_commits_captured_accumulator_after_reentrant_reset ... ok\ntest source_mutable_encoder_updates_event_before_cache_commit ... ok\ntest output_failure_does_not_commit_cache_and_nested_output_sees_old_cache ... ok\ntest move_buttons_priority_fallback_override_and_invalid_button_pairs ... ok\ntest empty_encoding_still_commits_last_event_and_reset_clears_it ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.00s\n\n",
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    },
+    {
+      "name": "webkit",
+      "status": "passed",
+      "tests": [
+        "__wbgt__mouse_routing::empty_encoding_still_commits_last_event_and_reset_clears_it",
+        "__wbgt__mouse_routing::move_buttons_priority_fallback_override_and_invalid_button_pairs",
+        "__wbgt__mouse_routing::output_failure_does_not_commit_cache_and_nested_output_sees_old_cache",
+        "__wbgt__mouse_routing::source_mutable_encoder_updates_event_before_cache_commit",
+        "__wbgt__mouse_routing::touch_assignment_commits_captured_accumulator_after_reentrant_reset",
+        "__wbgt__mouse_routing::upstream_alt_required_report_strips_only_nonwheel_alt",
+        "__wbgt__mouse_routing::wheel_veto_zero_shift_and_missing_coordinates_do_not_consume_state"
+      ],
+      "errors": [],
+      "console": [],
+      "version": "26.4",
+      "output": "running 7 tests\ntest wheel_veto_zero_shift_and_missing_coordinates_do_not_consume_state ... ok\ntest upstream_alt_required_report_strips_only_nonwheel_alt ... ok\ntest touch_assignment_commits_captured_accumulator_after_reentrant_reset ... ok\ntest source_mutable_encoder_updates_event_before_cache_commit ... ok\ntest output_failure_does_not_commit_cache_and_nested_output_sees_old_cache ... ok\ntest move_buttons_priority_fallback_override_and_invalid_button_pairs ... ok\ntest empty_encoding_still_commits_last_event_and_reset_clears_it ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 filtered out; finished in 0.03s\n\n",
+      "counts": {
+        "passed": 7,
+        "failed": 0,
+        "ignored": 0,
+        "filtered": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "compiler": {
+      "path": "results/acceptance-artifacts/cd9a6916e6c1390f9efbc327a45b92939f06ac858c2b2847c798d0bf80cb933a/artifact.wasm",
+      "sha256": "cd9a6916e6c1390f9efbc327a45b92939f06ac858c2b2847c798d0bf80cb933a",
+      "bytes": 19790962,
+      "originalPath": "O:/xterm-rust-swarm-16/tmp/worktrees/KaylaMouseZero/target\\wasm32-unknown-unknown\\debug\\deps\\mouse_routing-1c2b94b043d80b24.wasm"
+    },
+    "wasm": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\KaylaMouseZero\\results\\browser-host\\mouse_routing\\2026-11-06T00-19-39-764Z-5171b1fd-192c-4c8e-9ca9-4ca7914ec995\\artifacts\\suite_bg.wasm",
+      "bytes": 16621207,
+      "sha256": "6cc6f6d1133d3bdbb81e015b4ca632319fa15304403f1de562c403e9cfaeef78"
+    },
+    "bindings": {
+      "path": "O:\\xterm-rust-swarm-16\\tmp\\worktrees\\KaylaMouseZero\\results\\browser-host\\mouse_routing\\2026-11-06T00-19-39-764Z-5171b1fd-192c-4c8e-9ca9-4ca7914ec995\\artifacts\\suite.js",
+      "bytes": 249012,
+      "sha256": "9c807e52bf08cc3c47b89b4ed8bdcbd63fc7a706a04076a655bdb16524b858c4"
+    },
+    "css": {
+      "path": "crates/xterm-web/assets/xterm.css",
+      "bytes": 8154,
+      "sha256": "c8967ebd499ce60410e259bbbe7e22c0cb8edf2d5e0e96133ddacfa9a98fac1d"
+    },
+    "cargoLockSha256": "beddd73140b57cbf7d815bc5f8de94ceb88513d9c55aab2a3b75931c76ea59e9",
+    "testSourceSha256": "4d41e4157f81d3b00b717caa45f45533edeef7ed2a0407901aed35c1bcb8564d"
+  },
+  "finishedAt": "2026-11-06T00:19:52.336Z"
+}
