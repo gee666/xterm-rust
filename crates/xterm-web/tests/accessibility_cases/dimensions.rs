@@ -7,7 +7,7 @@ use wasm_bindgen_test::*;
 use web_sys::HtmlElement;
 use xterm_web::accessibility::AccessibilityEvent;
 
-#[wasm_bindgen(module = "/tests/accessibility_support/dimensions.js")]
+#[wasm_bindgen(module = "/tests/accessibility_dimensions_oracle.js")]
 extern "C" {
     #[wasm_bindgen(catch, js_name = sourceDimensionsCase)]
     fn source_case(container: &HtmlElement, mode: &str) -> Result<JsValue, JsValue>;

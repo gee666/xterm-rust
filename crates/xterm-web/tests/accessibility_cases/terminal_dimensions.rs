@@ -7,7 +7,7 @@ use wasm_bindgen_test::*;
 use web_sys::HtmlElement;
 use xterm_web::BrowserRuntime;
 
-#[wasm_bindgen(module = "/tests/accessibility_support/dimensions.js")]
+#[wasm_bindgen(module = "/tests/accessibility_dimensions_oracle.js")]
 extern "C" {
     #[wasm_bindgen(catch, js_name = rustDimensionsCase)]
     fn rust_case(

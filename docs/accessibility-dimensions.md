@@ -24,12 +24,24 @@ The additional `Object.assign` binding performs only that language/DOM operation
 
 Eight shared real-DOM scenarios compare source and Rust traces, resulting CSS values, cutoff points and thrown-object identity. They cover ordinary assignments, style-getter mutation, width-setter mutation, changing later row heights, shrinking the loop bound and errors from container style, width assignment and row-height assignment. A separate actual opened-Terminal test checks that resize propagates a width-setter error through real render/accessibility services. Existing component and real-Terminal assertions remain unchanged.
 
-Runtime results are pending. Source-fixture verification, JavaScript syntax checking and focused rustfmt checks have passed locally. No new compiler/browser or CI pass is claimed yet.
+On native Windows, both the initial and restored final fixed runs passed all 33 component tests and eight actual-Terminal tests in Chromium 148.0.7778.96, Firefox 150.0.2 and WebKit 26.4. Every run had zero failures, ignored/filtered tests or page errors. The four component-console warnings per engine are the existing invalid-selection controls, two invalid-row and two missing-column messages. No unexpected console error/warning occurred in the fixed runs. Actual-Terminal runs had none. The existing 25 component and seven Terminal tests were kept intact. The added tests are eight component functions and one Terminal function, not claimed unchanged upstream cases.
+
+The exact four production files from base `0442e357` were temporarily restored for Chromium controls. They produced 26 passed/seven failed component tests and seven passed/one failed Terminal test. All failures were the intended new regression assertions; the existing tests and the already-correct style-getter error control passed. A `finally` block restored and SHA-verified all four fixed files. Both targets then passed again in all three engines. Initial and final compiler WASM, served WASM and binding hashes are identical for each target.
+
+The focused native accessibility run passed 11 tests, including the existing seeded announcement and BMP-classification differentials. Warning-denied focused native Clippy and WASM library/both-test Clippy passed. The latter was rerun after the test packaging correction. The source verifier and eight source-only controlled-field probes passed; these Node probes are not DOM or Rust evidence. Focused rustfmt passed. Exact `cargo fmt --all -- --check` still failed with Windows OS206, retained as a failure. Full workspace/release/native OS matrices remain task 304.
+
+Failed development attempts are retained. An initial WASM type error required explicitly binding the current row before borrowing it. The first browser attempt could not load a relative source-fixture import because wasm-bindgen copies declared snippets, not their relative JS dependencies. The generator now combines the same unchanged source bodies and cases into one served test module. No assertion, production behavior or browser deadline was weakened. An initial source-only mock-host ownership error is retained separately.
+
+Raw reports, engine logs, source/restore pins and quality logs are under `results/accessibility-dimensions547/`. Generated WASM, bindings and scratch are disposable; their hashes are retained for review and cleanup. These scoped results do not establish full accessibility or terminal equivalence.
 
 Commands, using an owned O: worktree, existing matching wasm-bindgen 0.2.100 and Playwright installation:
 
 ```sh
 node scripts/accessibility-dimensions-source.mjs
+node --test scripts/accessibility-dimensions-source.test.mjs
+node scripts/audit-accessibility-dimensions547.mjs
+# Before disposal, also verify all recorded runtime artifacts:
+node scripts/audit-accessibility-dimensions547.mjs --runtime
 cargo test --locked -p xterm-web --test accessibility_state --test accessibility_differential -j2
 cargo clippy --locked -p xterm-web --all-targets --all-features -j2 -- -D warnings
 cargo clippy --locked -p xterm-web --target wasm32-unknown-unknown --lib --test wasm_accessibility --test wasm_accessibility_terminal --all-features -j2 -- -D warnings

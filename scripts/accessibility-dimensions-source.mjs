@@ -21,7 +21,16 @@ for(const signature of [
 }
 const hash=createHash('sha256').update(raw).digest('hex');
 const fixture=`// Copyright (c) 2017 The xterm.js authors. All rights reserved. MIT license.\n// Generated unchanged method bodies. Test-only, never imported by the library.\n// AccessibilityManager.ts SHA-256: ${hash}\nexport class SourceDimensions {\n${methods.join('\n')}\n}\n`;
-const output=resolve(root,'crates/xterm-web/tests/fixtures/accessibility-dimensions-source.js');
-if(process.argv.includes('--write'))await writeFile(output,fixture);
-else assert.equal((await readFile(output,'utf8')).replaceAll('\r\n','\n'),fixture);
+const cases=(await readFile(resolve(root,'crates/xterm-web/tests/accessibility_support/dimensions.js'),'utf8'))
+  .replaceAll('\r\n','\n').replace("import {SourceDimensions} from '../fixtures/accessibility-dimensions-source.js';\n",'');
+// wasm-bindgen copies imported snippets, not their relative JS dependencies.
+// One generated test module keeps both unchanged source and shared cases served.
+for(const [name,contents] of [
+  ['fixtures/accessibility-dimensions-source.js',fixture],
+  ['accessibility_dimensions_oracle.js',fixture+'\n'+cases]
+]) {
+  const output=resolve(root,'crates/xterm-web/tests',name);
+  if(process.argv.includes('--write'))await writeFile(output,contents);
+  else assert.equal((await readFile(output,'utf8')).replaceAll('\r\n','\n'),contents);
+}
 console.log(`Accessibility dimension methods match unchanged source ${hash}`);
