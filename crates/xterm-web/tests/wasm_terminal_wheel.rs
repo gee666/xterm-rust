@@ -136,9 +136,12 @@ fn active_and_passive_hooks_ignore_own_call_and_keep_event_identity() {
             poison
                 .call2(&JsValue::UNDEFINED, callback.as_ref(), &getter.into())
                 .unwrap();
-            setup.terminal.attach_custom_wheel_event_handler(
-                callback.as_ref().unchecked_ref::<Function>().clone(),
-            );
+            setup
+                .terminal
+                .attach_custom_wheel_event_handler(
+                    callback.as_ref().unchecked_ref::<Function>().clone().into(),
+                )
+                .unwrap();
             setup.dispatch(&event);
             assert!(
                 trap.errors.borrow().is_empty(),
@@ -199,9 +202,12 @@ fn only_literal_false_vetoes_both_live_routes() {
         let setup = Setup::new(active);
         for (index, value) in values.iter().enumerate() {
             let callback = Closure::<dyn Fn(JsValue) -> JsValue>::new(move |_| value.clone());
-            setup.terminal.attach_custom_wheel_event_handler(
-                callback.as_ref().unchecked_ref::<Function>().clone(),
-            );
+            setup
+                .terminal
+                .attach_custom_wheel_event_handler(
+                    callback.as_ref().unchecked_ref::<Function>().clone().into(),
+                )
+                .unwrap();
             setup.output.borrow_mut().clear();
             let event = setup.wheel();
             setup.dispatch(&event);
@@ -231,9 +237,12 @@ fn thrown_values_retain_identity_and_stop_output() {
             let callback = Closure::<dyn Fn(JsValue) -> Result<JsValue, JsValue>>::new(move |_| {
                 Err(thrown.clone())
             });
-            setup.terminal.attach_custom_wheel_event_handler(
-                callback.as_ref().unchecked_ref::<Function>().clone(),
-            );
+            setup
+                .terminal
+                .attach_custom_wheel_event_handler(
+                    callback.as_ref().unchecked_ref::<Function>().clone().into(),
+                )
+                .unwrap();
             let event = setup.wheel();
             setup.dispatch(&event);
             let errors = trap.errors.borrow();
@@ -267,13 +276,18 @@ fn hook_replacement_and_recursive_dispatch_do_not_hold_service_borrows() {
         let outer_seen = seen.clone();
         let callback = Closure::<dyn Fn(JsValue) -> bool>::new(move |event| {
             outer_seen.borrow_mut().push(event);
-            terminal.attach_custom_wheel_event_handler(replacement_fn.clone());
+            terminal
+                .attach_custom_wheel_event_handler(replacement_fn.clone().into())
+                .unwrap();
             element.dispatch_event(&inner_event).unwrap();
             false
         });
-        setup.terminal.attach_custom_wheel_event_handler(
-            callback.as_ref().unchecked_ref::<Function>().clone(),
-        );
+        setup
+            .terminal
+            .attach_custom_wheel_event_handler(
+                callback.as_ref().unchecked_ref::<Function>().clone().into(),
+            )
+            .unwrap();
         setup.dispatch(&outer);
         let observed = seen.borrow();
         assert_eq!(observed.len(), 2);

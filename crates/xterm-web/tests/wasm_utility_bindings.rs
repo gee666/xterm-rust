@@ -32,7 +32,7 @@ fn attach_constructor_matches_socket_first_order_and_primitive_option_boxing() {
                 .unwrap(),
             "arraybuffer"
         );
-        addon.dispose();
+        addon.dispose().unwrap();
     }
     let socket = Object::new();
     let captured = socket.clone();
@@ -52,7 +52,8 @@ fn attach_constructor_matches_socket_first_order_and_primitive_option_boxing() {
     Object::define_property(&options, &"bidirectional".into(), &descriptor);
     AttachAddon::new(socket.unchecked_into(), options.into())
         .unwrap()
-        .dispose();
+        .dispose()
+        .unwrap();
 }
 
 #[wasm_bindgen_test]

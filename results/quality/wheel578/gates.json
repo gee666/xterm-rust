@@ -1,0 +1,72 @@
+[
+  {
+    "name": "focused-fmt",
+    "command": [
+      "rustfmt",
+      "--edition",
+      "2021",
+      "--check",
+      "crates/xterm-web/tests/wasm_terminal_wheel.rs"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 44.7842,
+    "status": "passed"
+  },
+  {
+    "name": "fixed-wheel-check",
+    "command": [
+      "cargo",
+      "check",
+      "--locked",
+      "-p",
+      "xterm-web",
+      "--test",
+      "wasm_terminal_wheel",
+      "--all-features",
+      "--target",
+      "wasm32-unknown-unknown",
+      "-j2"
+    ],
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 243.5398,
+    "status": "passed"
+  },
+  {
+    "name": "wasm-all-target-check",
+    "command": [
+      "cargo",
+      "check",
+      "--workspace",
+      "--locked",
+      "--all-targets",
+      "--all-features",
+      "--target",
+      "wasm32-unknown-unknown",
+      "-j2"
+    ],
+    "exitCode": 101,
+    "signal": null,
+    "error": null,
+    "aborted": false,
+    "abortError": null,
+    "timedOut": false,
+    "terminationError": null,
+    "resourceError": null,
+    "elapsedMs": 45840.1441,
+    "status": "failed"
+  }
+]

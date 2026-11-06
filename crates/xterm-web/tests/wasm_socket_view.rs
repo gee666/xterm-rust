@@ -61,7 +61,7 @@ async fn later_message_listener_mutation_is_visible_when_rust_queue_parses() {
         .remove_event_listener_with_callback("message", listener.as_ref().unchecked_ref())
         .unwrap();
     parsed.dispose();
-    addon.dispose();
+    addon.dispose().unwrap();
     socket.close().unwrap();
     terminal.dispose().unwrap();
 }

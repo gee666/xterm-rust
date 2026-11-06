@@ -1,0 +1,129 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.27
+   Compiling quote v1.0.47
+   Compiling wasm-bindgen-shared v0.2.100
+   Compiling syn v2.0.119
+   Compiling bumpalo v3.20.3
+   Compiling log v0.4.34
+   Compiling rustversion v1.0.23
+   Compiling wasm-bindgen v0.2.100
+   Compiling wasm-bindgen-backend v0.2.100
+   Compiling wasm-bindgen-macro-support v0.2.100
+    Checking once_cell v1.21.4
+    Checking cfg-if v1.0.5
+    Checking equivalent v1.0.3
+    Checking foldhash v0.1.5
+    Checking memchr v2.8.3
+    Checking allocator-api2 v0.2.21
+    Checking hashbrown v0.15.5
+   Compiling wasm-bindgen-macro v0.2.100
+    Checking regress v0.10.4
+    Checking js-sys v0.3.77
+    Checking ryu-js v1.0.3
+    Checking xterm-core v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\Damaris563\crates\xterm-core)
+    Checking wasm-bindgen-futures v0.4.50
+   Compiling zmij v1.0.23
+    Checking adler2 v2.0.1
+   Compiling serde_core v1.0.229
+    Checking miniz_oxide v0.8.9
+   Compiling serde_json v1.0.154
+    Checking xterm-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\Damaris563\crates\xterm-addons)
+    Checking xterm-wasm-support v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\Damaris563\crates\xterm-wasm-support)
+    Checking web-sys v0.3.77
+    Checking itoa v1.0.18
+   Compiling wasm-bindgen-test-macro v0.3.50
+    Checking wasm-bindgen-test v0.3.50
+    Checking xterm-font-addons v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\Damaris563\crates\xterm-font-addons)
+    Checking xterm-web v0.1.0 (O:\xterm-rust-swarm-16\tmp\worktrees\Damaris563\crates\xterm-web)
+error[E0308]: mismatched types
+   --> crates\xterm-web\tests\wasm_terminal_wheel.rs:140:17
+    |
+139 |             setup.terminal.attach_custom_wheel_event_handler(
+    |                            --------------------------------- arguments to this method are incorrect
+140 |                 callback.as_ref().unchecked_ref::<Function>().clone(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `JsValue`, found `Function`
+    |
+note: method defined here
+   --> O:\xterm-rust-swarm-16\tmp\worktrees\Damaris563\crates\xterm-web\src\terminal\browser_open.rs:97:12
+    |
+97  |     pub fn attach_custom_wheel_event_handler(&self, handler: JsValue) -> Result<(), JsValue> {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: call `Into::into` on this expression to convert `Function` into `JsValue`
+    |
+140 |                 callback.as_ref().unchecked_ref::<Function>().clone().into(),
+    |                                                                      +++++++
+
+error[E0308]: mismatched types
+   --> crates\xterm-web\tests\wasm_terminal_wheel.rs:203:17
+    |
+202 |             setup.terminal.attach_custom_wheel_event_handler(
+    |                            --------------------------------- arguments to this method are incorrect
+203 |                 callback.as_ref().unchecked_ref::<Function>().clone(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `JsValue`, found `Function`
+    |
+note: method defined here
+   --> O:\xterm-rust-swarm-16\tmp\worktrees\Damaris563\crates\xterm-web\src\terminal\browser_open.rs:97:12
+    |
+97  |     pub fn attach_custom_wheel_event_handler(&self, handler: JsValue) -> Result<(), JsValue> {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: call `Into::into` on this expression to convert `Function` into `JsValue`
+    |
+203 |                 callback.as_ref().unchecked_ref::<Function>().clone().into(),
+    |                                                                      +++++++
+
+error[E0308]: mismatched types
+   --> crates\xterm-web\tests\wasm_terminal_wheel.rs:235:17
+    |
+234 |             setup.terminal.attach_custom_wheel_event_handler(
+    |                            --------------------------------- arguments to this method are incorrect
+235 |                 callback.as_ref().unchecked_ref::<Function>().clone(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `JsValue`, found `Function`
+    |
+note: method defined here
+   --> O:\xterm-rust-swarm-16\tmp\worktrees\Damaris563\crates\xterm-web\src\terminal\browser_open.rs:97:12
+    |
+97  |     pub fn attach_custom_wheel_event_handler(&self, handler: JsValue) -> Result<(), JsValue> {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: call `Into::into` on this expression to convert `Function` into `JsValue`
+    |
+235 |                 callback.as_ref().unchecked_ref::<Function>().clone().into(),
+    |                                                                      +++++++
+
+error[E0308]: mismatched types
+   --> crates\xterm-web\tests\wasm_terminal_wheel.rs:270:56
+    |
+270 |             terminal.attach_custom_wheel_event_handler(replacement_fn.clone());
+    |                      --------------------------------- ^^^^^^^^^^^^^^^^^^^^^^ expected `JsValue`, found `Function`
+    |                      |
+    |                      arguments to this method are incorrect
+    |
+note: method defined here
+   --> O:\xterm-rust-swarm-16\tmp\worktrees\Damaris563\crates\xterm-web\src\terminal\browser_open.rs:97:12
+    |
+97  |     pub fn attach_custom_wheel_event_handler(&self, handler: JsValue) -> Result<(), JsValue> {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: call `Into::into` on this expression to convert `Function` into `JsValue`
+    |
+270 |             terminal.attach_custom_wheel_event_handler(replacement_fn.clone().into());
+    |                                                                              +++++++
+
+error[E0308]: mismatched types
+   --> crates\xterm-web\tests\wasm_terminal_wheel.rs:275:13
+    |
+274 |         setup.terminal.attach_custom_wheel_event_handler(
+    |                        --------------------------------- arguments to this method are incorrect
+275 |             callback.as_ref().unchecked_ref::<Function>().clone(),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `JsValue`, found `Function`
+    |
+note: method defined here
+   --> O:\xterm-rust-swarm-16\tmp\worktrees\Damaris563\crates\xterm-web\src\terminal\browser_open.rs:97:12
+    |
+97  |     pub fn attach_custom_wheel_event_handler(&self, handler: JsValue) -> Result<(), JsValue> {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: call `Into::into` on this expression to convert `Function` into `JsValue`
+    |
+275 |             callback.as_ref().unchecked_ref::<Function>().clone().into(),
+    |                                                                  +++++++
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `xterm-web` (test "wasm_terminal_wheel") due to 5 previous errors
